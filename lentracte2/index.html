@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Entracte • Du grand écran à votre écran</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #E8253A;
+    --red-dark: #c01e2e;
+    --black: #0a0a0a;
+    --dark: #111111;
+    --dark2: #1a1a1a;
+    --white: #ffffff;
+    --grey: #888888;
+    --light-grey: #cccccc;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+
+  /* ─── SEARCH BTN ─── */
+  .search-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: transform .25s ease, background .2s;
+    flex-shrink: 0;
+  }
+  .search-btn:hover {
+    transform: scale(1.18);
+    background: rgba(0,0,0,.08);
+  }
+  .search-btn svg { width: 20px; height: 20px; }
+
+  /* ─── SEARCH OVERLAY ─── */
+  .search-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.82);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+    backdrop-filter: blur(4px);
+  }
+  .search-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .search-box {
+    width: min(600px, 90vw);
+    position: relative;
+    transform: translateY(20px);
+    transition: transform .35s ease;
+  }
+  .search-overlay.active .search-box {
+    transform: translateY(0);
+  }
+  .search-box input {
+    width: 100%;
+    background: #1a1a1a;
+    border: 2px solid var(--red);
+    border-radius: 50px;
+    padding: 18px 60px 18px 28px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    outline: none;
+    letter-spacing: .5px;
+  }
+  .search-box input::placeholder { color: #555; }
+  .search-box .search-submit {
+    position: absolute;
+    right: 16px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    padding: 4px;
+  }
+  .search-box .search-submit svg { width: 22px; height: 22px; fill: var(--red); }
+  .search-close {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: none; border: none;
+    color: #666; font-size: 28px; cursor: pointer;
+    transition: color .2s;
+    line-height: 1;
+  }
+  .search-close:hover { color: var(--white); }
+  .search-hint {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 12px;
+    color: #444;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    margin-right: 60px;
+  }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 120px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--red);
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    gap: 2px;
+  }
+  .logo-title {
+    font-family: 'Playfair Display', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 42px;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .logo-title span { color: var(--red); }
+  .logo-sub {
+    font-family: 'Playfair Display', serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--light-grey);
+    letter-spacing: 0px;
+    margin-top: 2px;
+  }
+  .logo-sub em { color: var(--red); font-style: normal; font-weight: 700; }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--red); }
+  .nav-cinema { font-weight: 700 !important; }
+  .nav-links .contact-link { color: var(--red); }
+
+  .nav-cinema {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    line-height: 1;
+    position: relative;
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+    transition: color .2s;
+  }
+  .nav-cinema:hover { color: var(--red); }
+  .nav-cinema svg { width: 12px; height: 12px; fill: var(--white); display: block; position: relative; top: 1px; transition: transform .25s; }
+  .nav-cinema:hover svg { transform: rotate(180deg); fill: var(--red); }
+
+  /* ─── DROPDOWN ─── */
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    background: var(--dark);
+    border-top: 2px solid var(--red);
+    border-radius: 0 0 10px 10px;
+    min-width: 260px;
+    padding: 8px 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .nav-cinema:hover .dropdown {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .dropdown a {
+    display: block;
+    padding: 11px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--light-grey) !important;
+    transition: color .2s, background .2s;
+    white-space: nowrap;
+  }
+  .dropdown a:hover {
+    color: var(--red) !important;
+    background: rgba(232,37,58,0.08);
+  }
+  .dropdown a span { color: var(--red); margin-right: 8px; }
+
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nav-icons svg { width: 20px; height: 20px; fill: var(--white); cursor: pointer; transition: fill .2s; }
+  .nav-icons svg:hover { fill: var(--red); }
+
+  /* burger menu (mobile) */
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .burger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
+
+  /* mobile nav hidden by default */
+  .mobile-nav { display: none; }
+
+  /* ─── SECTION HEADER ─── */
+  .section-header {
+    background: var(--red);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .section-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-header h2::after {
+    content: '•';
+    color: var(--white);
+    font-size: 22px;
+    line-height: 0;
+    position: relative;
+    top: 2px;
+  }
+  .section-header .search-icon { fill: var(--white); width: 18px; height: 18px; cursor: pointer; }
+
+  /* ─── CAROUSEL WRAPPER ─── */
+  .carousel-outer {
+    position: relative;
+    overflow: hidden;
+    background: var(--black);
+    padding: 20px 0;
+  }
+  .carousel-outer::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, #0a0a0a);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+
+  .carousel-track {
+    display: flex;
+    gap: 14px;
+    padding: 0 20px;
+    transition: transform .4s ease;
+  }
+
+  /* ─── REVIEW CARDS ─── */
+  .review-card {
+    flex: 0 0 220px;
+    cursor: pointer;
+  }
+
+  .review-card .card-wrap {
+    position: relative;
+    width: 220px;
+    height: 310px;
+    border-radius: 22px;
+    overflow: hidden;
+  }
+
+  .review-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s;
+  }
+  .review-card:hover img { transform: scale(1.05); }
+
+  /* Red gradient from bottom to middle */
+  .review-card .card-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    background: linear-gradient(
+      to top,
+      rgba(220,25,40,0.88) 0%,
+      rgba(200,20,35,0.55) 30%,
+      rgba(180,15,30,0.15) 50%,
+      transparent 60%
+    );
+    pointer-events: none;
+  }
+
+
+
+  /* Info sits BELOW the card */
+  .card-info {
+    margin-top: 8px;
+    padding: 0 2px;
+  }
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--red);
+    line-height: 1.2;
+  }
+  .card-title span { color: #aaa; font-size: 11px; }
+  .card-sub {
+    font-size: 8.5px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    margin-top: 3px;
+    line-height: 1.35;
+  }
+
+  /* carousel nav buttons */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--red);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background .2s, transform .2s;
+    box-shadow: 0 2px 12px rgba(0,0,0,.18);
+  }
+  .carousel-btn:hover { background: var(--red-dark); transform: translateY(-50%) scale(1.1); }
+  .carousel-btn svg { fill: white; width: 16px; height: 16px; stroke: white; stroke-width: 1; }
+  .carousel-btn.prev { left: 8px; }
+  .carousel-btn.next { right: 8px; }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 14px 0 6px;
+  }
+  .dot {
+    width: 28px; height: 8px;
+    border-radius: 99px;
+    background: #ddd;
+    cursor: pointer;
+    transition: background .25s, width .3s ease;
+  }
+  .dot.active {
+    background: var(--red);
+    width: 42px;
+  }
+  .dot:hover:not(.active) { background: #bbb; }
+
+  /* ─── "COMMENT C'EST FAIT" SECTION ─── */
+  .ccf-section { background: var(--black); }
+
+  .ccf-carousel-outer {
+    position: relative;
+    overflow: hidden;
+    background: var(--black);
+    padding: 20px 0;
+  }
+
+  .ccf-track {
+    display: flex;
+    gap: 16px;
+    padding: 0 20px;
+    transition: transform .4s ease;
+  }
+
+  .ccf-card {
+    flex: 0 0 calc(50% - 24px);
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 16/10;
+    min-width: 260px;
+  }
+
+  .ccf-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s;
+  }
+  .ccf-card:hover img { transform: scale(1.05); }
+
+  .ccf-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.1) 60%),
+                linear-gradient(160deg, rgba(232,37,58,0.22) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+  }
+  .ccf-movie-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(22px, 4vw, 36px);
+    letter-spacing: 2px;
+    line-height: 1;
+    color: var(--white);
+    text-shadow: 2px 2px 8px rgba(0,0,0,.8);
+  }
+  .ccf-tagline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(14px, 2.5vw, 22px);
+    letter-spacing: 2px;
+    color: #ddd;
+    margin-top: 4px;
+  }
+
+  .ccf-card-label {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .ccf-card-label .film { font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--red); letter-spacing: 1px; }
+  .ccf-card-label .cat { font-size: 10px; color: var(--grey); letter-spacing: 1px; text-transform: uppercase; }
+
+  /* ─── TOP & RETROSPECTIVES ─── */
+  .top-section { background: var(--black); }
+
+  .top-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    padding: 0;
+  }
+
+  .top-card {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .top-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s;
+  }
+  .top-card:hover img { transform: scale(1.06); }
+  .top-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.9) 0%, transparent 50%),
+                linear-gradient(160deg, rgba(232,37,58,0.20) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 14px;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .top-card:hover .top-card-overlay { opacity: 1; }
+  .top-card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 12px 12px;
+    background: linear-gradient(to top, rgba(150,10,25,.92) 0%, rgba(0,0,0,0) 100%);
+  }
+  .top-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--red);
+    line-height: 1.2;
+  }
+  .top-card-sub {
+    font-size: 8px;
+    color: var(--grey);
+    letter-spacing: .5px;
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+
+  /* top carousel on mobile */
+  .top-carousel-outer {
+    position: relative;
+    overflow: hidden;
+  }
+  .top-track {
+    display: flex;
+    transition: transform .4s;
+  }
+  .top-track .top-card {
+    flex: 0 0 50%;
+  }
+
+  /* ─── À PROPOS ─── */
+  .about-section {
+    background: var(--black);
+  }
+  .about-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 480px;
+    direction: rtl;
+  }
+  .about-left, .about-right {
+    direction: ltr;
+  }
+  .about-left {
+    position: relative;
+    overflow: hidden;
+    background: #0a0a0a;
+  }
+  .about-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    filter: brightness(.75);
+  }
+  .about-left::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0) 50%, rgba(10,10,10,1) 100%);
+    pointer-events: none;
+  }
+  .about-right {
+    padding: 64px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    background: var(--dark);
+  }
+  .about-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--red);
+    text-transform: uppercase;
+  }
+  .about-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 4vw, 56px);
+    letter-spacing: 2px;
+    line-height: 1.1;
+    color: var(--white);
+  }
+  .about-title em {
+    color: var(--red);
+    font-style: normal;
+  }
+  .about-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #bbb;
+    max-width: 480px;
+  }
+  .about-text strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+  .about-signature {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--white);
+    border-left: 3px solid var(--red);
+    padding-left: 16px;
+    margin-top: 8px;
+  }
+  @media (max-width: 768px) {
+    .about-inner { grid-template-columns: 1fr; }
+    .about-left { min-height: 260px; }
+    .about-right { padding: 40px 24px; }
+  }
+
+  /* ─── CONTACT ─── */
+  .contact-section {
+    background: var(--black);
+  }
+
+  .contact-inner {
+    position: relative;
+    min-height: 620px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  /* Image côté gauche */
+  .contact-bg {
+    display: none;
+  }
+
+  .contact-inner::after { display: none; }
+
+  .contact-left {
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+  }
+  .contact-left::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0) 40%, rgba(10,10,10,1) 100%);
+    pointer-events: none;
+  }
+  .contact-text {
+    position: absolute;
+    bottom: 48px;
+    left: 40px;
+    z-index: 2;
+  }
+  .contact-text p {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 3.5vw, 48px);
+    letter-spacing: 3px;
+    line-height: 1.15;
+    color: var(--white);
+    text-transform: uppercase;
+    text-shadow: 2px 2px 12px rgba(0,0,0,.8);
+  }
+  .contact-text p em { color: var(--red); font-style: normal; }
+
+  .contact-left {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+  }
+
+  .contact-text {
+    position: absolute;
+    top: 50%;
+    left: 48px;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+  .contact-text p {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 4vw, 58px);
+    letter-spacing: 3px;
+    line-height: 1.15;
+    color: var(--white);
+    text-transform: uppercase;
+    text-shadow: 2px 2px 12px rgba(0,0,0,.8);
+  }
+  .contact-text p em { color: var(--red); font-style: normal; }
+
+  .contact-text-form p {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 3.5vw, 52px);
+    letter-spacing: 3px;
+    line-height: 1.1;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .contact-text-form p em { color: var(--red); font-style: normal; }
+
+  .contact-right {
+    background: var(--dark);
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--white); }
+  .form-group input {
+    background: #2a2a2a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    color: var(--white);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-group input::placeholder { color: #555; }
+  .form-group input:focus { border-color: var(--red); }
+
+  .btn-send {
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: background .2s, transform .15s;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  .btn-send:hover { background: var(--red-dark); transform: scale(1.03); }
+
+  .social-block { margin-top: 8px; }
+  .social-block p { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1px; color: var(--white); margin-bottom: 10px; }
+  .social-icons { display: flex; gap: 14px; }
+  .social-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform .2s, opacity .2s;
+  }
+  .social-icon:hover { transform: scale(1.15); opacity: .85; }
+  .social-icon.x { background: #000; border: 1.5px solid #555; }
+  .social-icon.spotify { background: #1DB954; }
+  .social-icon.facebook { background: #1877F2; }
+  .social-icon svg { width: 18px; height: 18px; fill: white; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #050505;
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #444;
+    letter-spacing: 1px;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 0 16px; }
+    .nav-links { display: none; }
+    .burger { display: flex; }
+    .logo-title { font-size: 24px; }
+    .logo-sub { font-size: 9px; }
+    .nav-icons .search-desktop { display: block; }
+
+    /* mobile nav drawer */
+    .mobile-nav {
+      display: flex;
+      position: fixed;
+      top: 64px; left: 0; right: 0; bottom: 0;
+      background: rgba(10,10,10,.97);
+      z-index: 99;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+    }
+    .mobile-nav.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mobile-nav a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 3px;
+      color: var(--white);
+      transition: color .2s;
+    }
+    .mobile-nav a:hover, .mobile-nav a.active { color: var(--red); }
+
+    /* reviews: vertical list on mobile */
+    /* ── MOBILE REVIEWS : bannières plein largeur ── */
+    .reviews-mobile .carousel-track {
+      flex-direction: column;
+      gap: 0;
+      padding: 0;
+    }
+    .reviews-mobile { position: relative; background: #0a0a0a; }
+    .reviews-mobile-inner {
+      height: 580px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      position: relative;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .reviews-mobile-inner::-webkit-scrollbar { display: none; }
+    .reviews-mobile-fade {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 200px;
+      background: linear-gradient(to bottom, transparent, rgba(10,10,10,.98));
+      pointer-events: none;
+      z-index: 2;
+      transition: opacity .4s;
+    }
+    .reviews-mobile-toggle {
+      position: absolute;
+      bottom: 16px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 3;
+      transition: opacity .4s;
+    }
+    .btn-voir-plus {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(220,25,40,.4);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-voir-plus:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(220,25,40,.5); }
+    .btn-voir-plus svg { width: 26px; height: 26px; fill: #fff; transition: transform .3s; }
+    .btn-voir-plus.open svg { transform: rotate(180deg); }
+
+    /* Bannière */
+    .reviews-mobile .review-card {
+      display: block !important;
+      width: 100% !important;
+      padding: 12px 16px 0 !important;
+      border-bottom: none !important;
+      background: #0a0a0a !important;
+      text-decoration: none;
+      color: inherit;
+      box-sizing: border-box;
+    }
+    .reviews-mobile .review-card .card-wrap {
+      width: 100% !important;
+      height: 190px !important;
+      min-width: unset !important;
+      border-radius: 16px !important;
+      overflow: hidden;
+      position: relative;
+    }
+    .reviews-mobile .review-card .card-wrap img {
+      width: 100% !important;
+      height: 190px !important;
+      object-fit: cover !important;
+      border-radius: 16px !important;
+      display: block;
+    }
+    .reviews-mobile .review-card .card-wrap::after {
+      border-radius: 16px !important;
+      background: linear-gradient(
+        to top,
+        rgba(200,20,35,0.75) 0%,
+        rgba(180,15,30,0.35) 35%,
+        transparent 60%
+      ) !important;
+    }
+    .reviews-mobile .review-card .card-info {
+      position: static !important;
+      padding: 8px 4px 14px !important;
+      border-bottom: none !important;
+      background: #0a0a0a;
+    }
+    .reviews-mobile .review-card .card-title {
+      font-size: 13px !important;
+      color: var(--red) !important;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 1px;
+    }
+    .reviews-mobile .review-card .card-title span {
+      color: #999 !important;
+      font-size: 11px !important;
+    }
+    .reviews-mobile .review-card .card-sub {
+      font-size: 9.5px !important;
+      color: var(--white) !important;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-top: 3px;
+    }
+
+
+    /* ccf mobile: small cards grid */
+    .ccf-card { flex: 0 0 calc(50% - 8px); min-width: 140px; aspect-ratio: 4/5; }
+    .ccf-movie-title { font-size: 16px; }
+    .ccf-tagline { font-size: 11px; }
+
+    /* top: 2 col grid */
+    .top-grid { display: none; }
+    .top-mobile { display: block; }
+    .top-track .top-card { flex: 0 0 50%; }
+
+    /* contact stacked */
+    .contact-inner { grid-template-columns: 1fr; }
+    .contact-left { min-height: 220px; }
+
+    .section-header h2 { font-size: 15px; }
+  }
+
+  @media (min-width: 769px) {
+    .top-mobile { display: none; }
+    .reviews-mobile { display: none; }
+    .reviews-desktop { display: block; }
+  }
+  @media (max-width: 768px) {
+    .reviews-desktop { display: none; }
+    .reviews-mobile { display: block; }
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-in { animation: fadeIn .5s ease forwards; }
+
+  /* placeholder images via gradient */
+  .img-placeholder {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="#" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte" style="height:100px;width:auto;display:block;">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+          Cinéma
+          <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+          <div class="dropdown">
+            <a href="#reviews"><span>▸</span>Nos dernières reviews</a>
+            <a href="#ccf"><span>▸</span>Comment c'est fait ?</a>
+            <a href="#tops"><span>▸</span>Les tops & rétrospectives</a>
+          </div>
+      </li>
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#contact" class="contact-link">Contact</a></li>
+    </ul>
+    <div class="nav-icons">
+      <div class="burger" onclick="toggleMobileNav()" id="burger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+  <div class="search-btn" onclick="toggleSearch()" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    </svg>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#reviews" onclick="toggleMobileNav()">Reviews</a>
+  <a href="#ccf" onclick="toggleMobileNav()">Comment c'est fait ?</a>
+  <a href="#tops" onclick="toggleMobileNav()">Les tops</a>
+  <a href="#about" onclick="toggleMobileNav()">À propos</a>
+  <a href="#contact" onclick="toggleMobileNav()">Contact</a>
+</div>
+
+<!-- ─── NOS DERNIÈRES REVIEWS ─── -->
+<section id="reviews">
+  <div class="section-header">
+    <h2>NOS DERNIÈRES REVIEWS</h2>
+  </div>
+
+  <!-- DESKTOP carousel -->
+  <div class="carousel-outer reviews-desktop" id="reviewsDesktop">
+    <button class="carousel-btn prev" onclick="slideReviews(-1)">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="carousel-track" id="reviewsTrack">
+      <!-- Cards injected by JS -->
+    </div>
+    <button class="carousel-btn next" onclick="slideReviews(1)">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="carousel-dots" id="reviewsDots"></div>
+  </div>
+
+  <!-- MOBILE list -->
+  <div class="reviews-mobile" id="reviewsMobile">
+    <div class="reviews-mobile-inner" id="reviewsMobileInner">
+      <div class="carousel-track" id="reviewsMobileTrack"></div>
+    </div>
+    <div class="reviews-mobile-fade" id="reviewsMobileFade"></div>
+    <div class="reviews-mobile-toggle">
+      <button class="btn-voir-plus" id="btnVoirPlus" onclick="toggleMobileReviews()">
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COMMENT C'EST FAIT ─── -->
+<section class="ccf-section" id="ccf">
+  <div class="section-header">
+    <h2>COMMENT C'EST FAIT</h2>
+  </div>
+  <div class="ccf-carousel-outer">
+    <button class="carousel-btn prev" onclick="slideCCF(-1)">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="ccf-track" id="ccfTrack"></div>
+    <button class="carousel-btn next" onclick="slideCCF(1)">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="carousel-dots" id="ccfDots"></div>
+  </div>
+</section>
+
+<!-- ─── TOP & RETROSPECTIVES ─── -->
+<section class="top-section" id="tops">
+  <div class="section-header">
+    <h2>LES TOP ET RETROSPECTIVES DE L'ENTRACTE</h2>
+  </div>
+
+  <!-- desktop grid -->
+  <div class="top-grid" id="topGrid"></div>
+
+  <!-- mobile carousel -->
+  <div class="top-mobile">
+    <div class="top-carousel-outer">
+      <button class="carousel-btn prev" onclick="slideTop(-1)" style="top:40%">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="top-track" id="topTrack"></div>
+      <button class="carousel-btn next" onclick="slideTop(1)" style="top:40%">
+        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+    <div class="carousel-dots" id="topDots"></div>
+  </div>
+</section>
+
+<!-- ─── À PROPOS ─── -->
+<section class="about-section" id="about">
+  <div class="section-header">
+    <h2>À PROPOS</h2>
+  </div>
+  <div class="about-inner">
+    <div class="about-left">
+      <img src="images/about.jpg" alt="À propos - L'Entracte">
+    </div>
+    <div class="about-right">
+      <p class="about-label">Derrière l'écran</p>
+      <h3 class="about-title">UN ŒIL<br>SUR <em>L'ENVERS</em><br>DU DÉCOR</h3>
+      <p class="about-text">
+        Le cinéma, pour moi, ce n'a jamais été que regarder un film. C'est <strong>comprendre ce qui se passe derrière la caméra</strong> — les making of, les coulisses, les choix de réalisation qui transforment une scène ordinaire en quelque chose d'inoubliable.
+      </p>
+      <p class="about-text">
+        L'Entracte, c'est l'espace que je me suis créé pour <strong>écrire sur ce que j'aime</strong> : pas seulement critiquer un film, mais raconter ce qu'il cache. Parce que le meilleur d'un film, parfois, c'est tout ce qu'on ne voit pas à l'écran.
+      </p>
+      <div class="about-signature">— Jérémy, fondateur de L'Entracte</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section class="contact-section" id="contact">
+  <div class="section-header">
+    <h2>CONTACT</h2>
+  </div>
+  <div class="contact-inner">
+    <div class="contact-left">
+      <img src="images/contacter.jpg" alt="Contact">
+    </div>
+    <div class="contact-right">
+      <div class="contact-text-form">
+        <p>VOUS VOULEZ QU'ON<br>PARLE DE VOTRE FILM<br><em>PRÉFÉRÉ</em><br>OU NOUS<br><em>CONTACTER ?</em></p>
+      </div>
+      <div class="form-group">
+        <label>Nom ou Pseudo</label>
+        <input type="text" placeholder="Jules Winfield">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="j.winfield@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>Votre film préféré</label>
+        <input type="text" placeholder="Pulp Fiction">
+      </div>
+      <button class="btn-send">ENVOYER</button>
+      <div class="social-block">
+        <p>NOUS SUIVRE SUR LES RÉSEAUX :</p>
+        <div class="social-icons">
+          <div class="social-icon x">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </div>
+          <div class="social-icon spotify">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 0 1-.277-1.215c3.809-.87 7.077-.496 9.712 1.115.293.18.387.563.207.857zm1.223-2.722a.78.78 0 0 1-1.072.257c-2.687-1.652-6.785-2.131-9.965-1.166a.78.78 0 0 1-.973-.519.781.781 0 0 1 .52-.973c3.632-1.102 8.147-.568 11.233 1.329a.78.78 0 0 1 .257 1.072zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71a.937.937 0 1 1-.543-1.79c3.532-1.072 9.404-.866 13.115 1.337a.937.937 0 0 1-.954 1.61z"/></svg>
+          </div>
+          <div class="social-icon facebook">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script>
+const IMG = {
+  "frankenstein": "images/frankenstein.jpg",
+  "monsters_inc": "images/monsters_inc.jpg",
+  "alien": "images/alien.jpg",
+  "royal_tenenbaums": "images/royal_tenenbaums.jpg",
+  "paprika": "images/paprika.jpg",
+  "aftersun": "images/aftersun.jpg",
+  "three_billboards": "images/three_billboards.jpg",
+  "untouchables": "images/untouchables.jpg",
+  "reservoir_dogs": "images/reservoir_dogs.jpg",
+  "look_back": "images/look_back.jpg",
+  "banner_frankenstein": "images/banner_frankenstein.jpg",
+  "banner_monsters_inc": "images/banner_monsters_inc.jpg",
+  "banner_alien": "images/banner_alien.jpg",
+  "banner_royal_tenenbaums": "images/banner_royal_tenenbaums.jpg",
+  "banner_paprika": "images/banner_paprika.jpg",
+  "ccf_2001": "images/ccf_2001.jpg",
+  "ccf_hellraiser": "images/ccf_hellraiser.jpg",
+  "ccf_shining": "images/ccf_shining.jpg"
+};
+
+// ─── DATA ───
+const reviews = [
+  { title: "FRANKENSTEIN", year: "(2025)", sub: "La créature face au monstre qui l'a créée", badge: "netflix", color: "#1a0a2a", color2: "#2d1040", link: "lentracte-review.html", img: IMG.frankenstein, banner: IMG.banner_frankenstein },
+  { title: "MONSTERS, INC.", year: "(2001)", sub: "La peur des enfants comme carburant du monde", badge: null, color: "#062a2a", color2: "#0a3f3f", img: IMG.monsters_inc, banner: IMG.banner_monsters_inc },
+  { title: "ALIEN", year: "(1979)", sub: "Le silence de l'espace comme tombeau", badge: null, color: "#020a05", color2: "#051a0a", img: IMG.alien, banner: IMG.banner_alien },
+  { title: "THE ROYAL TENENBAUMS", year: "(2001)", sub: "Une famille comme collection de blessures", badge: null, color: "#1a1500", color2: "#2d2400", img: IMG.royal_tenenbaums, banner: IMG.banner_royal_tenenbaums },
+  { title: "PAPRIKA", year: "(2006)", sub: "Les rêves envahissent la réalité par effraction", badge: null, color: "#1a0505", color2: "#3a0f0f", img: IMG.paprika, banner: IMG.banner_paprika },
+  { title: "AFTERSUN", year: "(2022)", sub: "La mémoire comme seule étreinte possible", badge: null, color: "#050f1a", color2: "#0a1f35", img: IMG.aftersun },
+  { title: "THREE BILLBOARDS", year: "(2017)", sub: "La colère d'une mère contre le silence des hommes", badge: null, color: "#1a0a00", color2: "#301500", img: IMG.three_billboards },
+  { title: "THE UNTOUCHABLES", year: "(1987)", sub: "La loi contre l'empire de l'impunité", badge: null, color: "#0a0a0a", color2: "#1f1f1f", img: IMG.untouchables },
+  { title: "RESERVOIR DOGS", year: "(1992)", sub: "Tarantino et la grâce du chaos organisé", badge: null, color: "#1a0000", color2: "#330000", img: IMG.reservoir_dogs },
+  { title: "LOOK BACK", year: "(2024)", sub: "Deux filles, un cahier, une amitié qui brûle", badge: null, color: "#001a0a", color2: "#002d15", img: IMG.look_back },
+  { title: "WARFARE", year: "(2025)", sub: "La guerre sans héros ni morale de l'histoire", badge: null, color: "#0d0d08", color2: "#1a1a10" },
+  { title: "KLAUS", year: "(2019)", sub: "Le mythe du Père Noël réinventé avec tendresse", badge: "netflix", color: "#000a1a", color2: "#00152d" },
+  { title: "UZUMAKI", year: "(2000)", sub: "La spirale comme obsession et fin du monde", badge: null, color: "#0a0a00", color2: "#1a1a00" },
+  { title: "HOUSE OF GUCCI", year: "(2021)", sub: "L'ambition comme poison lent dans le luxe", badge: null, color: "#1a0010", color2: "#2d0020" },
+  { title: "BLINK TWICE", year: "(2024)", sub: "Le paradis des riches cache toujours un enfer", badge: null, color: "#1a1000", color2: "#2d1f00" },
+  { title: "PREDESTINATION", year: "(2014)", sub: "Le temps comme boucle sans innocents", badge: null, color: "#050510", color2: "#0a0a20" },
+  { title: "SPIDER-MAN 2", year: "(2004)", sub: "Le fardeau du héros face à sa propre humanité", badge: null, color: "#1a0005", color2: "#2d000a" },
+  { title: "PIRANHA", year: "(1978)", sub: "Dante mord là où Spielberg avait mordu avant", badge: null, color: "#00101a", color2: "#001f2d" },
+  { title: "TMNT: MUTANT MAYHEM", year: "(2023)", sub: "L'adolescence sous les égouts de New York", badge: null, color: "#001a05", color2: "#002d0a" },
+  { title: "DRACULA", year: "(1992)", sub: "Coppola et la tragédie d'un amour immortel", badge: null, color: "#1a0000", color2: "#330000" },
+  { title: "KIMI", year: "(2022)", sub: "Soderbergh transforme la paranoïa en thriller urbain", badge: null, color: "#00051a", color2: "#000a2d" },
+];
+
+const ccfMovies = [
+  { title: "2001 : A SPACE ODYSSEY", tagline: "L'ESPACE ET LE VERTIGE DES SENS", cat: "COMMENT C'EST FAIT?", color: "#0a0a1a", color2: "#15152a", img: IMG.ccf_2001 },
+  { title: "HELLRAISER", tagline: "LE PLAISIR DE LA DOULEUR FAÇON CLIVE BARKER", cat: "COMMENT C'EST FAIT?", color: "#0a051a", color2: "#1a0835", img: IMG.ccf_hellraiser },
+  { title: "THE SHINING", tagline: "L'OVERLOOK THÉÂTRE DU DÉSASTRE FAMILIAL", cat: "COMMENT C'EST FAIT?", color: "#050a1a", color2: "#0a1540", img: IMG.ccf_shining },
+  { title: "MÉMOIRES D'UN ESCARGOT", tagline: "L'ÉMERVEILLEMENT N'A PAS D'ÂGE", cat: "COMMENT C'EST FAIT?", color: "#1a1000", color2: "#352000" },
+];
+
+const tops = [
+  { title: "LES MEILLEURS FILMS DE 2025", sub: "De Parthenope… à Superman", color: "#0a0f1a", color2: "#1a2535".parthenope },
+  { title: "CES FILMS D'HORREUR À DÉCOUVRIR", sub: "Parce qu'il n'y a pas que Saw dans la vie", color: "#1a0505", color2: "#2d0808".hellraiser },
+  { title: "CES FILMS FRANÇAIS À DÉCOUVRIR", sub: "Non, il n'y a pas que la comédie en France", color: "#0a1005", color2: "#152010".grande_beleza },
+  { title: "LES MEILLEURS FILMS D'ANIMATION", sub: "L'émerveillement n'a pas d'âge", color: "#0a0a1a", color2: "#15152d".escargot },
+];
+
+// ─── RENDER REVIEW CARDS ───
+function makeReviewCard(r, mobile = false) {
+  const badge = '';
+  const link = r.link ? `href="${r.link}"` : 'href="#"';
+  const tag = r.link ? 'a' : 'div';
+
+  if (mobile) {
+    const bannerSrc = r.banner || r.img || '';
+    return `<${tag} class="review-card" ${link} style="text-decoration:none;color:inherit">
+      <div class="card-wrap">
+        <img src="${bannerSrc}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
+      </div>
+      <div class="card-info">
+        <div class="card-title">${r.title} <span>${r.year}</span></div>
+        <div class="card-sub">${r.sub}</div>
+      </div>
+    </${tag}>`;
+  }
+
+  return `<${tag} class="review-card" ${link} style="text-decoration:none;color:inherit">
+    <div class="card-wrap">
+      <img src="${r.img||''}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
+      ${badge}
+    </div>
+    <div class="card-info">
+      <div class="card-title">${r.title} <span>${r.year}</span></div>
+      <div class="card-sub">${r.sub}</div>
+    </div>
+  </${tag}>`;
+}
+
+// populate desktop reviews
+const reviewsTrack = document.getElementById('reviewsTrack');
+reviews.slice(0, 15).forEach(r => { reviewsTrack.innerHTML += makeReviewCard(r); });
+
+// reviews dots
+const reviewsDots = document.getElementById('reviewsDots');
+const reviewsPerPage = Math.floor((window.innerWidth - 80) / 174) || 5;
+const totalReviewPages = Math.ceil(Math.min(reviews.length, 15) / reviewsPerPage);
+let reviewsActiveDot = 0;
+for (let i = 0; i < totalReviewPages; i++) {
+  reviewsDots.innerHTML += `<div class="dot${i===0?' active':''}" onclick="goToReviews(${i})"></div>`;
+}
+function goToReviews(idx) {
+  reviewsActiveDot = idx;
+  const track = document.getElementById('reviewsTrack');
+  track.style.transform = `translateX(-${idx * reviewsPerPage * 174}px)`;
+  document.querySelectorAll('#reviewsDots .dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+}
+function slideReviews(dir) {
+  goToReviews(Math.max(0, Math.min(reviewsActiveDot + dir, totalReviewPages - 1)));
+}
+
+// populate mobile reviews
+const reviewsMobileTrack = document.getElementById('reviewsMobileTrack');
+reviews.slice(0, 15).forEach(r => { reviewsMobileTrack.innerHTML += makeReviewCard(r, true); });
+
+// ─── DESKTOP REVIEWS CAROUSEL ───
+let reviewsPos = 0;
+const CARD_W = 234; // 220 + 14 gap
+function slideReviews(dir) {
+  const track = document.getElementById('reviewsTrack');
+  const container = track.parentElement;
+  const maxScroll = track.scrollWidth - container.clientWidth;
+  reviewsPos = Math.max(0, Math.min(reviewsPos + dir * CARD_W * 2, maxScroll));
+  track.style.transform = `translateX(-${reviewsPos}px)`;
+}
+
+// ─── WHEEL SCROLL ON CAROUSEL ───
+const reviewsDesktop = document.getElementById('reviewsDesktop');
+let wheelTimeout = null;
+reviewsDesktop.addEventListener('wheel', (e) => {
+  // Only intercept vertical scroll
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  e.preventDefault();
+  clearTimeout(wheelTimeout);
+  wheelTimeout = setTimeout(() => {
+    const track = document.getElementById('reviewsTrack');
+    const container = track.parentElement;
+    const maxScroll = track.scrollWidth - container.clientWidth;
+    reviewsPos = Math.max(0, Math.min(reviewsPos + e.deltaY * 1.5, maxScroll));
+    track.style.transform = `translateX(-${reviewsPos}px)`;
+    // sync dots
+    const activePage = Math.round(reviewsPos / (reviewsPerPage * CARD_W));
+    reviewsActiveDot = Math.min(activePage, totalReviewPages - 1);
+    document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === reviewsActiveDot));
+  }, 10);
+}, { passive: false });
+
+// ─── TRACKPAD HORIZONTAL SWIPE + TOUCH ───
+// Trackpad: intercept horizontal deltaX
+reviewsDesktop.addEventListener('wheel', (e) => {
+  if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+  e.preventDefault();
+  const track = document.getElementById('reviewsTrack');
+  const container = track.parentElement;
+  const maxScroll = track.scrollWidth - container.clientWidth;
+  reviewsPos = Math.max(0, Math.min(reviewsPos + e.deltaX * 1.5, maxScroll));
+  track.style.transform = `translateX(-${reviewsPos}px)`;
+  const activePage = Math.round(reviewsPos / (reviewsPerPage * CARD_W));
+  reviewsActiveDot = Math.min(activePage, totalReviewPages - 1);
+  document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === reviewsActiveDot));
+}, { passive: false });
+
+// Touch support (mobile / tablette)
+let touchStartX = 0;
+let touchStartPos = 0;
+reviewsDesktop.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartPos = reviewsPos;
+}, { passive: true });
+reviewsDesktop.addEventListener('touchmove', (e) => {
+  const diff = touchStartX - e.touches[0].clientX;
+  const track = document.getElementById('reviewsTrack');
+  const container = track.parentElement;
+  const maxScroll = track.scrollWidth - container.clientWidth;
+  reviewsPos = Math.max(0, Math.min(touchStartPos + diff, maxScroll));
+  track.style.transform = `translateX(-${reviewsPos}px)`;
+}, { passive: true });
+reviewsDesktop.addEventListener('touchend', () => {
+  const activePage = Math.round(reviewsPos / (reviewsPerPage * CARD_W));
+  reviewsActiveDot = Math.min(activePage, totalReviewPages - 1);
+  document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === reviewsActiveDot));
+});
+
+// ─── CCF CARDS ───
+const ccfTrack = document.getElementById('ccfTrack');
+ccfMovies.forEach(m => {
+  ccfTrack.innerHTML += `
+    <div class="ccf-card">
+      <img src="${m.img||''}" alt="${m.title}" style="background:linear-gradient(135deg,${m.color} 0%,${m.color2} 100%);width:100%;height:100%;object-fit:cover" onerror="this.src='';this.style.background='linear-gradient(135deg,${m.color},${m.color2})'">
+      <div class="ccf-overlay">
+        <div class="ccf-movie-title">${m.title}</div>
+        <div class="ccf-tagline">${m.tagline}</div>
+      </div>
+    </div>
+    `;
+});
+
+// CCF dots
+const ccfDots = document.getElementById('ccfDots');
+let ccfActive = 0;
+for (let i = 0; i < Math.ceil(ccfMovies.length / 2); i++) {
+  ccfDots.innerHTML += `<div class="dot${i===0?' active':''}" onclick="goToCCF(${i})"></div>`;
+}
+
+function goToCCF(idx) {
+  ccfActive = idx;
+  const track = document.getElementById('ccfTrack');
+  const cardW = track.children[0]?.offsetWidth + 16 || 300;
+  track.style.transform = `translateX(-${idx * cardW * 2}px)`;
+  document.querySelectorAll('#ccfDots .dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+let ccfPos = 0;
+function slideCCF(dir) {
+  const newIdx = Math.max(0, Math.min(ccfActive + dir, Math.ceil(ccfMovies.length / 2) - 1));
+  goToCCF(newIdx);
+}
+
+// ─── TOP GRID ───
+const topGrid = document.getElementById('topGrid');
+tops.forEach(t => {
+  topGrid.innerHTML += `
+    <div class="top-card">
+      <img src="" alt="${t.title}" style="background:linear-gradient(135deg,${t.color} 0%,${t.color2} 100%);width:100%;height:100%;object-fit:cover" onerror="this.src='';this.style.background='linear-gradient(135deg,${t.color},${t.color2})'">
+      <div class="top-card-info">
+        <div class="top-card-title">${t.title}</div>
+        <div class="top-card-sub">${t.sub}</div>
+      </div>
+    </div>`;
+});
+
+// mobile top track
+const topTrack = document.getElementById('topTrack');
+tops.forEach(t => {
+  topTrack.innerHTML += `
+    <div class="top-card">
+      <img src="" alt="${t.title}" style="background:linear-gradient(135deg,${t.color} 0%,${t.color2} 100%);width:100%;height:100%;object-fit:cover" onerror="this.src='';this.style.background='linear-gradient(135deg,${t.color},${t.color2})'">
+      <div class="top-card-info">
+        <div class="top-card-title">${t.title}</div>
+        <div class="top-card-sub">${t.sub}</div>
+      </div>
+    </div>`;
+});
+
+let topPos = 0;
+const topDots = document.getElementById('topDots');
+for (let i = 0; i < Math.ceil(tops.length / 2); i++) {
+  topDots.innerHTML += `<div class="dot${i===0?' active':''}" onclick="goToTop(${i})"></div>`;
+}
+function goToTop(idx) {
+  topPos = idx;
+  const track = document.getElementById('topTrack');
+  const cardW = track.children[0]?.offsetWidth || 170;
+  track.style.transform = `translateX(-${idx * cardW * 2}px)`;
+  document.querySelectorAll('#topDots .dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+function slideTop(dir) {
+  goToTop(Math.max(0, Math.min(topPos + dir, Math.ceil(tops.length / 2) - 1)));
+}
+
+// ─── MOBILE NAV ───
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const burger = document.getElementById('burger');
+  const spans = burger.querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+function toggleMobileReviews() {
+  const inner = document.getElementById('reviewsMobileInner');
+  inner.scrollBy({ top: 400, behavior: 'smooth' });
+}
+
+// Hide button and fade when scrolled to the bottom
+document.getElementById('reviewsMobileInner').addEventListener('scroll', () => {
+  const inner = document.getElementById('reviewsMobileInner');
+  const fade = document.getElementById('reviewsMobileFade');
+  const toggle = document.querySelector('.reviews-mobile-toggle');
+  const atBottom = inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 20;
+  fade.style.opacity = atBottom ? '0' : '1';
+  toggle.style.opacity = atBottom ? '0' : '1';
+  toggle.style.pointerEvents = atBottom ? 'none' : 'all';
+});
+
+function toggleSearch() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.toggle('active');
+  if (overlay.classList.contains('active')) {
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  }
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
+});
+
+// ─── SCROLL ANIMATE ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-in'); } });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.ccf-card, .top-card').forEach(el => {
+  el.style.opacity = '0';
+  observer.observe(el);
+});
+</script>
+
+<!-- ─── SEARCH OVERLAY ─── -->
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+  <button class="search-close" onclick="toggleSearch()">✕</button>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Rechercher un film, un article…" autofocus>
+    <button class="search-submit">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    </button>
+    <div class="search-hint">Appuie sur Échap pour fermer</div>
+  </div>
+</div>
+
+</body>
+</html>
