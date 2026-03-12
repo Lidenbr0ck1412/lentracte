@@ -651,73 +651,53 @@
 
   .contact-inner {
     position: relative;
-    min-height: 300px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     overflow: hidden;
   }
 
-  /* Image côté gauche */
-  .contact-bg {
-    display: none;
-  }
-
-  .contact-inner::after { display: none; }
-
+  /* Image plein fond */
   .contact-left {
-    position: relative;
-    overflow: hidden;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
   }
   .contact-left img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center center;
+    object-position: left center;
     display: block;
   }
 
-  .contact-left {
+  /* Dégradé noir de droite vers transparent */
+  .contact-left::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to left,
+      rgba(10,10,10,1) 0%,
+      rgba(10,10,10,0.85) 40%,
+      rgba(10,10,10,0.2) 70%,
+      rgba(0,0,0,0) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Formulaire flottant à droite */
+  .contact-right {
     position: relative;
     z-index: 1;
-    flex: 1;
-  }
-
-  .contact-text {
-    position: absolute;
-    top: 50%;
-    left: 48px;
-    transform: translateY(-50%);
-    z-index: 2;
-  }
-  .contact-text p {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 4vw, 58px);
-    letter-spacing: 3px;
-    line-height: 1.15;
-    color: var(--white);
-    text-transform: uppercase;
-    text-shadow: 2px 2px 12px rgba(0,0,0,.8);
-  }
-  .contact-text p em { color: var(--red); font-style: normal; }
-
-  .contact-text-form p {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(32px, 3.5vw, 52px);
-    letter-spacing: 3px;
-    line-height: 1.1;
-    color: var(--white);
-    text-transform: uppercase;
-    margin-bottom: 32px;
-  }
-  .contact-text-form p em { color: var(--red); font-style: normal; }
-
-  .contact-right {
-    background: var(--dark);
-    padding: 48px 40px;
+    width: 460px;
+    padding: 48px 48px 48px 40px;
     display: flex;
     flex-direction: column;
     gap: 16px;
     justify-content: center;
+    background: transparent;
   }
 
   .form-group { display: flex; flex-direction: column; gap: 6px; }
