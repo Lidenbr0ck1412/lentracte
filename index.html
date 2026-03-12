@@ -426,6 +426,15 @@
     background: var(--black);
     padding: 20px 0;
   }
+  .ccf-carousel-outer::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 180px;
+    background: linear-gradient(to right, rgba(10,10,10,0) 0%, rgba(10,10,10,1) 100%);
+    pointer-events: none;
+    z-index: 2;
+  }
 
   .ccf-track {
     display: flex;
@@ -1190,7 +1199,7 @@ const ccfMovies = [
   { title: "2001 : A SPACE ODYSSEY", tagline: "L'ESPACE ET LE VERTIGE DES SENS", cat: "COMMENT C'EST FAIT?", color: "#0a0a1a", color2: "#15152a", img: IMG.ccf_2001 },
   { title: "HELLRAISER", tagline: "LE PLAISIR DE LA DOULEUR FAÇON CLIVE BARKER", cat: "COMMENT C'EST FAIT?", color: "#0a051a", color2: "#1a0835", img: IMG.ccf_hellraiser },
   { title: "THE SHINING", tagline: "L'OVERLOOK THÉÂTRE DU DÉSASTRE FAMILIAL", cat: "COMMENT C'EST FAIT?", color: "#050a1a", color2: "#0a1540", img: IMG.ccf_shining },
-  { title: "MÉMOIRES D'UN ESCARGOT", tagline: "L'ÉMERVEILLEMENT N'A PAS D'ÂGE", cat: "COMMENT C'EST FAIT?", color: "#1a1000", color2: "#352000" },
+  { title: "EVIL DEAD 2", tagline: "VISCÈRES ET GÉNIE ARTISANAL", cat: "COMMENT C'EST FAIT?", color: "#1a0500", color2: "#350a00", img: IMG.ccf_shining },
 ];
 
 const tops = [
