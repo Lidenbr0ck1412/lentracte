@@ -675,29 +675,6 @@
     object-position: center center;
     display: block;
   }
-  .contact-left::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, rgba(0,0,0,0) 40%, rgba(10,10,10,1) 100%);
-    pointer-events: none;
-  }
-  .contact-text {
-    position: absolute;
-    bottom: 48px;
-    left: 40px;
-    z-index: 2;
-  }
-  .contact-text p {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(28px, 3.5vw, 48px);
-    letter-spacing: 3px;
-    line-height: 1.15;
-    color: var(--white);
-    text-transform: uppercase;
-    text-shadow: 2px 2px 12px rgba(0,0,0,.8);
-  }
-  .contact-text p em { color: var(--red); font-style: normal; }
 
   .contact-left {
     position: relative;
@@ -1146,9 +1123,6 @@
       <img src="images/contacter.jpg" alt="Contact">
     </div>
     <div class="contact-right">
-      <div class="contact-text-form">
-        <p>VOUS VOULEZ QU'ON<br>PARLE DE VOTRE FILM<br><em>PRÉFÉRÉ</em><br>OU NOUS<br><em>CONTACTER ?</em></p>
-      </div>
       <div class="form-group">
         <label>Nom ou Pseudo</label>
         <input type="text" placeholder="Jules Winfield">
