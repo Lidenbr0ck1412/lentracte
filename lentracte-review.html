@@ -36,11 +36,9 @@
     position: sticky; top: 0; z-index: 100;
     border-bottom: 2px solid var(--red);
   }
-  .logo { display: flex; flex-direction: column; line-height: 1; gap: 2px; }
-  .logo-title { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 42px; letter-spacing: -0.5px; color: var(--white); line-height: 1; }
-  .logo-title span { color: var(--red); }
-  .logo-sub { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 13px; color: #cccccc; letter-spacing: 0px; margin-top: 2px; }
-  .logo-sub em { color: var(--red); font-style: normal; font-weight: 700; }
+  .logo { display: flex; align-items: center; }
+  .logo img { height: 60px; width: auto; display: block; }
+  .nav-right { display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 60px; }
   .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
   .nav-links a { font-size: 13px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: var(--white); transition: color .2s; }
   .nav-links a:hover { color: var(--red); }
@@ -309,13 +307,15 @@
 <!-- NAVBAR -->
 <nav>
   <a href="index.html" class="logo">
-    <img src="images/TAGLINE.png" alt="L'Entracte" style="height:60px;width:auto;display:block;">
+    <img src="images/TAGLINE.png" alt="L'Entracte">
   </a>
-  <ul class="nav-links">
-    <li><a href="lentracte.html">Accueil</a></li>
-    <li><a href="#" class="nav-cinema">Cinéma ▾</a></li>
-    <li><a href="lentracte.html#contact" class="nav-contact">Contact</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="#" class="nav-cinema">Cinéma ▾</a></li>
+      <li><a href="index.html#contact" class="nav-contact">Contact</a></li>
+    </ul>
+  </div>
   <div class="burger" onclick="toggleNav()" id="burger">
     <span></span><span></span><span></span>
   </div>
