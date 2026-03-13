@@ -507,7 +507,7 @@
 
   .top-card {
     position: relative;
-    aspect-ratio: 3/4;
+    aspect-ratio: 1/1;
     overflow: hidden;
     cursor: pointer;
   }
@@ -537,22 +537,24 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 10px 12px 12px;
-    background: linear-gradient(to top, rgba(150,10,25,.92) 0%, rgba(0,0,0,0) 100%);
+    padding: 14px 14px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%);
   }
   .top-card-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     letter-spacing: 1px;
-    color: var(--red);
+    color: var(--white);
     line-height: 1.2;
+    text-shadow: 0 1px 4px rgba(0,0,0,.8);
   }
   .top-card-sub {
-    font-size: 8px;
-    color: var(--grey);
+    font-size: 9px;
+    color: var(--light-grey);
     letter-spacing: .5px;
-    margin-top: 2px;
+    margin-top: 3px;
     text-transform: uppercase;
+    text-shadow: 0 1px 3px rgba(0,0,0,.8);
   }
 
   /* top carousel on mobile */
