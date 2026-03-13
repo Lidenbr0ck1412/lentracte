@@ -29,33 +29,43 @@
   }
 
   /* NAVBAR */
+  .nav-right { display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 60px; }
   nav {
     background: var(--dark);
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px; height: 100px;
+    padding: 0 32px; height: 120px;
     position: sticky; top: 0; z-index: 100;
     border-bottom: 2px solid var(--red);
   }
-  .logo { display: flex; align-items: center; }
+  .logo { display: flex; flex-direction: column; line-height: 1; gap: 2px; }
   .logo img { height: 60px; width: auto; display: block; }
-  .nav-right { display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 60px; }
   .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-  .nav-links a { font-size: 13px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: var(--white); transition: color .2s; }
+  .nav-links a { font-weight: 400; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--white); transition: color .2s; }
   .nav-links a:hover { color: var(--red); }
-  .nav-cinema { font-weight: 700 !important; }
-  .nav-contact { color: var(--red) !important; }
+  .nav-cinema {
+    display: flex; align-items: center; gap: 4px; cursor: pointer; line-height: 1; position: relative;
+    font-weight: 400; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--white); transition: color .2s;
+  }
+  .nav-cinema:hover { color: var(--red); }
+  .nav-cinema svg { width: 12px; height: 12px; fill: var(--white); display: block; position: relative; top: 1px; transition: transform .25s; }
+  .nav-cinema:hover svg { transform: rotate(180deg); fill: var(--red); }
+  .nav-links .contact-link { color: var(--red); }
+  .dropdown {
+    position: absolute; top: calc(100% + 2px); left: 50%; transform: translateX(-50%);
+    background: var(--dark); border-top: 2px solid var(--red); border-radius: 0 0 10px 10px;
+    min-width: 260px; padding: 8px 0; opacity: 0; pointer-events: none;
+    transition: opacity .2s ease; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .nav-cinema:hover .dropdown { opacity: 1; pointer-events: all; }
+  .dropdown a { display: block; padding: 11px 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #cccccc !important; transition: color .2s, background .2s; white-space: nowrap; }
+  .dropdown a:hover { color: var(--red) !important; background: rgba(232,37,58,0.08); }
+  .dropdown a span { color: var(--red); margin-right: 8px; }
+  .search-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: transform .25s ease; flex-shrink: 0; }
+  .search-btn:hover { transform: scale(1.18); }
+  .search-btn svg { width: 20px; height: 20px; }
   .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
   .burger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
-  .mobile-nav {
-    opacity: 0; pointer-events: none;
-    position: fixed; top: 100px; left: 0; right: 0; bottom: 0;
-    background: rgba(10,10,10,.97); z-index: 99;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
-    transition: opacity .3s;
-  }
-  .mobile-nav.open { opacity: 1; pointer-events: all; }
-  .mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--white); transition: color .2s; }
-  .mobile-nav a:hover { color: var(--red); }
+  .mobile-nav { display: none; }
 
   /* ── HERO ── */
   .hero {
@@ -307,14 +317,25 @@
 <!-- NAVBAR -->
 <nav>
   <a href="index.html" class="logo">
-    <img src="images/TAGLINE.png" alt="L'Entracte">
+    <img src="images/TAGLINE.png" alt="L'Entracte" style="height:60px;width:auto;display:block;">
   </a>
   <div class="nav-right">
     <ul class="nav-links">
-      <li><a href="index.html">Accueil</a></li>
-      <li><a href="#" class="nav-cinema">Cinéma ▾</a></li>
-      <li><a href="index.html#contact" class="nav-contact">Contact</a></li>
+      <li class="nav-cinema">
+        Cinéma
+        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        <div class="dropdown">
+          <a href="index.html#reviews"><span>▸</span>Nos dernières reviews</a>
+          <a href="index.html#ccf"><span>▸</span>Comment c'est fait ?</a>
+          <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+        </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
     </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
   </div>
   <div class="burger" onclick="toggleNav()" id="burger">
     <span></span><span></span><span></span>
