@@ -1161,7 +1161,7 @@
       </div>
       <div class="contact-pro">
         <p>Pour toute demande professionnelle ou collaboration :</p>
-        <a href="mailto:lentracte@outlook.be">lentracte@outlook.be</a>
+        <a href="/cdn-cgi/l/email-protection#2448414a505645475041644b5150484b4b4f0a4641"><span class="__cf_email__" data-cfemail="7a161f140e081b190e1f3a150f0e1615151154181f">[email&#160;protected]</span></a>
       </div>
     </div>
   </div>
@@ -1172,7 +1172,7 @@
   <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const IMG = {
   "frankenstein": "images/frankenstein.jpg",
   "monsters_inc": "images/monsters_inc.jpg",
@@ -1228,10 +1228,10 @@ const ccfMovies = [
 ];
 
 const tops = [
-  { title: "LES MEILLEURS FILMS DE 2025", sub: "De Parthenope… à Superman", color: "#0a0f1a", color2: "#1a2535".parthenope },
-  { title: "CES FILMS D'HORREUR À DÉCOUVRIR", sub: "Parce qu'il n'y a pas que Saw dans la vie", color: "#1a0505", color2: "#2d0808".hellraiser },
-  { title: "CES FILMS FRANÇAIS À DÉCOUVRIR", sub: "Non, il n'y a pas que la comédie en France", color: "#0a1005", color2: "#152010".grande_beleza },
-  { title: "LES MEILLEURS FILMS D'ANIMATION", sub: "L'émerveillement n'a pas d'âge", color: "#0a0a1a", color2: "#15152d".escargot },
+  { title: "LES MEILLEURS FILMS DE 2025", sub: "De Parthenope… à Superman", color: "#0a0f1a", color2: "#1a2535", img: "images/top_2025.jpg" },
+  { title: "CES FILMS D'HORREUR À DÉCOUVRIR", sub: "Parce qu'il n'y a pas que Saw dans la vie", color: "#1a0505", color2: "#2d0808", img: "images/top_horreur.jpg" },
+  { title: "CES FILMS FRANÇAIS À DÉCOUVRIR", sub: "Non, il n'y a pas que la comédie en France", color: "#0a1005", color2: "#152010", img: "images/top_francais.jpg" },
+  { title: "LES MEILLEURS FILMS D'ANIMATION", sub: "L'émerveillement n'a pas d'âge", color: "#0a0a1a", color2: "#15152d", img: "images/top_animation.jpg" },
 ];
 
 // ─── RENDER REVIEW CARDS ───
@@ -1399,7 +1399,7 @@ const topGrid = document.getElementById('topGrid');
 tops.forEach(t => {
   topGrid.innerHTML += `
     <div class="top-card">
-      <img src="" alt="${t.title}" style="background:linear-gradient(135deg,${t.color} 0%,${t.color2} 100%);width:100%;height:100%;object-fit:cover" onerror="this.src='';this.style.background='linear-gradient(135deg,${t.color},${t.color2})'">
+      <img src="${t.img||''}" alt="${t.title}" style="background:linear-gradient(135deg,${t.color} 0%,${t.color2} 100%);width:100%;height:100%;object-fit:cover" onerror="this.src='';this.style.background='linear-gradient(135deg,${t.color},${t.color2})'">
       <div class="top-card-info">
         <div class="top-card-title">${t.title}</div>
         <div class="top-card-sub">${t.sub}</div>
@@ -1412,7 +1412,7 @@ const topTrack = document.getElementById('topTrack');
 tops.forEach(t => {
   topTrack.innerHTML += `
     <div class="top-card">
-      <img src="" alt="${t.title}" style="background:linear-gradient(135deg,${t.color} 0%,${t.color2} 100%);width:100%;height:100%;object-fit:cover" onerror="this.src='';this.style.background='linear-gradient(135deg,${t.color},${t.color2})'">
+      <img src="${t.img||''}" alt="${t.title}" style="background:linear-gradient(135deg,${t.color} 0%,${t.color2} 100%);width:100%;height:100%;object-fit:cover" onerror="this.src='';this.style.background='linear-gradient(135deg,${t.color},${t.color2})'">
       <div class="top-card-info">
         <div class="top-card-title">${t.title}</div>
         <div class="top-card-sub">${t.sub}</div>
@@ -1498,11 +1498,4 @@ document.querySelectorAll('.ccf-card, .top-card').forEach(el => {
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Rechercher un film, un article…" autofocus>
     <button class="search-submit">
-      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-    </button>
-    <div class="search-hint">Appuie sur Échap pour fermer</div>
-  </div>
-</div>
-
-</body>
-</html>
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.0
