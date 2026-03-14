@@ -115,7 +115,10 @@ nav {
   max-width: 800px; margin: 0 auto; padding: 56px 24px 40px;
 }
 .retro-intro p {
-  font-size: 15px; line-height: 1.9; color: rgba(255,255,255,.72);
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 2.2vw, 22px); line-height: 1.85;
+  color: rgba(255,255,255,.88);
+  text-align: center;
 }
 
 /* ── GRILLE ── */
@@ -145,6 +148,13 @@ nav {
   transition: transform .5s ease;
 }
 .film-card:hover .film-card-poster img { transform: scale(1.04); }
+
+.film-card-poster::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.85) 100%);
+  pointer-events: none;
+}
 
 .film-card-poster-placeholder {
   width: 100%; height: 100%;
