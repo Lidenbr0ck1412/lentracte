@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Critique • L'Entracte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="review.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+        Cinéma
+        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        <div class="dropdown">
+          <a href="index.html#reviews"><span>▸</span>Nos dernières reviews</a>
+          <a href="index.html#ccf"><span>▸</span>Comment c'est fait ?</a>
+          <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+        </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </div>
+  <div class="burger" onclick="toggleNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Accueil</a>
+  <a href="index.html#reviews">Reviews</a>
+  <a href="index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<!-- HERO (populated by JS) -->
+<div id="hero-container">
+  <div class="loading-hero"><p>Chargement…</p></div>
+</div>
+
+<!-- ARTICLE (populated by JS) -->
+<div id="article-container"></div>
+
+<!-- RELATED (populated by JS) -->
+<div id="related-container"></div>
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script>
+/* ─────────────────────────────────────────────
+   SUPABASE CONFIG
+───────────────────────────────────────────── */
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+
+/* ─────────────────────────────────────────────
+   MARKDOWN PARSER
+   Supporte :
+   ## Titre section      → <div class="section-title">
+   > Citation            → <div class="pull-quote">
+   💡 Le saviez-vous ?   → <div class="anecdote-card"> (ligne qui commence par un emoji)
+   **gras**              → <strong>
+   *italique*            → <em>
+   Paragraphes normaux   → <p>
+   Première section = article-intro (Playfair italique)
+───────────────────────────────────────────── */
+function parseMarkdown(md) {
+  if (!md) return '';
+
+  const lines = md.split('\n');
+  const blocks = [];
+  let currentParagraph = [];
+  let isFirst = true; // première section = intro
+
+  function flushParagraph() {
+    if (currentParagraph.length === 0) return;
+    const text = currentParagraph.join(' ').trim();
+    if (!text) { currentParagraph = []; return; }
+    const html = inlineMarkdown(text);
+    if (isFirst) {
+      blocks.push(`<p class="article-intro reveal">${html}</p>`);
+      isFirst = false;
+    } else {
+      blocks.push(`<p class="reveal">${html}</p>`);
+    }
+    currentParagraph = [];
+  }
+
+  function inlineMarkdown(text) {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>');
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Ligne vide → flush paragraphe
+    if (line.trim() === '') {
+      flushParagraph();
+      continue;
+    }
+
+    // ## Section title
+    if (line.startsWith('## ')) {
+      flushParagraph();
+      isFirst = false;
+      const title = line.replace('## ', '').trim();
+      blocks.push(`<div class="section-title reveal">${title}</div>`);
+      continue;
+    }
+
+    // > Citation (pull-quote)
+    if (line.startsWith('> ')) {
+      flushParagraph();
+      isFirst = false;
+      // Ramasse les lignes suivantes qui continuent la citation
+      let quoteLines = [line.replace('> ', '')];
+      while (i + 1 < lines.length && lines[i + 1].startsWith('> ')) {
+        i++;
+        quoteLines.push(lines[i].replace('> ', ''));
+      }
+      const quoteText = inlineMarkdown(quoteLines.join(' '));
+      blocks.push(`
+        <div class="pull-quote reveal">
+          <p>${quoteText}</p>
+          <cite>L'Entracte</cite>
+        </div>`);
+      continue;
+    }
+
+    // Ligne qui commence par un emoji → anecdote card
+    // On détecte les emojis courants (💡🎬🎥📽️🎞️🔍⚡🏆💬🎭)
+    if (/^[\u{1F300}-\u{1FAFF}✨💡🎬🎥📽🎞🔍⚡🏆💬🎭🎦]/u.test(line.trim())) {
+      flushParagraph();
+      isFirst = false;
+      const emoji = [...line.trim()][0];
+      // Le reste de la première ligne = label
+      let label = line.trim().slice([...line.trim()][0].length).trim();
+      // Ramasse le contenu jusqu'à une ligne vide ou une nouvelle section
+      let contentLines = [];
+      while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !lines[i + 1].startsWith('## ') && !lines[i + 1].startsWith('> ')) {
+        i++;
+        contentLines.push(lines[i]);
+      }
+      const contentText = inlineMarkdown(contentLines.join(' '));
+      blocks.push(`
+        <div class="anecdote-card reveal">
+          <div class="anecdote-icon">${emoji}</div>
+          ${label ? `<div class="anecdote-label">${label}</div>` : ''}
+          <p class="anecdote-text">${contentText}</p>
+        </div>`);
+      continue;
+    }
+
+    // Ligne normale → accumulée dans paragraphe
+    currentParagraph.push(line);
+  }
+  flushParagraph();
+
+  // Wrap tout sauf article-intro et section-titles dans article-body
+  let inBody = false;
+  let result = '';
+  for (const block of blocks) {
+    const isIntro = block.includes('article-intro');
+    const isSection = block.includes('section-title');
+    const isPull = block.includes('pull-quote');
+    const isAnecdote = block.includes('anecdote-card');
+
+    if (!inBody && !isIntro) {
+      result += '<div class="article-body">';
+      inBody = true;
+    }
+    result += block;
+  }
+  if (inBody) result += '</div>';
+  return result;
+}
+
+/* ─────────────────────────────────────────────
+   ÉTOILES
+───────────────────────────────────────────── */
+function buildStars(note) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    const filled = i <= note ? 'filled' : 'empty';
+    html += `
+      <div class="star-wrap">
+        <div class="star ${filled}">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <span class="star-number">${i}</span>
+      </div>`;
+  }
+  return html;
+}
+
+/* ─────────────────────────────────────────────
+   RENDER HERO
+───────────────────────────────────────────── */
+function renderHero(r) {
+  const noteLabel = r.note ? `${r.note} / 5 ★` : '—';
+  const banner = r.banner || (r.img ? r.img : '');
+  const poster = r.img || '';
+
+  return `
+  <section class="hero">
+    <div class="hero-bg">
+      ${banner ? `<img src="${banner}" alt="${r.title}">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${r.color||'#1a0505'},${r.color2||'#3a1010'})"></div>`}
+    </div>
+
+    ${poster ? `
+    <div class="hero-poster-zone">
+      <img src="${poster}" alt="${r.title} poster">
+    </div>` : ''}
+
+    <div class="hero-content">
+      <div class="hero-category"><span class="dot"></span>CRITIQUE</div>
+      <h1 class="hero-title">
+        ${r.title}
+        <span class="year">${r.year || ''}</span>
+      </h1>
+      ${r.sub ? `<p class="hero-tagline">${r.sub}</p>` : ''}
+      <div class="hero-meta">
+        ${r.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${r.realisateur}</span></div>` : ''}
+        ${r.genre ? `<div class="meta-item"><span class="meta-label">Genre</span><span class="meta-value">${r.genre}</span></div>` : ''}
+        ${r.duree ? `<div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">${r.duree}</span></div>` : ''}
+        ${r.note ? `<div class="meta-item"><span class="meta-label">Note</span><span class="meta-value red">${noteLabel}</span></div>` : ''}
+        ${r.badge ? `<div class="meta-item"><span class="meta-label">Plateforme</span><span class="meta-value">${r.badge}</span></div>` : ''}
+      </div>
+    </div>
+
+    <div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})">
+      <span>LIRE</span>
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </section>`;
+}
+
+/* ─────────────────────────────────────────────
+   RENDER ARTICLE
+───────────────────────────────────────────── */
+function renderArticle(r) {
+  const bodyHtml = parseMarkdown(r.contenu || LOREM_IPSUM);
+  const verdict = r.verdict || 'À voir absolument';
+
+  return `
+  <div class="article-wrapper" id="article-top">
+    ${bodyHtml}
+
+    <!-- NOTE -->
+    <div class="rating-section reveal">
+      <div class="rating-label">Notre verdict</div>
+      <div class="rating-title">${verdict}</div>
+      <div class="stars-container">
+        ${buildStars(r.note || 0)}
+      </div>
+      <div class="rating-score">${r.note || '—'}<span> / 5</span></div>
+      <div class="rating-verdict">${verdict}</div>
+    </div>
+
+    <!-- PARTAGE -->
+    <div class="share-bar reveal">
+      <span class="share-label">Partager</span>
+      <button class="share-btn" onclick="shareTwitter()">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X / Twitter
+      </button>
+      <button class="share-btn" onclick="shareFacebook()">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </button>
+      <button class="share-btn" id="copyBtn">
+        <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+        Copier le lien
+      </button>
+    </div>
+  </div>`;
+}
+
+/* ─────────────────────────────────────────────
+   RENDER RELATED
+───────────────────────────────────────────── */
+function renderRelated(reviews, currentId) {
+  const others = reviews.filter(r => r.id !== currentId).slice(0, 3);
+  if (others.length === 0) return '';
+
+  const cards = others.map(r => {
+    const bg = r.img
+      ? `<img src="${r.img}" alt="${r.title}" class="related-card-bg" style="width:100%;height:100%;object-fit:cover;display:block;">`
+      : `<div class="related-card-bg" style="height:100%;background:linear-gradient(135deg,${r.color||'#1a0505'},${r.color2||'#3a1010'})"></div>`;
+    return `
+      <a href="review.html?id=${r.id}" class="related-card">
+        ${bg}
+        <div class="related-card-overlay">
+          <div class="related-card-title">${r.title}</div>
+          <div class="related-card-sub">${r.year || ''} · Critique</div>
+        </div>
+      </a>`;
+  }).join('');
+
+  return `
+  <section class="related-section">
+    <div class="related-inner">
+      <div class="related-header"><h3>À lire aussi</h3></div>
+      <div class="related-grid">${cards}</div>
+    </div>
+  </section>`;
+}
+
+/* ─────────────────────────────────────────────
+   LOREM IPSUM (fallback si contenu vide)
+───────────────────────────────────────────── */
+const LOREM_IPSUM = `Il fallait oser. Rarement un film aura autant divisé les salles obscures que celui-ci, et pourtant, rarement une œuvre aura dit autant de vérités sur notre époque avec aussi peu de mots. Ce n'est pas un film qui se regarde — c'est un film qui *vous* regarde.
+
+## CE QUI FONCTIONNE
+
+Dès les premières images, le réalisateur installe un climat oppressant, presque médiéval. Les décors baignent dans une lumière glauque de fin du monde. **On ne nous vend pas un film de genre — on nous plonge dans une tragédie morale.**
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit — et c'est là que le film devient quelque chose d'autre.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. **La mise en scène est d'une précision chirurgicale**, chaque plan construit comme une gravure ancienne.
+
+💡 LE SAVIEZ-VOUS ?
+Le réalisateur porte ce projet depuis plus de *vingt ans*. Il avait écrit une première version du scénario en 2000, mais le studio avait refusé de financer un film qu'il jugeait trop sombre. C'est finalement grâce à une plateforme de streaming qu'il a pu réaliser sa vision sans compromis.
+
+## CE QUI PÈCHE
+
+Le film n'est pas sans défauts. Le troisième acte, qui cherche à tout résoudre trop proprement, trahit légèrement la noirceur des deux premières heures. Certains personnages secondaires manquent de profondeur — on croit davantage à leur détresse qu'à leur complexité.
+
+On pourra aussi reprocher au film quelques longueurs dans son deuxième acte. Certes nécessaire, cette partie aurait gagné à être resserrée d'une vingtaine de minutes pour maintenir la tension dramatique intacte.
+
+Et pourtant. Quand le film prononce ses derniers mots dans le silence, **quelque chose se brise.** On nous rappelle que les grandes histoires ont toujours été des histoires d'abandon.`;
+
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+async function init() {
+  // Lire l'ID depuis l'URL (?id=X)
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  // Charger toutes les reviews (pour le related)
+  const allRes = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,img,color,color2&order=id.asc`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  const allReviews = await allRes.json();
+
+  // Charger la review courante
+  let review = null;
+  if (id) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}&select=*`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await res.json();
+    review = data[0] || null;
+  }
+
+  // Fallback : si aucun id ou review introuvable, prendre la première
+  if (!review && allReviews.length > 0) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${allReviews[0].id}&select=*`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await res.json();
+    review = data[0];
+  }
+
+  if (!review) {
+    document.getElementById('hero-container').innerHTML = '<div class="loading-hero"><p>Review introuvable.</p></div>';
+    return;
+  }
+
+  // Mettre à jour le titre de la page
+  document.title = `${review.title} (${review.year}) – Critique • L'Entracte`;
+
+  // Injecter
+  document.getElementById('hero-container').innerHTML = renderHero(review);
+  document.getElementById('article-container').innerHTML = renderArticle(review);
+  document.getElementById('related-container').innerHTML = renderRelated(allReviews, review.id);
+
+  // Reveal observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Copy button
+  const copyBtn = document.getElementById('copyBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function() {
+      navigator.clipboard?.writeText(location.href);
+      this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+      setTimeout(() => {
+        this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+      }, 2000);
+    });
+  }
+}
+
+/* ─────────────────────────────────────────────
+   PARTAGE
+───────────────────────────────────────────── */
+function shareTwitter() {
+  const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`;
+  window.open(url, '_blank');
+}
+function shareFacebook() {
+  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`;
+  window.open(url, '_blank');
+}
+
+/* ─────────────────────────────────────────────
+   MOBILE NAV
+───────────────────────────────────────────── */
+function toggleNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const spans = document.getElementById('burger').querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+init();
+</script>
+</body>
+</html>
