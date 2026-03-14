@@ -600,7 +600,7 @@ async function doSearch() {
   const data = await res.json();
 
   if (!data.length) {
-    resultsEl.innerHTML = '<p class="search-no-result">Aucun résultat pour « ' + query + ' »</p>';
+    resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';
     return;
   }
 
