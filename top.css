@@ -228,6 +228,75 @@ nav {
 .share-btn:hover { border-color: var(--red); background: rgba(232,37,58,.08); }
 .share-btn svg { width: 15px; height: 15px; fill: currentColor; }
 
+/* ── FILM N°1 TRAITEMENT SPÉCIAL ── */
+.film-number-one {
+  position: relative;
+  overflow: hidden;
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .9s ease, transform .9s ease;
+}
+.film-number-one.visible { opacity: 1; transform: translateY(0); }
+
+.film-one-bg {
+  position: absolute; inset: 0;
+}
+.film-one-bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 20%;
+  transform: scale(1.05);
+  filter: blur(4px) brightness(0.35);
+}
+.film-one-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.7) 100%);
+}
+
+.film-one-inner {
+  position: relative; z-index: 2;
+  max-width: 900px; margin: 0 auto;
+  padding: 72px 24px 80px;
+}
+
+.film-one-crown {
+  display: flex; align-items: center; gap: 24px; margin-bottom: 48px;
+}
+.film-one-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--red); padding: 6px 16px; border-radius: 3px;
+  font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
+}
+.film-one-label .dot { width: 5px; height: 5px; background: white; border-radius: 50%; }
+.film-one-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 120px; line-height: 1; letter-spacing: -4px;
+  color: var(--red);
+  text-shadow: 0 0 60px rgba(232,37,58,.4);
+}
+
+.film-one-body {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+.film-one-poster {
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 0 60px rgba(232,37,58,.25), 0 20px 60px rgba(0,0,0,.8);
+  aspect-ratio: 2/3;
+}
+.film-one-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.film-one-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 6vw, 72px);
+  letter-spacing: 4px; line-height: 1;
+  color: var(--white); margin-bottom: 12px;
+}
+.film-one-content .film-text p {
+  font-size: 15px; line-height: 1.9;
+  color: rgba(255,255,255,.78);
+  margin-bottom: 20px;
+}
+
 /* FOOTER */
 footer { background: #050505; text-align: center; padding: 20px; font-size: 11px; color: #444; letter-spacing: 1px; border-top: 1px solid #1a1a1a; }
 
@@ -245,6 +314,9 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .hero { height: 55vh; }
   .film-entry { grid-template-columns: 48px 140px 1fr; gap: 0 16px; padding: 32px 0; }
   .film-number { font-size: 52px; }
+  .film-one-body { grid-template-columns: 1fr; }
+  .film-one-poster { max-width: 200px; }
+  .film-one-num { font-size: 80px; }
 }
 @media (max-width: 540px) {
   .film-entry { grid-template-columns: 1fr; gap: 16px; }
