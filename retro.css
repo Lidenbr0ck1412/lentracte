@@ -60,7 +60,44 @@ nav {
 .mobile-nav.open { display: flex; }
 .mobile-nav a { padding: 14px 24px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #1e1e1e; }
 
-/* ── HERO ── */
+/* ── BLOOD DRIP ── */
+.blood-container {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 300px;
+  pointer-events: none;
+  z-index: 98;
+  overflow: visible;
+}
+.blood-drip {
+  position: absolute;
+  top: 0;
+  background: #cc0000;
+  border-radius: 0 0 50% 50%;
+  animation: drip linear infinite;
+  transform-origin: top center;
+}
+.blood-drip::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 14px;
+  background: #cc0000;
+  border-radius: 50%;
+}
+
+@keyframes drip {
+  0%   { height: 0px; opacity: 1; }
+  70%  { opacity: 1; }
+  85%  { height: var(--drip-length); opacity: 1; }
+  100% { height: var(--drip-length); opacity: 0; }
+}
+
+
 .hero {
   position: relative; height: 70vh; min-height: 460px;
   overflow: hidden; display: flex; align-items: flex-end;
