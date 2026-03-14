@@ -1508,20 +1508,6 @@ document.getElementById('reviewsMobileInner').addEventListener('scroll', () => {
   toggle.style.pointerEvents = atBottom ? 'none' : 'all';
 });
 
-function toggleSearch() {
-  const overlay = document.getElementById('searchOverlay');
-  overlay.classList.toggle('active');
-  if (overlay.classList.contains('active')) {
-    setTimeout(() => document.getElementById('searchInput').focus(), 50);
-  }
-}
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
-});
-
 // ─── SCROLL ANIMATE ───
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-in'); } });
@@ -1537,4 +1523,29 @@ document.querySelectorAll('.ccf-card, .top-card').forEach(el => {
 <div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
   <button class="search-close" onclick="toggleSearch()">✕</button>
   <div class="search-box">
-    <inpu
+    <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+    <button class="search-submit" onclick="toggleSearch()">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+  <p class="search-hint">APPUYEZ SUR ÉCHAP POUR FERMER</p>
+</div>
+
+<script>
+function toggleSearch() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.toggle('active');
+  if (overlay.classList.contains('active')) {
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  }
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
+});
+</script>
+
+</body>
+</html>
