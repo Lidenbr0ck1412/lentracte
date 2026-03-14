@@ -232,8 +232,9 @@ const tops = [
 // ─── RENDER REVIEW CARDS ───
 function makeReviewCard(r, mobile = false) {
   const badge = '';
-  const link = r.link ? `href="${r.link}"` : 'href="#"';
-  const tag = r.link ? 'a' : 'div';
+  const href = r.contenu ? `review.html?id=${r.id}` : '#';
+  const link = `href="${href}"`;
+  const tag = r.contenu ? 'a' : 'div';
 
   if (mobile) {
     const bannerSrc = r.banner || r.img || '';
