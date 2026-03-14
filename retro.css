@@ -78,8 +78,8 @@ nav {
     linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
 }
 @keyframes heroBreath {
-  from { filter: blur(4px) brightness(0.85) saturate(1); }
-  to   { filter: blur(4px) brightness(0.92) saturate(1.1); }
+  from { filter: brightness(0.85) saturate(1); }
+  to   { filter: brightness(0.92) saturate(1.1); }
 }
 .hero-content {
   position: relative; z-index: 2;
@@ -125,7 +125,14 @@ nav {
   background: linear-gradient(to right, var(--red), transparent);
 }
 
-.retro-intro p {
+.retro-intro-first {
+  font-size: clamp(17px, 2vw, 20px) !important;
+  font-weight: 700 !important;
+  color: var(--white) !important;
+  margin-bottom: 24px;
+}
+
+
   font-size: 15px; line-height: 1.9;
   color: rgba(255,255,255,.72);
   text-align: left;
