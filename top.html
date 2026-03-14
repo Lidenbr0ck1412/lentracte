@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top 2025 • L'Entracte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="top.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+        Cinéma
+        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        <div class="dropdown">
+          <a href="index.html#reviews"><span>▸</span>Nos dernières reviews</a>
+          <a href="index.html#ccf"><span>▸</span>Comment c'est fait ?</a>
+          <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+        </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </div>
+  <div class="burger" onclick="toggleNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Accueil</a>
+  <a href="index.html#reviews">Reviews</a>
+  <a href="index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="images/banner_top2025.jpg" alt="Top 2025">
+    <div class="hero-bg-gradient"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-category"><span class="dot"></span>TOP</div>
+    <h1 class="hero-title">NOS 10 FILMS<br>PRÉFÉRÉS DE 2025</h1>
+    <p class="hero-subtitle">Une année riche, surprenante, parfois bouleversante — voici les films qui nous ont marqués.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Année</span>
+        <span class="hero-meta-value">2025</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Films</span>
+        <span class="hero-meta-value">10 sélectionnés</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="top-intro">
+  <p>
+    2025 aura été une année de cinéma dense, parfois déroutante, souvent généreuse. Des salles obscures aux plateformes, des blockbusters aux pépites d'auteur, nous avons retenu dix films qui, chacun à leur façon, ont dit quelque chose d'essentiel sur notre époque — ou simplement sur ce que le cinéma peut faire de mieux.
+  </p>
+</div>
+
+<!-- FILMS -->
+<div class="films-list">
+
+  <!-- 1 — PARTHENOPE -->
+  <div class="film-entry">
+    <div class="film-number">1</div>
+    <div class="film-poster-wrap">
+      <img src="images/parthenope.jpg" alt="Parthenope">
+      <!-- <div class="film-poster-placeholder" style="background:linear-gradient(135deg,#1a0a05,#3a1a10)"></div> -->
+    </div>
+    <div class="film-content">
+      <div class="film-title">PARTHENOPE</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Paolo Sorrentino</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Drame</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Paolo Sorrentino signe avec <em>Parthenope</em> une œuvre d'une beauté presque insupportable — Naples comme personnage, comme destin, comme malédiction douce. <strong>C'est le film le plus personnel de sa carrière.</strong></p>
+        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. La caméra caresse chaque plan avec une tendresse qui confine à l'obsession. On pense à Fellini, on pense à Visconti, mais on est surtout face à quelque chose d'irréductiblement sorrentin.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 — A COMPLETE UNKNOWN -->
+  <div class="film-entry">
+    <div class="film-number">2</div>
+    <div class="film-poster-wrap">
+      <img src="images/a_complete_unknown.jpg" alt="A Complete Unknown">
+    </div>
+    <div class="film-content">
+      <div class="film-title">A COMPLETE UNKNOWN</div>
+      <div class="film-meta">
+        <span class="film-meta-item">James Mangold</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Biopic</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>Timothée Chalamet disparaît dans la peau de Bob Dylan avec une aisance troublante. James Mangold évite tous les pièges du biopic convenu pour livrer quelque chose de plus insaisissable — <strong>un portrait de l'ambiguïté comme moteur de création.</strong></p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. La reconstitution du Greenwich Village des années 60 est d'une précision saisissante, mais c'est la musique qui emporte tout.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 — FRANKENSTEIN -->
+  <div class="film-entry">
+    <div class="film-number">3</div>
+    <div class="film-poster-wrap">
+      <img src="images/frankenstein.jpg" alt="Frankenstein">
+      <div class="film-note-badge">4 / 5</div>
+    </div>
+    <div class="film-content">
+      <div class="film-title">FRANKENSTEIN</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Guillermo del Toro</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Horreur · Drame</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>Del Toro réinvente le mythe de Mary Shelley avec une générosité et une noirceur rares. <strong>Ce n'est pas la créature le monstre</strong> — et cette simple inversion de perspective suffit à faire de ce Frankenstein l'un des films les plus politiques de l'année.</p>
+        <p>La photographie de Dan Laustsen sculpte chaque plan comme une gravure ancienne. Oscar Isaac compose une créature déchirante, habitée par une intelligence que le film refuse d'infantiliser.</p>
+      </div>
+      <a href="review.html?id=1" class="film-review-link">
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Lire notre critique
+      </a>
+    </div>
+  </div>
+
+  <!-- 4 — WALLACE & GROMIT -->
+  <div class="film-entry">
+    <div class="film-number">4</div>
+    <div class="film-poster-wrap">
+      <img src="images/wallace_gromit.jpg" alt="Wallace & Gromit">
+    </div>
+    <div class="film-content">
+      <div class="film-title">WALLACE & GROMIT : VENGEANCE MOST FOWL</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Nick Park</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>Nick Park prouve une fois de plus qu'Aardman est la maison d'animation la plus attachante de la planète. <em>Vengeance Most Fowl</em> est un régal d'intelligence et de tendresse — <strong>chaque plan cache une blague, chaque blague cache une émotion.</strong></p>
+        <p>Le retour de Feathers McGraw est une aubaine. Le film parle d'intelligence artificielle sans jamais en avoir l'air, et c'est peut-être ça son tour de force le plus discret.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 — BUGONIA -->
+  <div class="film-entry">
+    <div class="film-number">5</div>
+    <div class="film-poster-wrap">
+      <img src="images/bugonia.jpg" alt="Bugonia">
+    </div>
+    <div class="film-content">
+      <div class="film-title">BUGONIA</div>
+      <div class="film-meta">
+        <span class="film-meta-item">John Lee</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Comédie · SF</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>La grande surprise de l'année. Personne n'attendait <em>Bugonia</em> au tournant, et c'est précisément pour ça qu'il frappe aussi fort. <strong>Une comédie de science-fiction déglinguée qui cache une satire acérée du capitalisme de surveillance.</strong></p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. L'énergie du film est communicative, son refus de se prendre au sérieux est une posture politique en soi.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 — WARFARE -->
+  <div class="film-entry">
+    <div class="film-number">6</div>
+    <div class="film-poster-wrap">
+      <img src="images/warfare.jpg" alt="Warfare">
+    </div>
+    <div class="film-content">
+      <div class="film-title">WARFARE</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Alex Garland · Ray Mendoza</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Guerre</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>Alex Garland et Ray Mendoza cosignent le film de guerre le plus immersif depuis <em>Il faut sauver le soldat Ryan</em>. Pas de héros, pas de morale, pas de rédemption — <strong>juste la guerre, dans sa réalité la plus brute et la plus déshumanisante.</strong></p>
+        <p>Le sound design est à couper le souffle. On ressort de <em>Warfare</em> épuisé, sonné, et profondément troublé — ce qui est exactement l'effet recherché.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 — 28 YEARS LATER -->
+  <div class="film-entry">
+    <div class="film-number">7</div>
+    <div class="film-poster-wrap">
+      <img src="images/28_years_later.jpg" alt="28 Years Later">
+    </div>
+    <div class="film-content">
+      <div class="film-title">28 YEARS LATER</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Danny Boyle</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Horreur · Post-apo</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>Danny Boyle retrouve l'énergie viscérale du premier film et y ajoute vingt ans de maturité. <em>28 Years Later</em> est moins un film de zombies qu'une méditation sur ce que la civilisation choisit de reconstruire après l'effondrement. <strong>Et ce choix-là est terrifiant.</strong></p>
+        <p>La photographie, tournée sur iPhone pour des raisons esthétiques délibérées, donne au film une texture quasi-documentaire qui renforce l'immersion à chaque séquence.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 — MEMOIR OF A SNAIL -->
+  <div class="film-entry">
+    <div class="film-number">8</div>
+    <div class="film-poster-wrap">
+      <img src="images/memoir_of_a_snail.jpg" alt="Memoir of a Snail">
+    </div>
+    <div class="film-content">
+      <div class="film-title">MEMOIR OF A SNAIL</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Adam Elliot</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>Adam Elliot revient avec un film d'animation en pâte à modeler d'une beauté mélancolique absolue. <em>Memoir of a Snail</em> parle de solitude, de deuil, d'amitié improbable — <strong>avec une tendresse qui désarme totalement.</strong></p>
+        <p>C'est le genre de film qu'on n'attendait plus, celui qui vous rappelle pourquoi l'animation peut être le medium le plus humain qui soit. Sarah Snook prête sa voix à un personnage inoubliable.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 — ONE BATTLE AFTER ANOTHER -->
+  <div class="film-entry">
+    <div class="film-number">9</div>
+    <div class="film-poster-wrap">
+      <img src="images/one_battle_after_another.jpg" alt="One Battle After Another">
+    </div>
+    <div class="film-content">
+      <div class="film-title">ONE BATTLE AFTER ANOTHER</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Paul Thomas Anderson</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Thriller</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>PTA en mode électrique. <em>One Battle After Another</em> est un film qui ne laisse jamais souffler — une tension permanente, une paranoïa qui s'infiltre dans chaque plan. <strong>Joaquin Phoenix y livre une performance qui redéfinit ce qu'un acteur peut faire d'un silence.</strong></p>
+        <p>C'est du grand cinéma américain dans la plus pure tradition — ancré dans un genre (le thriller) mais transcendant toutes ses conventions pour dire quelque chose de plus vaste sur la masculinité et la violence.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 — THE LIFE OF CHUCK -->
+  <div class="film-entry">
+    <div class="film-number">10</div>
+    <div class="film-poster-wrap">
+      <img src="images/the_life_of_chuck.jpg" alt="The Life of Chuck">
+    </div>
+    <div class="film-content">
+      <div class="film-title">THE LIFE OF CHUCK</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Mike Flanagan</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Fantastique · Drame</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2025</span>
+      </div>
+      <div class="film-text">
+        <p>Mike Flanagan adapte Stephen King avec une douceur qu'on n'attendait pas de lui. <em>The Life of Chuck</em> est un film sur la mort qui célèbre la vie avec une générosité rare. <strong>La structure narrative en trois actes inversés est un tour de force.</strong></p>
+        <p>Tom Hiddleston est bouleversant dans le rôle titre. C'est un film qui vous prend par surprise, qui vous arrache quelques larmes sans prévenir, et dont la dernière image reste longtemps après que les lumières se rallument.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fin films-list -->
+
+<!-- SHARE -->
+<div class="share-bar">
+  <span class="share-label">Partager</span>
+  <button class="share-btn" onclick="shareTwitter()">
+    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    X / Twitter
+  </button>
+  <button class="share-btn" onclick="shareFacebook()">
+    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    Facebook
+  </button>
+  <button class="share-btn" id="copyBtn">
+    <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+    Copier le lien
+  </button>
+</div>
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script>
+function toggleNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const spans = document.getElementById('burger').querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.film-entry').forEach(el => observer.observe(el));
+
+// Share
+function shareTwitter() {
+  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`, '_blank');
+}
+function shareFacebook() {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
+}
+document.getElementById('copyBtn').addEventListener('click', function() {
+  navigator.clipboard?.writeText(location.href);
+  this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+  setTimeout(() => {
+    this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+  }, 2000);
+});
+</script>
+</body>
+</html>
