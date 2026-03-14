@@ -69,9 +69,8 @@ nav {
 .hero-bg { position: absolute; inset: 0; }
 .hero-bg img {
   width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block;
-  animation: heroBreath 8s ease-in-out infinite alternate;
-  filter: blur(20px) brightness(0.85);
   transform: scale(1.05);
+  animation: heroBreath 8s ease-in-out infinite alternate;
 }
 .hero-bg::after {
   content: '';
@@ -81,8 +80,8 @@ nav {
     linear-gradient(to right, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 55%, transparent 100%);
 }
 @keyframes heroBreath {
-  from { filter: brightness(1) saturate(1); }
-  to   { filter: brightness(1.08) saturate(1.1); }
+  from { filter: blur(3px) brightness(0.85) saturate(1); }
+  to   { filter: blur(3px) brightness(0.92) saturate(1.1); }
 }
 
 /* Poster (right) */
