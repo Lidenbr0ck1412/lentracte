@@ -497,12 +497,69 @@ document.querySelectorAll('.ccf-card, .top-card').forEach(el => {
   <button class="search-close" onclick="toggleSearch()">✕</button>
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
-    <button class="search-submit" onclick="toggleSearch()">
+    <button class="search-submit" onclick="doSearch()">
       <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
     </button>
   </div>
-  <p class="search-hint">APPUYEZ SUR ÉCHAP POUR FERMER</p>
+  <p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+  <div id="searchResults" class="search-results"></div>
 </div>
+
+<style>
+.search-results {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 640px;
+}
+.search-result-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #fff;
+  transition: border-color .2s, background .2s;
+  cursor: pointer;
+}
+.search-result-card:hover {
+  border-color: #E8253A;
+  background: rgba(232,37,58,.07);
+}
+.search-result-img {
+  width: 44px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: #2a2a2a;
+}
+.search-result-info { display: flex; flex-direction: column; gap: 4px; }
+.search-result-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #fff;
+}
+.search-result-meta {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.search-no-result {
+  font-size: 13px;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+</style>
 
 <script>
 function toggleSearch() {
@@ -510,14 +567,53 @@ function toggleSearch() {
   overlay.classList.toggle('active');
   if (overlay.classList.contains('active')) {
     setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  } else {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
   }
 }
 function handleOverlayClick(e) {
   if (e.target === document.getElementById('searchOverlay')) toggleSearch();
 }
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('active');
+  if (e.key === 'Escape') {
+    document.getElementById('searchOverlay').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+  if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+    doSearch();
+  }
 });
+
+async function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  const resultsEl = document.getElementById('searchResults');
+  if (!query) return;
+
+  resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
+
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+
+  if (!data.length) {
+    resultsEl.innerHTML = '<p class="search-no-result">Aucun résultat pour « ' + query + ' »</p>';
+    return;
+  }
+
+  resultsEl.innerHTML = data.map(r => `
+    <a class="search-result-card" href="${r.link || '#'}">
+      ${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
+      <div class="search-result-info">
+        <div class="search-result-title">${r.title}</div>
+        <div class="search-result-meta">${r.year || ''}${r.genre ? ' · ' + r.genre : ''}</div>
+      </div>
+    </a>
+  `).join('');
+}
 </script>
 
 </body>
