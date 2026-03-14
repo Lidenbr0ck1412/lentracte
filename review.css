@@ -29,7 +29,7 @@ nav {
   border-bottom: 2px solid var(--red);
 }
 .logo { display: flex; flex-direction: column; line-height: 1; gap: 2px; }
-.logo img { height: 60px; width: auto; display: block; }
+.logo img { height: 100px; width: auto; display: block; }
 .nav-right { display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 60px; }
 .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
 .nav-links a { font-weight: 400; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--white); transition: color .2s; }
@@ -81,8 +81,8 @@ nav {
     linear-gradient(to right, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 55%, transparent 100%);
 }
 @keyframes heroBreath {
-  from { filter: blur(4px) brightness(0.85) saturate(1); }
-  to   { filter: blur(4px) brightness(0.92) saturate(1.1); }
+  from { filter: brightness(0.85) saturate(1); }
+  to   { filter: brightness(0.92) saturate(1.1); }
 }
 
 /* Poster (right) */
