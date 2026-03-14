@@ -114,6 +114,17 @@ nav {
 .retro-intro {
   max-width: 800px; margin: 0 auto; padding: 56px 24px 40px;
 }
+.retro-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px; letter-spacing: 3px; color: var(--white);
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px;
+}
+.retro-section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, var(--red), transparent);
+}
+
 .retro-intro p {
   font-size: 15px; line-height: 1.9;
   color: rgba(255,255,255,.72);
