@@ -1211,22 +1211,11 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ─── SUPABASE CONFIG ───
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+
 const IMG = {
-  "frankenstein": "images/frankenstein.jpg",
-  "monsters_inc": "images/monsters_inc.jpg",
-  "alien": "images/alien.jpg",
-  "royal_tenenbaums": "images/royal_tenenbaums.jpg",
-  "paprika": "images/paprika.jpg",
-  "aftersun": "images/aftersun.jpg",
-  "three_billboards": "images/three_billboards.jpg",
-  "untouchables": "images/untouchables.jpg",
-  "reservoir_dogs": "images/reservoir_dogs.jpg",
-  "look_back": "images/look_back.jpg",
-  "warfare": "images/warfare.jpg",
-  "klaus": "images/klaus.jpg",
-  "uzumaki": "images/uzumaki.jpg",
-  "house_of_gucci": "images/house_of_gucci.jpg",
-  "blink_twice": "images/blink_twice.jpg",
   "banner_frankenstein": "images/banner_frankenstein.jpg",
   "banner_monsters_inc": "images/banner_monsters_inc.jpg",
   "banner_alien": "images/banner_alien.jpg",
@@ -1237,25 +1226,6 @@ const IMG = {
   "ccf_shining": "images/ccf_shining.jpg",
   "ccf_evil_dead": "images/ccf_evil_dead.jpg"
 };
-
-// ─── DATA ───
-const reviews = [
-  { title: "FRANKENSTEIN", year: "(2025)", sub: "La créature face au monstre qui l'a créée", badge: "netflix", color: "#1a0a2a", color2: "#2d1040", link: "lentracte-review.html", img: IMG.frankenstein, banner: IMG.banner_frankenstein },
-  { title: "MONSTERS, INC.", year: "(2001)", sub: "La peur des enfants comme carburant du monde", badge: null, color: "#062a2a", color2: "#0a3f3f", img: IMG.monsters_inc, banner: IMG.banner_monsters_inc },
-  { title: "ALIEN", year: "(1979)", sub: "Le silence de l'espace comme tombeau", badge: null, color: "#020a05", color2: "#051a0a", img: IMG.alien, banner: IMG.banner_alien },
-  { title: "THE ROYAL TENENBAUMS", year: "(2001)", sub: "Une famille comme collection de blessures", badge: null, color: "#1a1500", color2: "#2d2400", img: IMG.royal_tenenbaums, banner: IMG.banner_royal_tenenbaums },
-  { title: "PAPRIKA", year: "(2006)", sub: "Les rêves envahissent la réalité par effraction", badge: null, color: "#1a0505", color2: "#3a0f0f", img: IMG.paprika, banner: IMG.banner_paprika },
-  { title: "AFTERSUN", year: "(2022)", sub: "La mémoire comme seule étreinte possible", badge: null, color: "#050f1a", color2: "#0a1f35", img: IMG.aftersun },
-  { title: "THREE BILLBOARDS", year: "(2017)", sub: "La colère d'une mère contre le silence des hommes", badge: null, color: "#1a0a00", color2: "#301500", img: IMG.three_billboards },
-  { title: "THE UNTOUCHABLES", year: "(1987)", sub: "La loi contre l'empire de l'impunité", badge: null, color: "#0a0a0a", color2: "#1f1f1f", img: IMG.untouchables },
-  { title: "RESERVOIR DOGS", year: "(1992)", sub: "Tarantino et la grâce du chaos organisé", badge: null, color: "#1a0000", color2: "#330000", img: IMG.reservoir_dogs },
-  { title: "LOOK BACK", year: "(2024)", sub: "Deux filles, un cahier, une amitié qui brûle", badge: null, color: "#001a0a", color2: "#002d15", img: IMG.look_back },
-  { title: "WARFARE", year: "(2025)", sub: "La guerre sans héros ni morale de l'histoire", badge: null, color: "#0d0d08", color2: "#1a1a10", img: IMG.warfare },
-  { title: "KLAUS", year: "(2019)", sub: "Le mythe du Père Noël réinventé avec tendresse", badge: "netflix", color: "#000a1a", color2: "#00152d", img: IMG.klaus },
-  { title: "UZUMAKI", year: "(2000)", sub: "La spirale comme obsession et fin du monde", badge: null, color: "#0a0a00", color2: "#1a1a00", img: IMG.uzumaki },
-  { title: "HOUSE OF GUCCI", year: "(2021)", sub: "L'ambition comme poison lent dans le luxe", badge: null, color: "#1a0010", color2: "#2d0020", img: IMG.house_of_gucci },
-  { title: "BLINK TWICE", year: "(2024)", sub: "Le paradis des riches cache toujours un enfer", badge: null, color: "#1a1000", color2: "#2d1f00", img: IMG.blink_twice },
-];
 
 const ccfMovies = [
   { title: "2001 : A SPACE ODYSSEY", tagline: "L'ESPACE ET LE VERTIGE DES SENS", cat: "COMMENT C'EST FAIT?", color: "#0a0a1a", color2: "#15152a", img: IMG.ccf_2001 },
@@ -1304,40 +1274,52 @@ function makeReviewCard(r, mobile = false) {
 
 // populate desktop reviews
 const reviewsTrack = document.getElementById('reviewsTrack');
-reviews.slice(0, 15).forEach(r => { reviewsTrack.innerHTML += makeReviewCard(r); });
-
-// reviews dots
 const reviewsDots = document.getElementById('reviewsDots');
-const reviewsPerPage = Math.floor((window.innerWidth - 80) / 174) || 5;
-const totalReviewPages = Math.ceil(Math.min(reviews.length, 15) / reviewsPerPage);
-let reviewsActiveDot = 0;
-for (let i = 0; i < totalReviewPages; i++) {
-  reviewsDots.innerHTML += `<div class="dot${i===0?' active':''}" onclick="goToReviews(${i})"></div>`;
+const reviewsMobileTrack = document.getElementById('reviewsMobileTrack');
+
+async function loadReviews() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=*&order=id.asc&limit=15`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`
+    }
+  });
+  const reviews = await res.json();
+
+  reviews.forEach(r => { reviewsTrack.innerHTML += makeReviewCard(r); });
+  reviews.forEach(r => { reviewsMobileTrack.innerHTML += makeReviewCard(r, true); });
+
+  // dots
+  const reviewsPerPage = Math.floor((window.innerWidth - 80) / 174) || 5;
+  const totalReviewPages = Math.ceil(reviews.length / reviewsPerPage);
+  let reviewsActiveDot = 0;
+  for (let i = 0; i < totalReviewPages; i++) {
+    reviewsDots.innerHTML += `<div class="dot${i===0?' active':''}" onclick="goToReviews(${i})"></div>`;
+  }
+  window._reviewsPerPage = reviewsPerPage;
+  window._totalReviewPages = totalReviewPages;
+  window._reviewsActiveDot = 0;
+
+  // scroll animate
+  document.querySelectorAll('.review-card').forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
 }
+loadReviews();
 function goToReviews(idx) {
-  reviewsActiveDot = idx;
+  window._reviewsActiveDot = idx;
   const track = document.getElementById('reviewsTrack');
-  track.style.transform = `translateX(-${idx * reviewsPerPage * 174}px)`;
+  track.style.transform = `translateX(-${idx * (window._reviewsPerPage||5) * 174}px)`;
   document.querySelectorAll('#reviewsDots .dot').forEach((d,i) => d.classList.toggle('active', i===idx));
 }
 function slideReviews(dir) {
-  goToReviews(Math.max(0, Math.min(reviewsActiveDot + dir, totalReviewPages - 1)));
+  goToReviews(Math.max(0, Math.min((window._reviewsActiveDot||0) + dir, (window._totalReviewPages||1) - 1)));
 }
-
-// populate mobile reviews
-const reviewsMobileTrack = document.getElementById('reviewsMobileTrack');
-reviews.slice(0, 15).forEach(r => { reviewsMobileTrack.innerHTML += makeReviewCard(r, true); });
 
 // ─── DESKTOP REVIEWS CAROUSEL ───
 let reviewsPos = 0;
 const CARD_W = 234; // 220 + 14 gap
-function slideReviews(dir) {
-  const track = document.getElementById('reviewsTrack');
-  const container = track.parentElement;
-  const maxScroll = track.scrollWidth - container.clientWidth;
-  reviewsPos = Math.max(0, Math.min(reviewsPos + dir * CARD_W * 2, maxScroll));
-  track.style.transform = `translateX(-${reviewsPos}px)`;
-}
 
 // ─── WHEEL SCROLL ON CAROUSEL ───
 const reviewsDesktop = document.getElementById('reviewsDesktop');
@@ -1354,9 +1336,9 @@ reviewsDesktop.addEventListener('wheel', (e) => {
     reviewsPos = Math.max(0, Math.min(reviewsPos + e.deltaY * 1.5, maxScroll));
     track.style.transform = `translateX(-${reviewsPos}px)`;
     // sync dots
-    const activePage = Math.round(reviewsPos / (reviewsPerPage * CARD_W));
-    reviewsActiveDot = Math.min(activePage, totalReviewPages - 1);
-    document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === reviewsActiveDot));
+    const activePage = Math.round(reviewsPos / ((window._reviewsPerPage||5) * CARD_W));
+    window._reviewsActiveDot = Math.min(activePage, (window._totalReviewPages||1) - 1);
+    document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === window._reviewsActiveDot));
   }, 10);
 }, { passive: false });
 
@@ -1391,9 +1373,9 @@ reviewsDesktop.addEventListener('touchmove', (e) => {
   track.style.transform = `translateX(-${reviewsPos}px)`;
 }, { passive: true });
 reviewsDesktop.addEventListener('touchend', () => {
-  const activePage = Math.round(reviewsPos / (reviewsPerPage * CARD_W));
-  reviewsActiveDot = Math.min(activePage, totalReviewPages - 1);
-  document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === reviewsActiveDot));
+  const activePage = Math.round(reviewsPos / ((window._reviewsPerPage||5) * CARD_W));
+  window._reviewsActiveDot = Math.min(activePage, (window._totalReviewPages||1) - 1);
+  document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === window._reviewsActiveDot));
 });
 
 // ─── CCF CARDS ───
