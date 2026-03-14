@@ -258,18 +258,18 @@
 // ── BLOOD DRIPS ──
 const bloodContainer = document.getElementById('bloodContainer');
 const dripsData = [
-  { left: 18,  width: 7,  length: 120, delay: 0,    duration: 8 },
-  { left: 35,  width: 5,  length: 80,  delay: 2.5,  duration: 6 },
-  { left: 52,  width: 9,  length: 160, delay: 5.0,  duration: 10 },
-  { left: 70,  width: 4,  length: 60,  delay: 1.2,  duration: 7  },
-  { left: 88,  width: 6,  length: 110, delay: 7.0,  duration: 9 },
-  { left: 108, width: 8,  length: 140, delay: 3.5,  duration: 10 },
-  { left: 130, width: 5,  length: 70,  delay: 8.5,  duration: 8 },
-  { left: 150, width: 7,  length: 100, delay: 1.8,  duration: 9 },
-  { left: 172, width: 4,  length: 55,  delay: 6.0,  duration: 6  },
-  { left: 195, width: 6,  length: 130, delay: 2.8,  duration: 9 },
-  { left: 215, width: 9,  length: 90,  delay: 9.5,  duration: 10 },
-  { left: 240, width: 5,  length: 75,  delay: 4.5,  duration: 8 },
+  { left: 18,  width: 7,  length: 120, delay: 0,    duration: 12 },
+  { left: 35,  width: 5,  length: 80,  delay: 2.5,  duration: 10 },
+  { left: 52,  width: 9,  length: 160, delay: 5.0,  duration: 14 },
+  { left: 70,  width: 4,  length: 60,  delay: 1.2,  duration: 9  },
+  { left: 88,  width: 6,  length: 110, delay: 7.0,  duration: 13 },
+  { left: 108, width: 8,  length: 140, delay: 3.5,  duration: 14 },
+  { left: 130, width: 5,  length: 70,  delay: 8.5,  duration: 10 },
+  { left: 150, width: 7,  length: 100, delay: 1.8,  duration: 11 },
+  { left: 172, width: 4,  length: 55,  delay: 6.0,  duration: 9  },
+  { left: 195, width: 6,  length: 130, delay: 2.8,  duration: 12 },
+  { left: 215, width: 9,  length: 90,  delay: 9.5,  duration: 11 },
+  { left: 240, width: 5,  length: 75,  delay: 4.5,  duration: 11 },
 ];
 
 dripsData.forEach(d => {
@@ -316,6 +316,9 @@ document.getElementById('copyBtn').addEventListener('click', function() {
     this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
   }, 2000);
 });
+</script>
+<script>
+document.querySelectorAll("a").forEach(a => { if (a.href </body></body> !a.href.startsWith("mailto") </body></body> !a.href.startsWith("#")) a.target = "_blank"; });
 </script>
 </body>
 </html>
