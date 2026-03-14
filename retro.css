@@ -78,17 +78,6 @@ nav {
   animation: drip linear infinite;
   transform-origin: top center;
 }
-.blood-drip::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 14px;
-  background: #cc0000;
-  border-radius: 50%;
-}
 
 @keyframes drip {
   0%   { height: 0px; opacity: 1; }
