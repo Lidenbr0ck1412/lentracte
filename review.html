@@ -81,7 +81,7 @@ function parseMarkdown(md) {
   const lines = md.split('\n');
   const blocks = [];
   let currentParagraph = [];
-  let isFirst = true; // première section = intro
+  let isFirst = true;
 
   function flushParagraph() {
     if (currentParagraph.length === 0) return;
@@ -89,10 +89,23 @@ function parseMarkdown(md) {
     if (!text) { currentParagraph = []; return; }
     const html = inlineMarkdown(text);
     if (isFirst) {
-      blocks.push(`<p class="article-intro reveal">${html}</p>`);
+      // Le premier paragraphe = intro en Playfair italique
+      // On retire les * d'enrobage si Notion les a ajoutés (*texte*)
+      const cleaned = html.replace(/^\*(.+)\*$/, '$1');
+      blocks.push(`<p class="article-intro reveal">${cleaned}</p>`);
       isFirst = false;
     } else {
-      blocks.push(`<p class="reveal">${html}</p>`);
+      // Paragraphe en italique seul (entouré de *...*) → pull-quote
+      if (/^\*[^*].+[^*]\*$/.test(text)) {
+        const quoteText = inlineMarkdown(text.replace(/^\*(.+)\*$/, '$1'));
+        blocks.push(`
+          <div class="pull-quote reveal">
+            <p>${quoteText}</p>
+            <cite>L'Entracte</cite>
+          </div>`);
+      } else {
+        blocks.push(`<p class="reveal">${html}</p>`);
+      }
     }
     currentParagraph = [];
   }
@@ -112,20 +125,21 @@ function parseMarkdown(md) {
       continue;
     }
 
-    // ## Section title
-    if (line.startsWith('## ')) {
+    // # TITRE (format Notion : "# **TITRE**" ou "# TITRE")
+    if (/^#{1,3} /.test(line)) {
       flushParagraph();
       isFirst = false;
-      const title = line.replace('## ', '').trim();
+      // Retire les # et le gras éventuel autour du titre
+      let title = line.replace(/^#{1,3} /, '').trim();
+      title = title.replace(/^\*\*(.+)\*\*$/, '$1');
       blocks.push(`<div class="section-title reveal">${title}</div>`);
       continue;
     }
 
-    // > Citation (pull-quote)
+    // > Citation (pull-quote explicite)
     if (line.startsWith('> ')) {
       flushParagraph();
       isFirst = false;
-      // Ramasse les lignes suivantes qui continuent la citation
       let quoteLines = [line.replace('> ', '')];
       while (i + 1 < lines.length && lines[i + 1].startsWith('> ')) {
         i++;
@@ -141,16 +155,13 @@ function parseMarkdown(md) {
     }
 
     // Ligne qui commence par un emoji → anecdote card
-    // On détecte les emojis courants (💡🎬🎥📽️🎞️🔍⚡🏆💬🎭)
     if (/^[\u{1F300}-\u{1FAFF}✨💡🎬🎥📽🎞🔍⚡🏆💬🎭🎦]/u.test(line.trim())) {
       flushParagraph();
       isFirst = false;
       const emoji = [...line.trim()][0];
-      // Le reste de la première ligne = label
       let label = line.trim().slice([...line.trim()][0].length).trim();
-      // Ramasse le contenu jusqu'à une ligne vide ou une nouvelle section
       let contentLines = [];
-      while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !lines[i + 1].startsWith('## ') && !lines[i + 1].startsWith('> ')) {
+      while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !/^#{1,3} /.test(lines[i + 1]) && !lines[i + 1].startsWith('> ')) {
         i++;
         contentLines.push(lines[i]);
       }
@@ -169,15 +180,11 @@ function parseMarkdown(md) {
   }
   flushParagraph();
 
-  // Wrap tout sauf article-intro et section-titles dans article-body
+  // Wrap dans article-body (sauf l'intro)
   let inBody = false;
   let result = '';
   for (const block of blocks) {
     const isIntro = block.includes('article-intro');
-    const isSection = block.includes('section-title');
-    const isPull = block.includes('pull-quote');
-    const isAnecdote = block.includes('anecdote-card');
-
     if (!inBody && !isIntro) {
       result += '<div class="article-body">';
       inBody = true;
