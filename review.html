@@ -258,13 +258,56 @@ function renderHero(r) {
 /* ─────────────────────────────────────────────
    RENDER ARTICLE
 ───────────────────────────────────────────── */
+function renderStills(stills) {
+  if (!stills) return '';
+  const imgs = stills.split(',').map(s => s.trim()).filter(Boolean);
+  if (!imgs.length) return '';
+  return `
+  <div class="stills-grid reveal">
+    ${imgs.map((src, i) => `
+    <div class="still">
+      <img src="${src}" alt="Still ${i+1}">
+    </div>`).join('')}
+  </div>`;
+}
+
+function renderTrailer(url) {
+  if (!url) return '';
+  return `
+  <div class="trailer-section reveal">
+    <div class="section-title">BANDE ANNONCE</div>
+    <div class="trailer-wrap">
+      <iframe src="${url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>`;
+}
+
 function renderArticle(r) {
-  const bodyHtml = parseMarkdown(r.contenu || LOREM_IPSUM);
+  // Injecter les stills après le premier paragraphe (article-intro)
+  let bodyHtml = parseMarkdown(r.contenu || LOREM_IPSUM);
+
+  // Insérer les stills juste après l'article-intro
+  if (r.stills) {
+    const stillsHtml = renderStills(r.stills);
+    bodyHtml = bodyHtml.replace('</p>\n<div class="article-body">', `</p>\n${stillsHtml}\n<div class="article-body">`);
+    // fallback si pas d'article-body séparé
+    if (!bodyHtml.includes(stillsHtml)) {
+      const firstP = bodyHtml.indexOf('</p>');
+      if (firstP !== -1) {
+        bodyHtml = bodyHtml.slice(0, firstP + 4) + stillsHtml + bodyHtml.slice(firstP + 4);
+      }
+    }
+  }
+
+  // Insérer la bande annonce juste avant la note (après le dernier paragraphe du corps)
+  const trailerHtml = renderTrailer(r.trailer);
   const verdict = r.verdict || 'À voir absolument';
 
   return `
   <div class="article-wrapper" id="article-top">
     ${bodyHtml}
+
+    ${trailerHtml}
 
     <!-- NOTE -->
     <div class="rating-section reveal">
