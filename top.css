@@ -124,6 +124,35 @@ nav {
   color: rgba(255,255,255,.85);
 }
 
+/* ── MENTIONS HONORABLES ── */
+.mentions-section {
+  border-top: 1px solid #1e1e1e;
+  margin-top: 48px;
+}
+.mentions-inner {
+  max-width: 800px; margin: 0 auto;
+  padding: 40px 24px 48px;
+}
+.mentions-header {
+  margin-bottom: 20px;
+}
+.mentions-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--red); padding: 5px 14px; border-radius: 3px;
+  font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
+}
+.mentions-label .dot { width: 5px; height: 5px; background: white; border-radius: 50%; }
+.mentions-text {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: clamp(16px, 2vw, 19px); line-height: 1.85;
+  color: rgba(255,255,255,.75);
+}
+.mentions-text strong {
+  color: var(--white); font-style: normal; font-weight: 700;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1em; letter-spacing: 1px;
+}
+
 /* ── FILMS LIST ── */
 .films-list {
   max-width: 900px; margin: 0 auto; padding: 48px 24px 80px;
