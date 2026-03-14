@@ -62,7 +62,7 @@ nav {
 
 /* ── BLOOD DRIP ── */
 .blood-container {
-  position: absolute;
+  position: fixed;
   top: 100px;
   left: 0;
   width: 300px;
