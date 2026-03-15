@@ -384,7 +384,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .hero-sticker { width: 80px; bottom: -30px; right: 24px; }
+  .hero-sticker { width: 100px; bottom: -30px; right: 24px; }
   nav { padding: 0 16px; }
   .nav-links { display: none; }
   .burger { display: flex; }
