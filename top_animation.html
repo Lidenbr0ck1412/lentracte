@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les meilleurs films d'animation • L'Entracte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="top.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+        Cinéma
+        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        <div class="dropdown">
+          <a href="index.html#reviews"><span>▸</span>Nos dernières reviews</a>
+          <a href="index.html#ccf"><span>▸</span>Comment c'est fait ?</a>
+          <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+        </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </div>
+  <div class="burger" onclick="toggleNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Accueil</a>
+  <a href="index.html#reviews">Reviews</a>
+  <a href="index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="images/banner_top_animation.jpg" alt="Les meilleurs films d'animation">
+    <div class="hero-bg-gradient"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-category"><span class="dot"></span>TOP</div>
+    <h1 class="hero-title">LES MEILLEURS FILMS<br>D'ANIMATION</h1>
+    <p class="hero-subtitle">L'émerveillement n'a pas d'âge.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Films</span>
+        <span class="hero-meta-value">10 sélectionnés</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="top-intro">
+  <p>
+    L'animation est le seul medium cinématographique sans limites — pas de budget de décors, pas de contraintes physiques, pas de frontière entre le réel et l'imaginaire. Et pourtant, les meilleurs films d'animation sont aussi les plus humains qui soient. Voici dix œuvres qui nous ont prouvé, chacune à leur façon, que le dessin animé peut être du grand art.
+  </p>
+</div>
+
+<!-- FILMS 10 → 2 -->
+<div class="films-list">
+
+  <!-- 10 — KIZUMONOGATARI -->
+  <div class="film-entry">
+    <div class="film-number">10</div>
+    <div class="film-poster-wrap">
+      <img src="images/kizumonogatari.jpg" alt="Kizumonogatari">
+    </div>
+    <div class="film-content">
+      <div class="film-title">KIZUMONOGATARI — TRILOGIE</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Akiyuki Shinbo</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · Fantastique</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2016–2017</span>
+      </div>
+      <div class="film-text">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <strong>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</strong></p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 — COCO -->
+  <div class="film-entry">
+    <div class="film-number">9</div>
+    <div class="film-poster-wrap">
+      <img src="images/coco.jpg" alt="Coco">
+    </div>
+    <div class="film-content">
+      <div class="film-title">COCO</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Lee Unkrich</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · Aventure</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2017</span>
+      </div>
+      <div class="film-text">
+        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium totam. <em>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</em></p>
+        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum. <strong>Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 — DRAGONS -->
+  <div class="film-entry">
+    <div class="film-number">8</div>
+    <div class="film-poster-wrap">
+      <img src="images/dragons.jpg" alt="Dragons">
+    </div>
+    <div class="film-content">
+      <div class="film-title">DRAGONS</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Dean DeBlois · Chris Sanders</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · Aventure</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2010</span>
+      </div>
+      <div class="film-text">
+        <p>Temporibus autem quibusdam et aut officiis debitis rerum necessitatibus saepe eveniet ut et voluptates. Itaque earum rerum hic tenetur a sapiente delectus ut aut reiciendis voluptatibus maiores.</p>
+        <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae. <strong>Vel illum qui dolorem eum fugiat quo voluptas nulla pariatur consequuntur.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 — MARS EXPRESS -->
+  <div class="film-entry">
+    <div class="film-number">7</div>
+    <div class="film-poster-wrap">
+      <img src="images/mars_express.jpg" alt="Mars Express">
+    </div>
+    <div class="film-content">
+      <div class="film-title">MARS EXPRESS</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Jérémie Périn</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · SF · Noir</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2023</span>
+      </div>
+      <div class="film-text">
+        <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit. <strong>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam.</strong></p>
+        <p>Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 — KLAUS -->
+  <div class="film-entry">
+    <div class="film-number">6</div>
+    <div class="film-poster-wrap">
+      <img src="images/klaus.jpg" alt="Klaus">
+    </div>
+    <div class="film-content">
+      <div class="film-title">KLAUS</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Sergio Pablos</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · Comédie</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2019</span>
+      </div>
+      <div class="film-text">
+        <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores. <strong>Ut labore et dolore magnam aliquam quaerat voluptatem architecto beatae.</strong></p>
+        <p>Totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo nemo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 — FLOW -->
+  <div class="film-entry">
+    <div class="film-number">5</div>
+    <div class="film-poster-wrap">
+      <img src="images/flow.jpg" alt="Flow">
+    </div>
+    <div class="film-content">
+      <div class="film-title">FLOW</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Gints Zilbalodis</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · Aventure</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2024</span>
+      </div>
+      <div class="film-text">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <strong>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</strong></p>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident deserunt mollit anim.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 — TINTIN -->
+  <div class="film-entry">
+    <div class="film-number">4</div>
+    <div class="film-poster-wrap">
+      <img src="images/tintin.jpg" alt="The Adventures of Tintin">
+    </div>
+    <div class="film-content">
+      <div class="film-title">THE ADVENTURES OF TINTIN</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Steven Spielberg</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · Aventure</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2011</span>
+      </div>
+      <div class="film-text">
+        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. <em>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit sed.</em></p>
+        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium. <strong>Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 — EVANGELION -->
+  <div class="film-entry">
+    <div class="film-number">3</div>
+    <div class="film-poster-wrap">
+      <img src="images/evangelion.jpg" alt="Evangelion">
+    </div>
+    <div class="film-content">
+      <div class="film-title">EVANGELION — TETALOGIE</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Hideaki Anno</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · SF</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2007–2021</span>
+      </div>
+      <div class="film-text">
+        <p>Temporibus autem quibusdam et aut officiis debitis rerum necessitatibus saepe eveniet ut et voluptates. <strong>Itaque earum rerum hic tenetur a sapiente delectus ut aut reiciendis voluptatibus.</strong></p>
+        <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 — FANTASTIC MR FOX -->
+  <div class="film-entry">
+    <div class="film-number">2</div>
+    <div class="film-poster-wrap">
+      <img src="images/fantastic_mr_fox.jpg" alt="Fantastic Mr Fox">
+    </div>
+    <div class="film-content">
+      <div class="film-title">FANTASTIC MR FOX</div>
+      <div class="film-meta">
+        <span class="film-meta-item">Wes Anderson</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item">Animation · Comédie</span>
+        <span class="film-meta-sep">·</span>
+        <span class="film-meta-item red">2009</span>
+      </div>
+      <div class="film-text">
+        <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit. <strong>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat.</strong></p>
+        <p>Nam libero tempore cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus omnis voluptas assumenda est.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fin films-list -->
+
+<!-- ── N°1 TRAITEMENT SPÉCIAL — LE CHÂTEAU DANS LE CIEL ── -->
+<div class="film-number-one">
+  <div class="film-one-bg">
+    <img src="images/banner_chateau_ciel.jpg" alt="Le Château dans le ciel">
+    <div class="film-one-gradient"></div>
+  </div>
+  <div class="film-one-inner">
+    <div class="film-one-crown">
+      <div class="film-one-label"><span class="dot"></span>FILM DE LA SÉLECTION</div>
+      <div class="film-one-num">1</div>
+    </div>
+    <div class="film-one-body">
+      <div class="film-one-poster">
+        <img src="images/chateau_dans_le_ciel.jpg" alt="Le Château dans le ciel">
+      </div>
+      <div class="film-one-content">
+        <div class="film-one-title">LE CHÂTEAU DANS LE CIEL</div>
+        <div class="film-meta" style="margin-bottom:24px;">
+          <span class="film-meta-item">Hayao Miyazaki</span>
+          <span class="film-meta-sep">·</span>
+          <span class="film-meta-item">Animation · Aventure</span>
+          <span class="film-meta-sep">·</span>
+          <span class="film-meta-item red">1986</span>
+        </div>
+        <div class="film-text">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <strong>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</strong></p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. <strong>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE -->
+<div class="share-bar">
+  <span class="share-label">Partager</span>
+  <button class="share-btn" onclick="shareTwitter()">
+    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    X / Twitter
+  </button>
+  <button class="share-btn" onclick="shareFacebook()">
+    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    Facebook
+  </button>
+  <button class="share-btn" id="copyBtn">
+    <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+    Copier le lien
+  </button>
+</div>
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script>
+function toggleNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const spans = document.getElementById('burger').querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.film-entry, .film-number-one').forEach(el => observer.observe(el));
+
+function shareTwitter() {
+  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`, '_blank');
+}
+function shareFacebook() {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
+}
+document.getElementById('copyBtn').addEventListener('click', function() {
+  navigator.clipboard?.writeText(location.href);
+  this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+  setTimeout(() => {
+    this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+  }, 2000);
+});
+
+document.querySelectorAll("a").forEach(a => {
+  if (a.href && !a.href.startsWith("mailto") && !a.href.startsWith("#")) a.target = "_blank";
+});
+</script>
+</body>
+</html>
