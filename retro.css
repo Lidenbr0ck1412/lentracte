@@ -43,7 +43,7 @@ nav {
 .nav-links .contact-link { color: var(--red); }
 .dropdown {
   position: absolute; top: calc(100% + 2px); left: 50%; transform: translateX(-50%);
-  background: var(--dark); border-top: 2px solid var(--red); border-radius: 0 0 80px 80px;
+  background: var(--dark); border-top: 2px solid var(--red); border-radius: 0 0 10px 10px;
   min-width: 260px; padding: 8px 0; opacity: 0; pointer-events: none;
   transition: opacity .2s ease; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,.4);
 }
@@ -73,16 +73,15 @@ nav {
 .blood-drip {
   position: absolute;
   top: 0;
-  background: #cc0000;
-  border-radius: 0 0 50% 50%;
   animation: drip linear infinite;
-  transform-origin: top center;
 }
+.blood-drip svg { display: block; overflow: visible; }
 
 @keyframes drip {
-  0%   { height: 0px; opacity: 1; }
-  60%  { height: var(--drip-length); opacity: 1; }
-  100% { height: var(--drip-length); opacity: 0; }
+  0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+  10%  { opacity: 1; transform: scaleY(0.1); transform-origin: top; }
+  65%  { opacity: 1; transform: scaleY(1); transform-origin: top; }
+  100% { opacity: 0; transform: scaleY(1); transform-origin: top; }
 }
 
 
