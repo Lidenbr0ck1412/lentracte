@@ -61,7 +61,7 @@ nav {
 
 .hero-sticker {
   position: absolute;
-  bottom: -60px; right: 80px;
+  bottom: -100px; right: 80px;
   width: 300px; height: auto;
   z-index: 10;
   transform: rotate(6deg);
