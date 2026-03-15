@@ -466,7 +466,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .mobile-nav { top: 70px; }
   .hero-content { padding: 0 20px 48px; }
   .hero { height: 75vh; }
-  .hero-bg img { object-position: center center; }
+  .hero-bg img { object-position: 70% center; }
   .img-float, .img-float-left { float: none; width: 100%; margin: 24px 0; }
   .cenobites-grid { grid-template-columns: repeat(2, 1fr); }
   .img-duo { grid-template-columns: 1fr; }
