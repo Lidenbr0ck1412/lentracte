@@ -166,8 +166,10 @@ function renderHero(article) {
       <span class="hero-film">${article.tagline || ''}</span>
       <div class="hero-meta">
         ${article.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${article.realisateur}</span></div>` : ''}
-        ${article.fx_studio ? `<div class="meta-item"><span class="meta-label">Effets spéciaux</span><span class="meta-value">${article.fx_studio}</span></div>` : ''}
         ${article.annee ? `<div class="meta-item"><span class="meta-label">Année</span><span class="meta-value">${article.annee}</span></div>` : ''}
+        ${article.fx_studio ? `<div class="meta-item"><span class="meta-label">Effets spéciaux</span><span class="meta-value">${article.fx_studio}</span></div>` : ''}
+        ${article.genre ? `<div class="meta-item"><span class="meta-label">Genre</span><span class="meta-value">${article.genre}</span></div>` : ''}
+        ${article.duree ? `<div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">${article.duree} min</span></div>` : ''}
       </div>
     </div>
     <div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})">
