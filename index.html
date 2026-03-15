@@ -240,7 +240,7 @@ function makeReviewCard(r, mobile = false) {
     const bannerSrc = r.banner || r.img || '';
     return `<${tag} class="review-card" ${link} style="text-decoration:none;color:inherit">
       <div class="card-wrap">
-        <img loading="lazy" src="${bannerSrc}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
+        <img src="${bannerSrc}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
       </div>
       <div class="card-info">
         <div class="card-title">${r.title} <span>${r.year}</span></div>
@@ -251,7 +251,7 @@ function makeReviewCard(r, mobile = false) {
 
   return `<${tag} class="review-card" ${link} style="text-decoration:none;color:inherit">
     <div class="card-wrap">
-      <img loading="lazy" src="${r.img||''}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
+      <img src="${r.img||''}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
       ${badge}
     </div>
     <div class="card-info">
@@ -624,6 +624,11 @@ async function doSearch() {
 
 <script>
 document.querySelectorAll("a").forEach(a => { if (a.href && !a.href.startsWith("mailto") && !a.href.startsWith("#")) a.target = "_blank"; });
+
+// Ouvrir la recherche si on arrive avec #search
+if (window.location.hash === '#search') {
+  setTimeout(() => toggleSearch(), 300);
+}
 </script>
 </body>
 </html>
