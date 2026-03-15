@@ -135,7 +135,7 @@ nav {
   padding-bottom: 40px;
   border-bottom: 1px solid #1e1e1e;
 }
-.article-intro strong { color: var(--red); font-weight: 500; font-style: normal; }
+.article-intro strong { color: var(--red); font-weight: 700; font-style: italic; }
 .article-body p {
   font-size: 15px; line-height: 1.95; color: rgba(255,255,255,.72);
   margin-bottom: 26px;
