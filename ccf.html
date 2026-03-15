@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comment c'est fait ? • L'Entracte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ccf.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+        Cinéma
+        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        <div class="dropdown">
+          <a href="index.html#reviews"><span>▸</span>Nos dernières reviews</a>
+          <a href="index.html#ccf"><span>▸</span>Comment c'est fait ?</a>
+          <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+        </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </div>
+  <div class="burger" onclick="toggleNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Accueil</a>
+  <a href="index.html#ccf">Comment c'est fait ?</a>
+  <a href="index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<!-- HERO -->
+<div id="hero-container">
+  <div style="height:92vh;display:flex;align-items:center;justify-content:center;background:var(--dark);">
+    <p style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:4px;color:#888">Chargement…</p>
+  </div>
+</div>
+
+<!-- ARTICLE -->
+<div id="article-container"></div>
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+
+/* ── INLINE MARKDOWN ── */
+function md(text) {
+  if (!text) return '';
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+}
+
+/* Markdown pour l'intro — strong en rouge italique gras */
+function mdIntro(text) {
+  if (!text) return '';
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+}
+
+/* Markdown pour les paragraphes de texte — sauts de ligne → <p> */
+function mdText(text) {
+  if (!text) return '';
+  return text.split(/\n\n+/).map(p => `<p class="reveal">${md(p.trim())}</p>`).join('');
+}
+
+/* ── RENDER HERO ── */
+function renderHero(article) {
+  return `
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="${article.banner || ''}" alt="${article.title}">
+      <div class="hero-bg-after"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow"><span class="dot"></span>COMMENT C'EST FAIT ?</div>
+      <h1 class="hero-title">${article.title}</h1>
+      <span class="hero-film">${article.realisateur || ''}, ${article.annee || ''}</span>
+      <div class="hero-meta">
+        ${article.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${article.realisateur}</span></div>` : ''}
+        ${article.fx_studio ? `<div class="meta-item"><span class="meta-label">Effets spéciaux</span><span class="meta-value">${article.fx_studio}</span></div>` : ''}
+        ${article.annee ? `<div class="meta-item"><span class="meta-label">Année</span><span class="meta-value">${article.annee}</span></div>` : ''}
+      </div>
+    </div>
+    <div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})">
+      <span>LIRE</span>
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </section>`;
+}
+
+/* ── RENDER SECTION ── */
+function renderSection(s) {
+  switch (s.type) {
+
+    case 'section_title':
+      return `<div class="section-title reveal">${s.titre}</div>`;
+
+    case 'text':
+      return mdText(s.contenu);
+
+    case 'pull_quote':
+      return `
+        <div class="pull-quote reveal">
+          <p>${md(s.contenu)}</p>
+          ${s.cite ? `<cite>${s.cite}</cite>` : ''}
+        </div>`;
+
+    case 'anecdote':
+      return `
+        <div class="anecdote-card reveal">
+          <div class="anecdote-icon">💡</div>
+          <div class="anecdote-label">${s.titre || 'LE SAVIEZ-VOUS ?'}</div>
+          <p class="anecdote-text">${md(s.contenu)}</p>
+        </div>`;
+
+    case 'img_full':
+      return `
+        <figure class="img-full reveal">
+          <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+          ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
+        </figure>`;
+
+    case 'img_float':
+      return `
+        <figure class="img-float reveal">
+          <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+          ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
+        </figure>`;
+
+    case 'img_float_left':
+      return `
+        <figure class="img-float-left reveal">
+          <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+          ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
+        </figure>`;
+
+    case 'img_center':
+      return `
+        <figure class="img-center reveal">
+          <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+          ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
+        </figure>`;
+
+    case 'img_duo':
+      return `
+        <div class="img-duo reveal">
+          <figure>
+            <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+            ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
+          </figure>
+          <figure>
+            <img src="${s.img_2}" alt="${s.caption_2 || ''}">
+            ${s.caption_2 ? `<figcaption>${s.caption_2}</figcaption>` : ''}
+          </figure>
+        </div>`;
+
+    case 'img_stills': {
+      const imgs = [
+        { src: s.img_1, cap: s.caption_1 },
+        { src: s.img_2, cap: s.caption_2 },
+        { src: s.img_3, cap: s.caption_3 },
+      ].filter(i => i.src);
+      return `
+        <div class="stills-grid reveal">
+          ${imgs.map((img, idx) => `
+          <figure class="still${idx === 0 ? ' still-wide' : ''}" ${idx === 0 ? 'style="aspect-ratio:21/9"' : 'style="aspect-ratio:16/9"'}>
+            <img src="${img.src}" alt="${img.cap || ''}">
+            ${img.cap ? `<figcaption>${img.cap}</figcaption>` : ''}
+          </figure>`).join('')}
+        </div>`;
+    }
+
+    case 'img_cenobites': {
+      const cards = [
+        { src: s.img_1, cap: s.caption_1 },
+        { src: s.img_2, cap: s.caption_2 },
+        { src: s.img_3, cap: s.caption_3 },
+        { src: s.img_4, cap: s.caption_4 },
+      ].filter(c => c.src);
+      return `
+        <div class="cenobites-grid reveal">
+          ${cards.map(c => {
+            const [name, sub] = (c.cap || '').split('|');
+            return `
+            <div class="cenobite-card">
+              <img src="${c.src}" alt="${name || ''}">
+              <div class="cenobite-card-overlay">
+                <div class="cenobite-name">${name || ''}</div>
+                ${sub ? `<div class="cenobite-sub">${sub}</div>` : ''}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>`;
+    }
+
+    case 'clearfix':
+      return `<div class="clearfix"></div>`;
+
+    default:
+      return '';
+  }
+}
+
+/* ── INIT ── */
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id') || 1;
+
+  const [articleRes, sectionsRes] = await Promise.all([
+    fetch(`${SUPABASE_URL}/rest/v1/ccf?id=eq.${id}&select=*`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    }),
+    fetch(`${SUPABASE_URL}/rest/v1/ccf_sections?ccf_id=eq.${id}&select=*&order=ordre.asc`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    })
+  ]);
+
+  const [articleData, sections] = await Promise.all([articleRes.json(), sectionsRes.json()]);
+  const article = articleData[0];
+  if (!article) {
+    document.getElementById('hero-container').innerHTML = '<div style="height:60vh;display:flex;align-items:center;justify-content:center"><p style="color:#888;font-family:Bebas Neue,sans-serif;letter-spacing:4px">Article introuvable.</p></div>';
+    return;
+  }
+
+  document.title = `${article.title} — Comment c'est fait ? • L'Entracte`;
+  document.getElementById('hero-container').innerHTML = renderHero(article);
+
+  // Intro
+  let html = '<div class="article-wrapper">';
+  if (article.intro_1) html += `<p class="article-intro reveal">${mdIntro(article.intro_1)}</p>`;
+  if (article.intro_2) html += `<p class="article-intro reveal">${mdIntro(article.intro_2)}</p>`;
+  if (article.intro_3) html += `<p class="article-intro reveal">${mdIntro(article.intro_3)}</p>`;
+
+  html += '<div class="article-body">';
+  sections.forEach(s => { html += renderSection(s); });
+  html += '</div>';
+
+  // Share
+  html += `
+    <div class="share-bar reveal">
+      <span class="share-label">Partager</span>
+      <button class="share-btn" onclick="shareTwitter()">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X / Twitter
+      </button>
+      <button class="share-btn" onclick="shareFacebook()">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </button>
+      <button class="share-btn" id="copyBtn">
+        <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+        Copier le lien
+      </button>
+    </div>
+  </div>`;
+
+  document.getElementById('article-container').innerHTML = html;
+
+  // Reveal observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Copy btn
+  document.getElementById('copyBtn')?.addEventListener('click', function() {
+    navigator.clipboard?.writeText(location.href);
+    this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+    setTimeout(() => {
+      this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+    }, 2000);
+  });
+}
+
+function toggleNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const spans = document.getElementById('burger').querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+function shareTwitter() {
+  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`, '_blank');
+}
+function shareFacebook() {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
+}
+
+document.querySelectorAll('a').forEach(a => {
+  if (a.href && !a.href.startsWith('mailto') && !a.href.startsWith('#')) a.target = '_blank';
+});
+
+init();
+</script>
+</body>
+</html>
