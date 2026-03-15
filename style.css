@@ -678,6 +678,7 @@ nav {
   margin-top: 8px;
 }
 @media (max-width: 768px) {
+  .logo img { height: 60px; }
   .about-inner { grid-template-columns: 1fr; }
   .about-left { min-height: 260px; }
   .about-right { padding: 40px 24px; }
