@@ -604,7 +604,7 @@ async function doSearch() {
   const data = await res.json();
 
   if (!data.length) {
-    resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p><img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnA0dW5ieGZpdG4xd216eXZ1cjdnMDRpM2c3MGs4bDNlbGptZTAyayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sk6yL9EGVeAcE/giphy.gif" alt="" style="margin-top:20px;border-radius:10px;max-width:300px;display:block;">';
+    resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p><img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnA0dW5ieGZpdG4xd216eXZ1cjdnMDRpM2c3MGs4bDNlbGptZTAyayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sk6yL9EGVeAcE/giphy.gif" alt="" style="margin-top:20px;border-radius:10px;max-width:500px;display:block;margin-left:auto;margin-right:auto;">';
     return;
   }
 
