@@ -43,7 +43,7 @@ nav {
 .nav-links .contact-link { color: var(--red); }
 .dropdown {
   position: absolute; top: calc(100% + 2px); left: 50%; transform: translateX(-50%);
-  background: var(--dark); border-top: 2px solid var(--red); border-radius: 0 0 10px 10px;
+  background: var(--dark); border-top: 2px solid var(--red); border-radius: 0 0 80px 80px;
   min-width: 260px; padding: 8px 0; opacity: 0; pointer-events: none;
   transition: opacity .2s ease; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,.4);
 }
