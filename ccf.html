@@ -163,7 +163,7 @@ function renderHero(article) {
     <div class="hero-content">
       <div class="hero-eyebrow"><span class="dot"></span>COMMENT C'EST FAIT ?</div>
       <h1 class="hero-title">${article.title}</h1>
-      <span class="hero-film">${article.realisateur || ''}, ${article.annee || ''}</span>
+      <span class="hero-film">${article.tagline || ''}</span>
       <div class="hero-meta">
         ${article.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${article.realisateur}</span></div>` : ''}
         ${article.fx_studio ? `<div class="meta-item"><span class="meta-label">Effets spéciaux</span><span class="meta-value">${article.fx_studio}</span></div>` : ''}
