@@ -73,15 +73,14 @@ nav {
 .blood-drip {
   position: absolute;
   top: 0;
-  animation: drip linear infinite;
+  background: #cc0000;
+  border-radius: 0 0 999px 999px;
+  animation: drip ease-in forwards;
 }
-.blood-drip svg { display: block; overflow: visible; }
 
 @keyframes drip {
-  0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
-  10%  { opacity: 1; transform: scaleY(0.1); transform-origin: top; }
-  65%  { opacity: 1; transform: scaleY(1); transform-origin: top; }
-  100% { opacity: 0; transform: scaleY(1); transform-origin: top; }
+  0%   { height: 0px; }
+  100% { height: var(--drip-length); }
 }
 
 
