@@ -249,6 +249,7 @@ async function init() {
   if (article.intro_1) html += `<p class="article-intro reveal">${mdIntro(article.intro_1)}</p>`;
   if (article.intro_2) html += `<p class="article-intro reveal">${mdIntro(article.intro_2)}</p>`;
   if (article.intro_3) html += `<p class="article-intro reveal">${mdIntro(article.intro_3)}</p>`;
+  if (article.transition) html += `<p class="article-transition reveal">${mdIntro(article.transition)}</p>`;
 
   html += '<div class="article-body">';
   sections.forEach(s => { html += renderSection(s); });
