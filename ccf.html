@@ -317,6 +317,17 @@ document.querySelectorAll('a').forEach(a => {
   if (a.href && !a.href.startsWith('mailto') && !a.href.startsWith('#')) a.target = '_blank';
 });
 
+// ── GYROSCOPE PARALLAX ──
+if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', (e) => {
+    const img = document.querySelector('.hero-bg img');
+    if (!img) return;
+    const tiltX = Math.max(-10, Math.min(10, e.gamma || 0));
+    const tiltY = Math.max(-10, Math.min(10, (e.beta || 0) - 45));
+    img.style.transform = `scale(1.08) translate(${tiltX * 0.5}px, ${tiltY * 0.3}px)`;
+  });
+}
+
 init();
 </script>
 </body>
