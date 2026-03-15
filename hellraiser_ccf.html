@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hellraiser — Comment c'est fait ? • L'Entracte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ccf.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+        Cinéma
+        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        <div class="dropdown">
+          <a href="index.html#reviews"><span>▸</span>Nos dernières reviews</a>
+          <a href="index.html#ccf"><span>▸</span>Comment c'est fait ?</a>
+          <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+        </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </div>
+  <div class="burger" onclick="toggleNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Accueil</a>
+  <a href="index.html#ccf">Comment c'est fait ?</a>
+  <a href="index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="images/ccf_hellraiser_banner.jpg" alt="Hellraiser">
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="dot"></span>COMMENT C'EST FAIT ?</div>
+    <h1 class="hero-title">HELLRAISER</h1>
+    <span class="hero-film">Clive Barker, 1987</span>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Réalisateur</span>
+        <span class="meta-value">Clive Barker</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Effets spéciaux</span>
+        <span class="meta-value">Bob Keen / Image Animation</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Année</span>
+        <span class="meta-value">1987</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll" onclick="document.querySelector('.article-wrapper').scrollIntoView({behavior:'smooth'})">
+    <span>LIRE</span>
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<div class="article-wrapper">
+
+  <!-- INTRO -->
+  <p class="article-intro reveal">
+    J'ai toujours eu un attrait pour l'horreur. Ces petites pulsions macabres qui nous poussent à nous faire peur, à ressentir cette dose de frissons qui chatouille la colonne vertébrale. J'avais dix ans quand j'ai été confronté pour la première fois à une vision d'angoisse et de pure terreur. Je descendais les escaliers de chez moi un matin quand se déroulait devant mes yeux d'enfant une scène qui resterait gravée en moi pour l'éternité. Une personne de ma famille avait eu la bonne idée de mettre le deuxième opus de la saga Saw sur la télévision. Cette scène où une femme tombe dans un trou rempli d'aiguilles tellement sales que même le tétanos n'irait pas s'y loger. Son visage tétanisé par la peur, ce cri strident qui résonne encore quinze ans plus tard.
+  </p>
+
+  <div class="article-body">
+
+    <p class="reveal">J'ai encore plusieurs scènes comme celle-ci en tête, découvertes un peu trop tôt. C'est dans ces moments que ma cinéphilie a été nourrie, que j'ai développé un attrait pour le macabre et le gore. Je vous rassure : je ne suis pas devenu un psychopathe qui attend sa prochaine victime dans une ruelle sombre. Juste un fan de cinéma d'horreur qui se pose une question depuis toujours : <strong>« Mais comment ont-ils fait ? »</strong></p>
+
+    <!-- IMAGE PLEINE LARGEUR — Affiche / ambiance Hellraiser -->
+    <figure class="img-full reveal">
+      <img src="images/ccf_hellraiser_01.jpg" alt="Hellraiser - ambiance">
+      <figcaption>Hellraiser, 1987. Un film de chair, de sang et de désir.</figcaption>
+    </figure>
+
+    <div class="section-title reveal">CLIVE BARKER ET L'AVÈNEMENT D'UN UNIVERS</div>
+
+    <!-- IMAGE FLOTTANTE DROITE — Portrait Clive Barker -->
+    <figure class="img-float reveal">
+      <img src="images/ccf_barker_portrait.jpg" alt="Clive Barker sur le tournage">
+      <figcaption>Clive Barker sur le tournage d'Hellraiser, 1986.</figcaption>
+    </figure>
+
+    <p class="reveal">Avant d'être un réalisateur, Clive Barker est un écrivain. Au début des années 80, ses recueils <em>Les Livres de sang</em> le propulsent au rang des nouveaux maîtres de la littérature d'épouvante. Stephen King lui-même lui rendra hommage avec cette formule désormais célèbre : <em>« J'ai vu le futur de l'horreur, et son nom est Clive Barker. »</em> Une déclaration qui figurera sur toutes les bandes-annonces du film.</p>
+
+    <p class="reveal">Deux premières adaptations de ses œuvres au cinéma — <em>Transmutations</em> et <em>Rawhead Rex</em>, signées George Pavlou — laissent Barker profondément frustré. Trop éloignées de sa vision, trop lisses, trop conventionnelles. La conclusion s'impose : si personne ne peut adapter Barker comme Barker le souhaite, c'est Barker lui-même qui devra le faire. <em>Hellraiser</em>, sorti en 1987, sera son premier long métrage en tant que réalisateur, adapté de sa propre novella <em>The Hellbound Heart</em>.</p>
+
+    <p class="reveal">L'univers de Barker est d'une singularité radicale. Là où ses contemporains jouaient sur la peur primaire, sur le monstre tapi dans l'ombre, Barker convoque quelque chose de plus trouble : le désir comme vecteur de destruction. Les Cénobites ne sont pas des prédateurs ; ce sont des explorateurs de la chair, des philosophes de la douleur. <em>Hellraiser</em> plonge dans les recoins les plus sombres de la nature humaine avec une franchise qui désarçonne encore aujourd'hui.</p>
+
+    <div class="clearfix"></div>
+
+    <div class="section-title reveal">LA RÉCEPTION D'UN FILM MAUDIT</div>
+
+    <p class="reveal">À sa sortie en septembre 1987, <em>Hellraiser</em> divise la critique. La presse britannique le défend avec enthousiasme. Aux États-Unis, le ton est moins homogène. Roger Ebert, dans une critique restée célèbre pour sa sévérité, qualifie le film de production sans style ni raison. La censure, elle, ne s'y trompe pas : le film reçoit une note X pour ses séquences gores et sa scène de sexe entre Julia et Frank, obligeant Barker à effectuer des coupes.</p>
+
+    <p class="reveal">Au box-office, le résultat est pourtant sans appel. Produit pour un million de dollars, le film en rapporte plus de vingt fois sa mise. Le public qui le découvre en salle sort troublé, fasciné, parfois choqué — mais il en parle. Et c'est dans le marché de la vidéo que <em>Hellraiser</em> va véritablement asseoir sa légende. Le film remporte le Prix spécial de la peur au Festival d'Avoriaz en 1988 et engendre sept suites, dont la qualité déclinante révèle a posteriori à quel point le premier opus tenait debout par la seule force de la vision de son auteur.</p>
+
+    <!-- GRILLE STILLS — La maison, l'atmosphère -->
+    <div class="stills-grid reveal">
+      <figure class="still still-wide" style="aspect-ratio:21/9">
+        <img src="images/ccf_hellraiser_maison.jpg" alt="La maison d'Hellraiser">
+        <figcaption>La maison des Cotton — décor unique d'un huis-clos étouffant.</figcaption>
+      </figure>
+      <figure class="still" style="aspect-ratio:16/9">
+        <img src="images/ccf_hellraiser_boite.jpg" alt="La boîte puzzle">
+        <figcaption>La Configuration des Lamentations.</figcaption>
+      </figure>
+      <figure class="still" style="aspect-ratio:16/9">
+        <img src="images/ccf_hellraiser_julia.jpg" alt="Julia Cotton">
+        <figcaption>Julia Cotton, incarnée par Clare Higgins.</figcaption>
+      </figure>
+    </div>
+
+    <div class="section-title reveal">LA NAISSANCE DE FRANK</div>
+
+    <p class="reveal">Descendez du wagon et écoutez. Écoutez cette douce mélodie onirique qui berce vos oreilles. Méfiez-vous.</p>
+
+    <p class="reveal">Larry, mari aimant et légèrement naïf, emménage avec sa femme Julia dans l'ancienne maison de son frère Frank — disparu depuis, parti à travers le monde à la recherche de l'expérience la plus douloureuse et orgasmique qui soit. Julia, hantée par des visions de ce frère disparu, se languit d'une liaison passée avec lui. Un triangle amoureux pervers se dessine entre le mari, la femme et le fantôme de l'amant.</p>
+
+    <p class="reveal">Pendant que Julia est perdue dans ses souvenirs, Larry s'ouvre la main sur un clou. Il saigne abondamment sur le sol du grenier — la pièce même où Frank avait jadis déverrouillé la boîte à puzzle occulte qui avait déchiré son âme et son corps. Quelque chose de dormant se réveille sous le plancher. Quelque chose de charnu, de têtu, et déterminé à revivre.</p>
+
+    <!-- IMAGE PLEINE LARGEUR — Frank qui se reconstitue -->
+    <figure class="img-full reveal">
+      <img src="images/ccf_frank_naissance.jpg" alt="La naissance de Frank">
+      <figcaption>La séquence de naissance de Frank — l'une des plus mémorables du cinéma d'horreur des années 80.</figcaption>
+    </figure>
+
+    <div class="section-title reveal">BOB KEEN ET IMAGE ANIMATION</div>
+
+    <!-- IMAGE FLOTTANTE GAUCHE — Bob Keen au travail -->
+    <figure class="img-float-left reveal">
+      <img src="images/ccf_bob_keen.jpg" alt="Bob Keen au travail">
+      <figcaption>Bob Keen, superviseur des effets spéciaux d'Hellraiser.</figcaption>
+    </figure>
+
+    <p class="reveal">Bob Keen est un makeup artist et model maker de génie. À seulement vingt ans, il travaille déjà sur la première trilogie <em>Star Wars</em>, <em>Superman</em>, <em>Alien</em> et <em>L'Histoire sans fin</em>. <em>Hellraiser</em> sera le premier long métrage du tout nouveau studio d'effets spéciaux Image Animation, que Keen a cofondé avec le superviseur de l'atelier, Geoff Portass.</p>
+
+    <p class="reveal">D'après les dires de Portass dans le documentaire <em>Leviathan : The Story of Hellraiser & Hellraiser II Hellbound</em>, la séquence de la naissance de Frank a été un pur casse-tête. Les producteurs voyaient dans le projet quelque chose d'impossible à réaliser. Après un visionnage au banc de montage, ils ont aimé ce qu'ils ont vu et ont donné le feu vert. Une bonne partie du budget a alors été injectée dans cette seule séquence.</p>
+
+    <div class="clearfix"></div>
+
+    <div class="section-title reveal">UNE NAISSANCE IMPOSSIBLE À TOURNER</div>
+
+    <p class="reveal">Le montage original se déroulait ainsi : Larry s'ouvre la main. La caméra coupe. Julia retrouve Frank sans peau dans le grenier. Dans le scénario initial, Frank était éparpillé dans la pièce et sur les murs, censé commencer à parler avant de se matérialiser. Instinctivement, Keen sentait qu'il manquait quelque chose. Pas assez impressionnant. Pas assez viscéral. L'équipe a alors confectionné quelque chose de plus visqueux — un rêve d'ingéniosité : un cadavre vivant qui se reconstitue à partir du sol.</p>
+
+    <div class="pull-quote reveal">
+      <p>« J'ai trouvé intéressant de commencer par les os originels et de progresser vers quelque chose de rachitique mais définitivement vivant. Un renversement total par rapport à l'effet habituel où l'on faisait se décomposer quelqu'un. »</p>
+      <cite>Bob Keen</cite>
+    </div>
+
+    <!-- DUO — tournage / résultat final -->
+    <div class="img-duo reveal">
+      <figure>
+        <img src="images/ccf_tournage_sol.jpg" alt="Le sol surélevé en studio">
+        <figcaption>Le sol surélevé du studio permettait de dissimuler l'équipe et les mécanismes en dessous.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/ccf_frank_sol.jpg" alt="Frank qui émerge du sol">
+        <figcaption>Le résultat à l'écran : une reconstitution organique et viscérale.</figcaption>
+      </figure>
+    </div>
+
+    <div class="section-title reveal">LA FABRICATION</div>
+
+    <p class="reveal">La séquence a été tournée dans un studio au sud de Londres après la fin du tournage principal — la seule scène du film réalisée en studio. L'équipe a travaillé sur un sol surélevé, ce qui permettait d'actionner marionnettes et pompes depuis le dessous du plancher.</p>
+
+    <p class="reveal">Le plan du sang de Larry coulant à travers le sol est simplement inversé — un fluide rouge pompé à travers les clous visibles à l'écran. Les petits bras de Frank qui surgissent sont des animatroniques, fabriqués en grand nombre pour se rapprocher au maximum d'un résultat organique. L'effet de reconstitution de la chair a été obtenu avec de la cire et de la photographie inversée. Il suffit d'inverser la séquence pour que le spectateur assiste, ébahi, à cette naissance.</p>
+
+    <div class="anecdote-card reveal">
+      <div class="anecdote-icon">💡</div>
+      <div class="anecdote-label">LE SAVIEZ-VOUS ?</div>
+      <p class="anecdote-text">Le petit cœur embryonnaire visible sous le plancher a été fabriqué à partir d'un <strong>préservatif</strong>, d'un morceau de tube, de colle et de quelques pièces récupérées. Selon l'équipe, la base des effets spéciaux reposait sur l'utilisation de préservatifs et de lubrifiant — une ironie savoureuse pour un film hanté par la chair et le désir. On utilisait également de la méthylcellulose, un épaississant similaire à la maïzena, pompé en grandes quantités pour obtenir ces liquides visqueux si caractéristiques.</p>
+    </div>
+
+    <!-- IMAGE CENTRÉE — Frank reconstitué -->
+    <figure class="img-center reveal">
+      <img src="images/ccf_frank_final.jpg" alt="Frank sans peau">
+      <figcaption>Frank Cotton, ressuscité mais sans peau. Oliver Smith dans un maquillage de plusieurs heures.</figcaption>
+    </figure>
+
+    <div class="section-title reveal">LA NAISSANCE DES CÉNOBITES</div>
+
+    <p class="reveal">Si la séquence du grenier est le cœur battant d'<em>Hellraiser</em>, les Cénobites en sont l'âme. Barker les appelait ses "super-bouchers". Pour les concevoir, il puisa dans un mélange de sources : l'esthétique punk de la Londres des années 80, l'imagerie catholique, et les clubs sadomasochistes qu'il fréquentait à New York et à Amsterdam. Pour Pinhead en particulier, l'inspiration vient des sculptures fétiches africaines.</p>
+
+    <p class="reveal">Le premier design envisagé pour Pinhead était radicalement différent. Il ressemblait à Shuna Sassi, personnage de son futur film <em>Nightbreed</em> — une silhouette hérissée de piquants. Quand Bob Keen a vu les croquis, la réponse a été immédiate : impossible à réaliser avec le budget. Un tel maquillage aurait nécessité six jours de travail par personnage. C'est de cette contrainte qu'est né le Pinhead que le monde connaît — cette grille géométrique de clous plantés dans un crâne rasé, d'une élégance presque liturgique.</p>
+
+    <!-- GALERIE CÉNOBITES -->
+    <div class="cenobites-grid reveal">
+      <div class="cenobite-card">
+        <img src="images/ccf_pinhead.jpg" alt="Pinhead">
+        <div class="cenobite-card-overlay">
+          <div class="cenobite-name">PINHEAD</div>
+          <div class="cenobite-sub">Doug Bradley</div>
+        </div>
+      </div>
+      <div class="cenobite-card">
+        <img src="images/ccf_chatterer.jpg" alt="Chatterer">
+        <div class="cenobite-card-overlay">
+          <div class="cenobite-name">CHATTERER</div>
+          <div class="cenobite-sub">Nicholas Vince</div>
+        </div>
+      </div>
+      <div class="cenobite-card">
+        <img src="images/ccf_butterball.jpg" alt="Butterball">
+        <div class="cenobite-card-overlay">
+          <div class="cenobite-name">BUTTERBALL</div>
+          <div class="cenobite-sub">Simon Bamford</div>
+        </div>
+      </div>
+      <div class="cenobite-card">
+        <img src="images/ccf_female.jpg" alt="Female Cenobite">
+        <div class="cenobite-card-overlay">
+          <div class="cenobite-name">FEMALE</div>
+          <div class="cenobite-sub">Grace Kirby</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title reveal">DOUG BRADLEY FACE AU MIROIR</div>
+
+    <!-- IMAGE FLOTTANTE DROITE — Doug Bradley en Pinhead -->
+    <figure class="img-float reveal">
+      <img src="images/ccf_pinhead_full.jpg" alt="Doug Bradley en Pinhead">
+      <figcaption>Doug Bradley dans la peau de Pinhead — cinq à six heures de maquillage par jour.</figcaption>
+    </figure>
+
+    <p class="reveal">Doug Bradley s'est vu proposer deux rôles dans <em>Hellraiser</em>. Le premier : un déménageur de matelas, figurant. Le second : le Cénobite principal, entièrement recouvert de maquillage. Bradley a failli choisir le déménageur — au moins, dans ce rôle, le public verrait son visage. Il a finalement opté pour Pinhead, une décision qui allait définir toute sa carrière.</p>
+
+    <p class="reveal">Le maquillage prenait cinq à six heures à appliquer lors des premières sessions. La première fois que Bradley s'est retrouvé face à lui-même dans le miroir avec le costume complet, il a passé un long moment à apprivoiser ce nouveau visage, à jouer ses répliques devant son reflet. C'est là, dit-il, que la plupart de ses décisions sur le personnage ont été prises.</p>
+
+    <div class="pull-quote reveal">
+      <p>« J'avais un sentiment de puissance, de majesté, d'une certaine beauté. Sa menace est implicite : regardez ce que je me suis fait à moi-même — imaginez maintenant ce que je peux vous faire. »</p>
+      <cite>Doug Bradley</cite>
+    </div>
+
+    <p class="reveal">Barker avait donné une indication précise : concevoir Pinhead comme un croisement entre un administrateur et un chirurgien qui dirige un hôpital où il n'y aurait que des salles d'opération. Cette vision d'un monstre bureaucrate, méthodique et éloquent, tranchait radicalement avec les codes du genre. Les producteurs suggéraient de lui faire cracher des blagues, comme Freddy. Barker a tenu bon. Et il avait raison.</p>
+
+    <div class="clearfix"></div>
+
+    <div class="section-title reveal">LES AUTRES CÉNOBITES</div>
+
+    <p class="reveal">Butterball est né d'une conversation simple : l'idée d'un personnage obèse qui jouerait constamment avec ses propres plaies. Chatterer — baptisé en interne "le pauvre bougre" — a été conçu autour d'un masque qui rendait son porteur totalement aveugle. Barker a insisté pour que chaque Cénobite soit joué par un véritable acteur. Le studio aurait préféré des figurants, moins coûteux. Barker a refusé, convaincu que même sous six heures de maquillage, les acteurs apporteraient quelque chose d'irremplaçable.</p>
+
+    <div class="anecdote-card reveal">
+      <div class="anecdote-icon">💡</div>
+      <div class="anecdote-label">LE SAVIEZ-VOUS ?</div>
+      <p class="anecdote-text">Butterball et Chatterer avaient des dialogues dans le scénario original. Mais une fois en costume, les deux acteurs étaient incapables d'articuler correctement. Leurs répliques ont été redistribuées — principalement à Pinhead, ce qui a contribué à faire de lui le personnage dominant du film. Par ailleurs, le surnom "Pinhead" n'apparaît nulle part dans le film original : au générique, le personnage est crédité comme "Lead Cenobite". C'est l'équipe maquillage qui a inventé ce surnom pendant le tournage. <strong>Barker a toujours détesté ce surnom</strong>, le jugeant indigne. Dans sa série de comics de 2011, il a restauré le nom original : Priest.</p>
+    </div>
+
+    <!-- IMAGE FINALE PLEINE LARGEUR -->
+    <figure class="img-full reveal">
+      <img src="images/ccf_hellraiser_final.jpg" alt="Hellraiser - image finale">
+      <figcaption>Hellraiser, 1987. Un million de dollars de budget. Une icône du cinéma d'horreur pour l'éternité.</figcaption>
+    </figure>
+
+  </div><!-- fin article-body -->
+
+  <!-- SHARE -->
+  <div class="share-bar reveal">
+    <span class="share-label">Partager</span>
+    <button class="share-btn" onclick="shareTwitter()">
+      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      X / Twitter
+    </button>
+    <button class="share-btn" onclick="shareFacebook()">
+      <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      Facebook
+    </button>
+    <button class="share-btn" id="copyBtn">
+      <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+      Copier le lien
+    </button>
+  </div>
+
+</div><!-- fin article-wrapper -->
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script>
+function toggleNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const spans = document.getElementById('burger').querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+function shareTwitter() {
+  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`, '_blank');
+}
+function shareFacebook() {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
+}
+document.getElementById('copyBtn').addEventListener('click', function() {
+  navigator.clipboard?.writeText(location.href);
+  this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+  setTimeout(() => {
+    this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+  }, 2000);
+});
+
+document.querySelectorAll('a').forEach(a => {
+  if (a.href && !a.href.startsWith('mailto') && !a.href.startsWith('#')) a.target = '_blank';
+});
+</script>
+</body>
+</html>
