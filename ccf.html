@@ -56,6 +56,60 @@
   <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
 </footer>
 
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+  <button class="search-close" onclick="toggleSearch()">✕</button>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+    <button class="search-submit" onclick="doSearch()">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+  <p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<style>
+.search-overlay {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.92); backdrop-filter: blur(8px);
+  flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  padding: 40px 20px;
+}
+.search-overlay.active { display: flex; }
+.search-close {
+  position: absolute; top: 24px; right: 32px;
+  background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; opacity: .6; transition: opacity .2s;
+}
+.search-close:hover { opacity: 1; }
+.search-box {
+  display: flex; align-items: center; gap: 0;
+  border-bottom: 2px solid #E8253A; width: 100%; max-width: 640px;
+}
+.search-box input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px;
+  color: #fff; padding: 8px 0;
+}
+.search-box input::placeholder { color: #444; }
+.search-submit { background: none; border: none; cursor: pointer; color: #E8253A; padding: 4px; }
+.search-submit svg { width: 24px; height: 24px; }
+.search-hint { font-size: 10px; letter-spacing: 2px; color: #555; text-transform: uppercase; }
+.search-results { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 640px; }
+.search-result-card {
+  display: flex; align-items: center; gap: 16px;
+  background: #181818; border: 1px solid #2a2a2a; border-radius: 10px;
+  padding: 12px 16px; text-decoration: none; color: #fff;
+  transition: border-color .2s, background .2s; cursor: pointer;
+}
+.search-result-card:hover { border-color: #E8253A; background: rgba(232,37,58,.07); }
+.search-result-img { width: 44px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #2a2a2a; }
+.search-result-info { display: flex; flex-direction: column; gap: 4px; }
+.search-result-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: #fff; }
+.search-result-meta { font-size: 11px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+.search-no-result { font-size: 13px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+</style>
+
 <script>
 const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
@@ -307,7 +361,51 @@ function toggleNav() {
 }
 
 function toggleSearch() {
-  window.location.href = 'index.html#search';
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.toggle('active');
+  if (overlay.classList.contains('active')) {
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  } else {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('searchOverlay').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+  if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+    doSearch();
+  }
+});
+async function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  const resultsEl = document.getElementById('searchResults');
+  if (!query) return;
+  resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+  if (!data.length) {
+    resultsEl.innerHTML = `<p class="search-no-result">Nous n'avons pas encore écrit sur <em style="color:#fff">« ${query} »</em>, mais n'hésitez pas à nous le conseiller !</p><img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnA0dW5ieGZpdG4xd216eXZ1cjdnMDRpM2c3MGs4bDNlbGptZTAyayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sk6yL9EGVeAcE/giphy.gif" alt="" style="margin-top:20px;border-radius:10px;max-width:300px;display:block;margin-left:auto;margin-right:auto;">`;
+    return;
+  }
+  resultsEl.innerHTML = data.map(r => `
+    <a class="search-result-card" href="${r.link || '#'}">
+      ${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
+      <div class="search-result-info">
+        <div class="search-result-title">${r.title}</div>
+        <div class="search-result-meta">${r.year || ''}${r.genre ? ' · ' + r.genre : ''}</div>
+      </div>
+    </a>
+  `).join('');
 }
 
 function shareTwitter() {
