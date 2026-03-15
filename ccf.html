@@ -236,11 +236,15 @@ function renderSection(s) {
       return `
         <div class="img-duo reveal">
           <figure>
-            <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+            <div class="img-duo-wrap">
+              <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+            </div>
             ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
           </figure>
           <figure>
-            <img src="${s.img_2}" alt="${s.caption_2 || ''}">
+            <div class="img-duo-wrap">
+              <img src="${s.img_2}" alt="${s.caption_2 || ''}">
+            </div>
             ${s.caption_2 ? `<figcaption>${s.caption_2}</figcaption>` : ''}
           </figure>
         </div>`;
