@@ -275,13 +275,15 @@ const dripsData = [
 dripsData.forEach(d => {
   const el = document.createElement('div');
   el.className = 'blood-drip';
-  el.style.cssText = `
-    left: ${d.left}px;
-    width: ${d.width}px;
-    --drip-length: ${d.length}px;
-    animation-duration: ${d.duration}s;
-    animation-delay: ${d.delay}s;
-  `;
+  el.style.cssText = `left: ${d.left}px; animation-duration: ${d.duration}s; animation-delay: ${d.delay}s;`;
+  // SVG goutte arrondie : rectangle + demi-cercle en bas
+  const w = d.width;
+  const h = d.length;
+  const r = w / 2;
+  el.innerHTML = `<svg width="${w}" height="${h + r}" viewBox="0 0 ${w} ${h + r}">
+    <rect x="0" y="0" width="${w}" height="${h}" fill="#cc0000"/>
+    <ellipse cx="${r}" cy="${h}" rx="${r}" ry="${r * 1.2}" fill="#cc0000"/>
+  </svg>`;
   bloodContainer.appendChild(el);
 });
 
