@@ -81,8 +81,7 @@ nav {
 
 @keyframes drip {
   0%   { height: 0px; opacity: 1; }
-  70%  { opacity: 1; }
-  85%  { height: var(--drip-length); opacity: 1; }
+  60%  { height: var(--drip-length); opacity: 1; }
   100% { height: var(--drip-length); opacity: 0; }
 }
 
