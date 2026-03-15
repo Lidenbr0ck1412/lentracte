@@ -151,7 +151,7 @@ nav {
 
 /* Pull quote */
 .pull-quote {
-  border-left: 4px solid var(--red); padding: 20px 28px; margin: 40px 0;
+  border-left: 4px solid var(--red); padding: 20px 28px; margin: 56px 0 40px;
   background: rgba(232,37,58,.05); border-radius: 0 8px 8px 0;
 }
 .pull-quote p {
@@ -178,28 +178,49 @@ nav {
 .anecdote-text strong { color: var(--white); }
 
 /* ── IMAGES ── */
+/* Mixin dégradé bas → transparent */
+.img-full, .img-float, .img-float-left, .img-duo figure, .img-center { position: relative; }
 
 /* Image pleine largeur */
 .img-full {
-  width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+  width: calc(100% + 48px);
+  position: relative;
+  left: -24px;
   margin: 56px 0;
+  overflow: hidden;
+  border-radius: 4px;
 }
 .img-full img {
-  width: 100%; max-height: 600px; object-fit: cover; display: block;
+  width: 100%; max-height: 550px; object-fit: cover; display: block;
+}
+.img-full::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
+  pointer-events: none;
 }
 .img-full figcaption {
-  max-width: 820px; margin: 12px auto 0; padding: 0 24px;
+  padding: 10px 0 0;
   font-size: 11px; color: var(--grey); font-style: italic; letter-spacing: .5px;
 }
 
 /* Image flottante droite */
 .img-float {
-  float: right; margin: 0 0 24px 36px;
+  float: right; margin: 8px 0 24px 36px;
   width: 340px; flex-shrink: 0;
+  position: relative;
 }
 .img-float img {
   width: 100%; border-radius: 10px; display: block;
   box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+.img-float::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40%; border-radius: 0 0 10px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+  pointer-events: none;
 }
 .img-float figcaption {
   font-size: 11px; color: var(--grey); font-style: italic;
@@ -209,12 +230,20 @@ nav {
 
 /* Image flottante gauche */
 .img-float-left {
-  float: left; margin: 0 36px 24px 0;
+  float: left; margin: 8px 36px 24px 0;
   width: 320px;
+  position: relative;
 }
 .img-float-left img {
   width: 100%; border-radius: 10px; display: block;
   box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+.img-float-left::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40%; border-radius: 0 0 10px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+  pointer-events: none;
 }
 .img-float-left figcaption {
   font-size: 11px; color: var(--grey); font-style: italic;
@@ -256,23 +285,38 @@ nav {
 }
 .cenobite-sub { font-size: 10px; color: var(--grey); letter-spacing: .5px; margin-top: 2px; }
 
-/* Image côte à côte (avant/après ou tournage) */
+/* Image côte à côte */
 .img-duo {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
   margin: 48px 0;
 }
-.img-duo figure { position: relative; }
+.img-duo figure { position: relative; overflow: hidden; border-radius: 8px; }
+.img-duo figure::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+  pointer-events: none;
+}
 .img-duo img { width: 100%; border-radius: 8px; display: block; }
 .img-duo figcaption {
   font-size: 11px; color: var(--grey); font-style: italic;
   margin-top: 8px; letter-spacing: .5px;
 }
 
-/* Image centrée avec légende */
+/* Image centrée */
 .img-center {
   margin: 48px auto; max-width: 680px;
+  position: relative; overflow: hidden; border-radius: 10px;
 }
-.img-center img { width: 100%; border-radius: 10px; display: block; box-shadow: 0 8px 40px rgba(0,0,0,.6); }
+.img-center::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+  pointer-events: none;
+}
+.img-center img { width: 100%; display: block; box-shadow: 0 8px 40px rgba(0,0,0,.6); }
 .img-center figcaption {
   font-size: 11px; color: var(--grey); font-style: italic;
   margin-top: 10px; text-align: center; letter-spacing: .5px;
