@@ -131,10 +131,21 @@ nav {
   margin-bottom: 20px;
 }
 .article-intro:last-of-type {
-  margin-bottom: 40px;
-  padding-bottom: 40px;
+  margin-bottom: 24px;
+  padding-bottom: 0;
+}
+.article-intro + .article-transition {
+  border-top: 1px solid #1e1e1e;
+  padding-top: 40px;
+}
+.article-transition {
+  font-size: 15px; line-height: 1.9;
+  color: rgba(255,255,255,.72);
+  margin-bottom: 48px;
+  padding-bottom: 48px;
   border-bottom: 1px solid #1e1e1e;
 }
+.article-transition strong { color: var(--red); font-weight: 700; }
 .article-intro strong { color: var(--red); font-weight: 700; font-style: italic; }
 .article-body p {
   font-size: 15px; line-height: 1.95; color: rgba(255,255,255,.72);
