@@ -126,14 +126,16 @@ nav {
 /* Intro */
 .article-intro {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(17px, 2vw, 20px); font-weight: 400; font-style: normal;
-  line-height: 2; color: rgba(255,255,255,.85);
+  font-size: clamp(16px, 1.8vw, 18px); font-weight: 400; font-style: italic;
+  line-height: 1.9; color: rgba(255,255,255,.78);
+  margin-bottom: 20px;
+}
+.article-intro:last-of-type {
   margin-bottom: 40px;
   padding-bottom: 40px;
   border-bottom: 1px solid #1e1e1e;
 }
-.article-intro em { font-style: italic; }
-.article-intro strong { color: var(--red); font-weight: 600; }
+.article-intro strong { color: var(--red); font-weight: 500; font-style: normal; }
 .article-body p {
   font-size: 15px; line-height: 1.95; color: rgba(255,255,255,.72);
   margin-bottom: 26px;
