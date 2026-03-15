@@ -386,13 +386,22 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 @media (max-width: 768px) {
   .logo img { height: 60px; }
   .hero-sticker { width: 100px; bottom: -30px; right: 24px; }
-  nav { padding: 0 16px; }
+  nav { padding: 0 16px; height: 70px; }
+  .nav-right { margin-right: 0; gap: 16px; }
+  .search-btn { display: flex; }
   .nav-links { display: none; }
   .burger { display: flex; }
+  .mobile-nav { top: 70px; }
   .hero-content { padding: 0 20px 48px; }
   .hero { height: 75vh; }
+  .hero-bg img { object-position: center center; }
   .img-float, .img-float-left { float: none; width: 100%; margin: 24px 0; }
   .cenobites-grid { grid-template-columns: repeat(2, 1fr); }
   .img-duo { grid-template-columns: 1fr; }
   .stills-grid { grid-template-columns: 1fr; }
+}
+
+/* ── PARALLAX GYROSCOPE (mobile) ── */
+@media (max-width: 768px) {
+  .hero-bg img { transition: transform .1s ease-out; }
 }
