@@ -264,7 +264,7 @@ nav {
 /* Image flottante gauche */
 .img-float-left {
   float: left; margin: 8px 36px 24px 0;
-  width: 320px;
+  width: 200px;
   position: relative; overflow: hidden; border-radius: 10px;
 }
 .img-float-left img {
