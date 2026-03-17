@@ -165,6 +165,12 @@ nav {
 .article-body p strong { color: var(--white); font-weight: 700; }
 .article-body p em { color: rgba(255,255,255,.88); font-style: italic; }
 
+/* Les paragraphes après une image flottante passent en dessous */
+.img-float ~ p,
+.img-float-left ~ p {
+  clear: both;
+}
+
 /* Section title */
 .section-title {
   font-family: 'Bebas Neue', sans-serif;
