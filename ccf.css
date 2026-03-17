@@ -457,6 +457,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 /* REVEAL */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal.visible img { transition: transform .5s ease; }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--black); }
