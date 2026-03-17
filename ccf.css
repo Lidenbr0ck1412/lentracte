@@ -242,7 +242,17 @@ nav {
 .img-float {
   float: right; margin: 8px 0 24px 36px;
   width: 340px; flex-shrink: 0;
+  position: relative;
+}
+.img-float .img-float-wrap {
   position: relative; overflow: hidden; border-radius: 10px;
+}
+.img-float .img-float-wrap::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+  pointer-events: none;
 }
 .img-float img {
   width: 100%; display: block;
@@ -250,13 +260,6 @@ nav {
   transition: transform .5s ease;
 }
 .img-float:hover img { transform: scale(1.04); }
-.img-float::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 40%;
-  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
-  pointer-events: none;
-}
 .img-float figcaption {
   font-size: 12px; color: rgba(255,255,255,.65); font-style: italic;
   margin-top: 8px; letter-spacing: .5px;
@@ -267,7 +270,17 @@ nav {
 .img-float-left {
   float: left; margin: 8px 36px 24px 0;
   width: 200px;
+  position: relative;
+}
+.img-float-left .img-float-wrap {
   position: relative; overflow: hidden; border-radius: 10px;
+}
+.img-float-left .img-float-wrap::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+  pointer-events: none;
 }
 .img-float-left img {
   width: 100%; display: block;
@@ -275,13 +288,6 @@ nav {
   transition: transform .5s ease;
 }
 .img-float-left:hover img { transform: scale(1.04); }
-.img-float-left::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 40%;
-  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
-  pointer-events: none;
-}
 .img-float-left figcaption {
   font-size: 12px; color: rgba(255,255,255,.65); font-style: italic;
   margin-top: 8px; letter-spacing: .5px;
