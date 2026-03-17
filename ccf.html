@@ -214,14 +214,18 @@ function renderSection(s) {
     case 'img_float':
       return `
         <figure class="img-float reveal">
-          <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+          <div class="img-float-wrap">
+            <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+          </div>
           ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
         </figure>`;
 
     case 'img_float_left':
       return `
         <figure class="img-float-left reveal">
-          <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+          <div class="img-float-wrap">
+            <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+          </div>
           ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
         </figure>`;
 
