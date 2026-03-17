@@ -187,7 +187,7 @@ function renderSection(s) {
       return `<div class="section-title reveal">${s.titre}</div>`;
 
     case 'text':
-      return mdText(s.contenu);
+      return mdText(s.contenu) + '<div class="clearfix"></div>';
 
     case 'pull_quote':
       return `
