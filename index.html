@@ -645,8 +645,6 @@ async function sendContactMessage() {
   }
 }
 
-document.querySelectorAll("a").forEach(a => { if (a.href && !a.href.startsWith("mailto") && !a.href.startsWith("#")) a.target = "_blank"; });
-
 // Ouvrir la recherche si on arrive avec #search
 if (window.location.hash === '#search') {
   setTimeout(() => toggleSearch(), 300);
