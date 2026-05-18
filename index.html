@@ -443,19 +443,13 @@ function toggleMobileNav() {
 
 function toggleMobileReviews() {
   const inner = document.getElementById('reviewsMobileInner');
-  inner.scrollBy({ top: 400, behavior: 'smooth' });
-}
-
-// Hide button and fade when scrolled to the bottom
-document.getElementById('reviewsMobileInner').addEventListener('scroll', () => {
-  const inner = document.getElementById('reviewsMobileInner');
   const fade = document.getElementById('reviewsMobileFade');
   const toggle = document.querySelector('.reviews-mobile-toggle');
-  const atBottom = inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 20;
-  fade.style.opacity = atBottom ? '0' : '1';
-  toggle.style.opacity = atBottom ? '0' : '1';
-  toggle.style.pointerEvents = atBottom ? 'none' : 'all';
-});
+  inner.classList.add('expanded');
+  fade.style.opacity = '0';
+  toggle.style.opacity = '0';
+  toggle.style.pointerEvents = 'none';
+}
 
 // ─── SCROLL ANIMATE ───
 const observer = new IntersectionObserver((entries) => {
