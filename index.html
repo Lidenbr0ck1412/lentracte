@@ -315,43 +315,8 @@ function slideReviews(dir) {
 let reviewsPos = 0;
 const CARD_W = 234; // 220 + 14 gap
 
-// ─── WHEEL SCROLL ON CAROUSEL ───
+// ─── TOUCH SUPPORT (mobile / tablette) ───
 const reviewsDesktop = document.getElementById('reviewsDesktop');
-let wheelTimeout = null;
-reviewsDesktop.addEventListener('wheel', (e) => {
-  // Only intercept vertical scroll
-  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-  e.preventDefault();
-  clearTimeout(wheelTimeout);
-  wheelTimeout = setTimeout(() => {
-    const track = document.getElementById('reviewsTrack');
-    const container = track.parentElement;
-    const maxScroll = track.scrollWidth - container.clientWidth;
-    reviewsPos = Math.max(0, Math.min(reviewsPos + e.deltaY * 1.5, maxScroll));
-    track.style.transform = `translateX(-${reviewsPos}px)`;
-    // sync dots
-    const activePage = Math.round(reviewsPos / ((window._reviewsPerPage||5) * CARD_W));
-    window._reviewsActiveDot = Math.min(activePage, (window._totalReviewPages||1) - 1);
-    document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === window._reviewsActiveDot));
-  }, 10);
-}, { passive: false });
-
-// ─── TRACKPAD HORIZONTAL SWIPE + TOUCH ───
-// Trackpad: intercept horizontal deltaX
-reviewsDesktop.addEventListener('wheel', (e) => {
-  if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
-  e.preventDefault();
-  const track = document.getElementById('reviewsTrack');
-  const container = track.parentElement;
-  const maxScroll = track.scrollWidth - container.clientWidth;
-  reviewsPos = Math.max(0, Math.min(reviewsPos + e.deltaX * 1.5, maxScroll));
-  track.style.transform = `translateX(-${reviewsPos}px)`;
-  const activePage = Math.round(reviewsPos / (reviewsPerPage * CARD_W));
-  reviewsActiveDot = Math.min(activePage, totalReviewPages - 1);
-  document.querySelectorAll('#reviewsDots .dot').forEach((d, i) => d.classList.toggle('active', i === reviewsActiveDot));
-}, { passive: false });
-
-// Touch support (mobile / tablette)
 let touchStartX = 0;
 let touchStartPos = 0;
 reviewsDesktop.addEventListener('touchstart', (e) => {
