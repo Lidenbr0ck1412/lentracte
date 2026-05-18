@@ -159,18 +159,19 @@
     </div>
     <div class="contact-right">
       <div class="form-group">
-  <label>Nom ou Pseudo</label>
-  <input type="text" id="contactName" placeholder="Jules Winfield">
-</div>
-<div class="form-group">
-  <label>Votre film préféré</label>
-  <input type="text" id="contactFilm" placeholder="Pulp Fiction">
-</div>
-<div class="form-group">
-  <label>Votre message</label>
-  <textarea id="contactMessage" placeholder="Dites-moi ce que vous en pensez..." rows="4"></textarea>
-</div>
-<button class="btn-send" onclick="sendContactEmail()">ENVOYER</button>
+        <label>Nom ou Pseudo</label>
+        <input type="text" id="contactName" placeholder="Jules Winfield">
+      </div>
+      <div class="form-group">
+        <label>Votre film préféré</label>
+        <input type="text" id="contactFilm" placeholder="Pulp Fiction">
+      </div>
+      <div class="form-group">
+        <label>Votre message</label>
+        <textarea id="contactMessage" placeholder="Dites-moi ce que vous en pensez..."></textarea>
+      </div>
+      <button class="btn-send" onclick="sendContactMessage()">ENVOYER</button>
+      <div id="contactFeedback" style="margin-top: 12px; font-size: 13px; min-height: 18px;"></div>
       <div class="social-block">
         <p>NOUS SUIVRE SUR LES RÉSEAUX :</p>
         <div class="social-icons">
@@ -623,24 +624,58 @@ async function doSearch() {
 </script>
 
 <script>
-  function sendContactEmail() {
-  const name = document.getElementById('contactName').value || 'Anonyme';
-  const film = document.getElementById('contactFilm').value || 'Non précisé';
-  const message = document.getElementById('contactMessage').value || '';
-  
-  const subject = encodeURIComponent(`Contact L'Entracte - ${name}`);
-  const body = encodeURIComponent(
-    `Nom : ${name}\n` +
-    `Film préféré : ${film}\n\n` +
-    `Message :\n${message}`
-  );
-  
-  // Remplace TON_EMAIL@gmail.com par ton vraie adresse
-  window.location.href = `mailto:jeremy.mahieu@outlook.be?subject=${subject}&body=${body}`;
-    const btn = document.querySelector('.btn-send');
-btn.textContent = 'MESSAGE PRÊT !';
-setTimeout(() => btn.textContent = 'ENVOYER', 2000);
+async function sendContactMessage() {
+  const name = document.getElementById('contactName').value.trim();
+  const film = document.getElementById('contactFilm').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+  const feedback = document.getElementById('contactFeedback');
+  const btn = document.querySelector('.btn-send');
+
+  // Validation basique
+  if (!name || !message) {
+    feedback.textContent = '⚠ Merci de remplir au moins le nom et le message';
+    feedback.style.color = '#ff6b6b';
+    return;
+  }
+
+  // État "envoi en cours"
+  btn.disabled = true;
+  btn.textContent = 'ENVOI...';
+  feedback.textContent = '';
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        name: name,
+        favorite_film: film || null,
+        message: message
+      })
+    });
+
+    if (!res.ok) throw new Error('Échec de l\'envoi');
+
+    // Succès
+    feedback.textContent = '✓ Message envoyé, merci !';
+    feedback.style.color = '#4ade80';
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactFilm').value = '';
+    document.getElementById('contactMessage').value = '';
+  } catch (err) {
+    feedback.textContent = '⚠ Erreur lors de l\'envoi, réessayez plus tard';
+    feedback.style.color = '#ff6b6b';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'ENVOYER';
+  }
 }
+
 document.querySelectorAll("a").forEach(a => { if (a.href && !a.href.startsWith("mailto") && !a.href.startsWith("#")) a.target = "_blank"; });
 
 // Ouvrir la recherche si on arrive avec #search
