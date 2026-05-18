@@ -804,6 +804,7 @@ footer {
 /* ─── MOBILE ─── */
 @media (max-width: 768px) {
   nav { padding: 0 16px; }
+  .nav-right { margin-right: 0; gap: 12px; }
   .nav-links { display: none; }
   .burger { display: flex; }
   .logo-title { font-size: 24px; }
