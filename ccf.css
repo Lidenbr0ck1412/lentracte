@@ -55,9 +55,33 @@ nav {
 .search-btn svg { width: 20px; height: 20px; }
 .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
 .burger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
-.mobile-nav { display: none; position: fixed; top: 100px; left: 0; right: 0; background: var(--dark); z-index: 99; flex-direction: column; border-bottom: 2px solid var(--red); }
-.mobile-nav.open { display: flex; }
-.mobile-nav a { padding: 14px 24px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #1e1e1e; }
+.mobile-nav {
+  display: flex;
+  position: fixed;
+  top: 100px; left: 0; right: 0; bottom: 0;
+  background: rgba(10,10,10,.97);
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+.mobile-nav.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-nav a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 3px;
+  color: var(--white);
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.mobile-nav a:hover, .mobile-nav a.active { color: var(--red); }
 
 .hero-sticker {
   position: absolute;
