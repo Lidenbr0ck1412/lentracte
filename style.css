@@ -738,24 +738,6 @@ nav {
 .form-group input::placeholder { color: #555; }
 .form-group input:focus { border-color: var(--red); }
 
-.form-group textarea {
-  background: #2a2a2a;
-  border: 1px solid #333;
-  border-radius: 6px;
-  padding: 10px 14px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  color: var(--white);
-  outline: none;
-  transition: border-color .2s;
-  resize: vertical;
-  min-height: 100px;
-  width: 100%;
-  box-sizing: border-box;
-}
-.form-group textarea::placeholder { color: #555; font-family: 'Montserrat', sans-serif; }
-.form-group textarea:focus { border-color: var(--red); }
-
 .btn-send {
   background: var(--red);
   color: var(--white);
@@ -865,13 +847,13 @@ footer {
   }
   .reviews-mobile { position: relative; background: #0a0a0a; }
   .reviews-mobile-inner {
-    height: 580px;
-    overflow-y: scroll;
-    overflow-x: hidden;
     position: relative;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    overflow: hidden;
+    max-height: 1080px;
+    transition: max-height .5s ease;
+  }
+  .reviews-mobile-inner.expanded {
+    max-height: 99999px;
   }
   .reviews-mobile-inner::-webkit-scrollbar { display: none; }
   .reviews-mobile-fade {
