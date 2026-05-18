@@ -59,9 +59,7 @@ nav {
 .burger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
 .mobile-nav { display: none; position: fixed; top: 100px; left: 0; right: 0; background: var(--dark); z-index: 99; flex-direction: column; border-bottom: 2px solid var(--red); }
 .mobile-nav.open { display: flex; }
-.mobile-nav a { padding: 22px 24px; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--white); border-bottom: 1px solid #1a1a1a; transition: color .2s, background .2s; }
-.mobile-nav a:last-child { border-bottom: none; }
-.mobile-nav a:hover, .mobile-nav a.active { color: var(--red); background: #0a0a0a; }
+.mobile-nav a { padding: 14px 24px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #1e1e1e; }
 
 /* ── HERO ── */
 .hero {
@@ -282,7 +280,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 /* RESPONSIVE */
 @media (max-width: 768px) {
   nav { padding: 0 16px; }
-  .nav-right { margin-right: 0; gap: 12px; }
+  .nav-right { margin-right: 0; }
   .nav-links { display: none; }
   .burger { display: flex; }
   .hero-poster-zone { display: none; }
