@@ -358,10 +358,7 @@ document.getElementById('copyBtn').addEventListener('click', function() {
     this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
   }, 2000);
 });
-
-document.querySelectorAll("a").forEach(a => {
-  if (a.href && !a.href.startsWith("mailto") && !a.href.startsWith("#")) a.target = "_blank";
-});
+  
 </script>
 </body>
 </html>
