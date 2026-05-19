@@ -867,13 +867,13 @@ footer {
   }
   .reviews-mobile { position: relative; background: #0a0a0a; }
   .reviews-mobile-inner {
-    height: 580px;
-    overflow-y: scroll;
-    overflow-x: hidden;
     position: relative;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    overflow: hidden;
+    max-height: 1080px;
+    transition: max-height .5s ease;
+  }
+  .reviews-mobile-inner.expanded {
+    max-height: 99999px;
   }
   .reviews-mobile-inner::-webkit-scrollbar { display: none; }
   .reviews-mobile-fade {
