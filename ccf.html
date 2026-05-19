@@ -282,6 +282,18 @@ function renderSection(s) {
           </div>
         </div>`;
 
+    case 'audio_clip':
+      return `
+        <div class="audio-clip reveal">
+          <span class="audio-clip-label">${s.titre || '◆ ÉCOUTER'}</span>
+          <button class="audio-clip-btn" onclick="toggleAudioClip(this)" data-src="${s.img_1}" aria-label="Lecture audio">
+            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <div class="audio-clip-progress"><div class="audio-clip-progress-bar"></div></div>
+          ${s.caption_1 ? `<p class="audio-clip-caption">${s.caption_1}</p>` : ''}
+        </div>`;
+
     case 'img_stills': {
       const imgs = [
         { src: s.img_1, cap: s.caption_1 },
@@ -326,6 +338,44 @@ function renderSection(s) {
 
     default:
       return '';
+  }
+}
+
+/* ── AUDIO CLIP : lecture/pause + barre de progression ── */
+let currentAudioClip = null;
+
+function toggleAudioClip(btn) {
+  const src = btn.dataset.src;
+  const wrap = btn.closest('.audio-clip');
+  const progressBar = wrap.querySelector('.audio-clip-progress-bar');
+
+  // Si un autre audio joue, l'arrêter
+  if (currentAudioClip && currentAudioClip.audio && !currentAudioClip.audio.paused && currentAudioClip.btn !== btn) {
+    currentAudioClip.audio.pause();
+    currentAudioClip.btn.classList.remove('playing');
+  }
+
+  // Première fois : créer l'audio
+  if (!btn._audio) {
+    btn._audio = new Audio(src);
+    btn._audio.addEventListener('timeupdate', () => {
+      const pct = (btn._audio.currentTime / btn._audio.duration) * 100;
+      progressBar.style.width = pct + '%';
+    });
+    btn._audio.addEventListener('ended', () => {
+      btn.classList.remove('playing');
+      progressBar.style.width = '0%';
+    });
+  }
+
+  // Toggle play/pause
+  if (btn._audio.paused) {
+    btn._audio.play();
+    btn.classList.add('playing');
+    currentAudioClip = { audio: btn._audio, btn: btn };
+  } else {
+    btn._audio.pause();
+    btn.classList.remove('playing');
   }
 }
 
@@ -479,6 +529,10 @@ function shareTwitter() {
 function shareFacebook() {
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
 }
+
+document.querySelectorAll('a').forEach(a => {
+  if (a.href && !a.href.startsWith('mailto') && !a.href.startsWith('#')) a.target = '_blank';
+});
 
 init();
 </script>
