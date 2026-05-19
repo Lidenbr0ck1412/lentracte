@@ -37,8 +37,10 @@
   </div>
 </nav>
 <div class="mobile-nav" id="mobileNav">
-  <a href="index.html">Accueil</a>
-  <a href="index.html#reviews">Reviews</a>
+  <a href="index.html#reviews" onclick="toggleNav()">Reviews</a>
+  <a href="index.html#ccf" onclick="toggleNav()">Comment c'est fait ?</a>
+  <a href="index.html#tops" onclick="toggleNav()">Les tops</a>
+  <a href="index.html#about" onclick="toggleNav()">À propos</a>
   <a href="index.html#contact" onclick="toggleNav()">Contact</a>
 </div>
 
@@ -278,9 +280,6 @@ function shareFacebook() {
 }
 
 init();
-</script>
-<script>
-document.querySelectorAll("a").forEach(a => { if (a.href </body></body> !a.href.startsWith("mailto") </body></body> !a.href.startsWith("#")) a.target = "_blank"; });
 </script>
 </body>
 </html>
