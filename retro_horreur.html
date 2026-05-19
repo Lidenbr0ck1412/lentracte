@@ -37,8 +37,10 @@
   </div>
 </nav>
 <div class="mobile-nav" id="mobileNav">
-  <a href="index.html">Accueil</a>
-  <a href="index.html#reviews">Reviews</a>
+  <a href="index.html#reviews" onclick="toggleNav()">Reviews</a>
+  <a href="index.html#ccf" onclick="toggleNav()">Comment c'est fait ?</a>
+  <a href="index.html#tops" onclick="toggleNav()">Les tops</a>
+  <a href="index.html#about" onclick="toggleNav()">À propos</a>
   <a href="index.html#contact" onclick="toggleNav()">Contact</a>
 </div>
 
@@ -316,9 +318,6 @@ document.getElementById('copyBtn').addEventListener('click', function() {
     this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
   }, 2000);
 });
-</script>
-<script>
-document.querySelectorAll("a").forEach(a => { if (a.href </body></body> !a.href.startsWith("mailto") </body></body> !a.href.startsWith("#")) a.target = "_blank"; });
 </script>
 </body>
 </html>
