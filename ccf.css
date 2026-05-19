@@ -411,6 +411,67 @@ nav {
   margin-top: 8px; letter-spacing: .5px;
 }
 
+/* Audio clip : encadré spécial pour écouter un son */
+.audio-clip {
+  margin: 48px 0;
+  padding: 32px 28px;
+  background: var(--dark2);
+  border: 1px solid #2a2a2a;
+  border-left: 3px solid var(--red);
+  border-radius: 0 12px 12px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+  text-align: center;
+}
+.audio-clip-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px; letter-spacing: 3px; color: var(--red);
+  text-transform: uppercase;
+}
+.audio-clip-btn {
+  width: 84px; height: 84px;
+  background: var(--red);
+  border: none; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .3s ease;
+  box-shadow: 0 0 0 0 rgba(232,37,58,.4);
+  position: relative;
+}
+.audio-clip-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 16px rgba(232,37,58,0);
+  animation: audioPulse 1.5s ease-out infinite;
+}
+@keyframes audioPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(232,37,58,.5); }
+  100% { box-shadow: 0 0 0 22px rgba(232,37,58,0); }
+}
+.audio-clip-btn svg {
+  width: 36px; height: 36px;
+  fill: var(--white);
+  transition: opacity .2s;
+}
+.audio-clip-btn.playing svg.icon-play { display: none; }
+.audio-clip-btn:not(.playing) svg.icon-pause { display: none; }
+.audio-clip-caption {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 14px; line-height: 1.6;
+  color: rgba(255,255,255,.7);
+  max-width: 480px;
+}
+.audio-clip-progress {
+  width: 100%; max-width: 320px; height: 3px;
+  background: #2a2a2a; border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.audio-clip-progress-bar {
+  height: 100%; width: 0%;
+  background: var(--red);
+  transition: width .15s linear;
+}
+
 /* Image centrée */
 .img-center {
   margin: 48px auto; max-width: 100%;
