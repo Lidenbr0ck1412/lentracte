@@ -255,6 +255,33 @@ function renderSection(s) {
           </figure>
         </div>`;
 
+    case 'img_mosaic':
+      return `
+        <div class="img-mosaic reveal">
+          <div class="mosaic-left">
+            <figure>
+              <div class="img-mosaic-wrap">
+                <img src="${s.img_1}" alt="${s.caption_1 || ''}">
+              </div>
+              ${s.caption_1 ? `<figcaption>${s.caption_1}</figcaption>` : ''}
+            </figure>
+          </div>
+          <div class="mosaic-right">
+            <figure>
+              <div class="img-mosaic-wrap">
+                <img src="${s.img_2}" alt="${s.caption_2 || ''}">
+              </div>
+              ${s.caption_2 ? `<figcaption>${s.caption_2}</figcaption>` : ''}
+            </figure>
+            <figure>
+              <div class="img-mosaic-wrap">
+                <img src="${s.img_3}" alt="${s.caption_3 || ''}">
+              </div>
+              ${s.caption_3 ? `<figcaption>${s.caption_3}</figcaption>` : ''}
+            </figure>
+          </div>
+        </div>`;
+
     case 'img_stills': {
       const imgs = [
         { src: s.img_1, cap: s.caption_1 },
