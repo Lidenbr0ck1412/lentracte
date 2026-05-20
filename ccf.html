@@ -530,10 +530,6 @@ function shareFacebook() {
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
 }
 
-document.querySelectorAll('a').forEach(a => {
-  if (a.href && !a.href.startsWith('mailto') && !a.href.startsWith('#')) a.target = '_blank';
-});
-
 init();
 </script>
 </body>
