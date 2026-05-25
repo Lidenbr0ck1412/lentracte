@@ -156,35 +156,49 @@
     --affiche-w: 220px;
     --affiche-h: 340px;
     --banner-w: 500px;
-    --gap: 22px;
+    --gap: 14px;
+    --track-padding: 20px;
     --t-duration: 0.6s;
     --t-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  /* Espacement vertical autour des carrousels (haut & bas) */
+  /* Carrousel : pleine largeur, padding vertical uniquement (comme l'accueil) */
   .feature-carousel {
     position: relative;
-    padding: 50px 70px 60px;
-    margin: 0 auto;
-    max-width: 1700px;
+    padding: 40px 0 50px;
+    margin: 0;
+    background: var(--black);
   }
   @media (max-width: 900px) {
     .feature-carousel { display: none; }
   }
 
-  /* Viewport : c'est lui qui clip ce qui dépasse */
+  /* Dégradé noir à droite (fade-out comme sur l'accueil) */
+  .feature-carousel::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px;
+    height: 100%;
+    background: linear-gradient(to right, transparent, #0a0a0a);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* Viewport : clip horizontal */
   .feature-viewport {
     overflow: hidden;
     height: var(--affiche-h);
     width: 100%;
   }
 
-  /* Track : glisse horizontalement via translateX */
+  /* Track : glisse horizontalement via translateX, avec padding latéral interne */
   .feature-track {
     display: flex;
     gap: var(--gap);
     align-items: stretch;
     height: 100%;
+    padding: 0 var(--track-padding);
     will-change: transform;
     transition: transform var(--t-duration) var(--t-ease);
   }
@@ -414,6 +428,8 @@ function renderBandeau(key) {
 // On positionne le track pour que la carte active soit visible à gauche.
 // Comme la carte active devient large (banner-w), toutes les cartes avant
 // elle font la largeur d'affiche standard.
+// NB : le padding gauche du track (var(--track-padding)) reste toujours
+// visible, donc on n'a pas besoin de le compenser dans le translateX.
 function updateTrackPosition(key) {
   const state = bandeauState[key];
   const track = document.getElementById(`${key}Track`);
@@ -425,7 +441,6 @@ function updateTrackPosition(key) {
   const gap      = parseFloat(cs.getPropertyValue('--gap'));
 
   // Distance à parcourir : (afficheW + gap) × currentIndex
-  // Toutes les cartes AVANT la bannière sont en mode affiche standard.
   const offset = state.currentIndex * (afficheW + gap);
   track.style.transform = `translateX(-${offset}px)`;
 }
