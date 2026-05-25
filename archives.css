@@ -1,0 +1,326 @@
+/* ════════════════════════════════════════════════════════════════════
+   archives.css
+   ────────────────────────────────────────────────────────────────────
+   Styles spécifiques à la page "Les Archives" (full-reviews.html)
+   Ce fichier dépend de style.css pour les variables (--red, --white...)
+   et les styles partagés (navbar, footer, search overlay).
+   ════════════════════════════════════════════════════════════════════ */
+
+
+/* ──────────────── EN-TÊTE ÉDITORIAL ──────────────── */
+.archives-hero {
+  padding: 70px 40px 50px;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+.archives-hero-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.archives-label {
+  font-family: 'Bebas Neue', sans-serif;
+  color: var(--red);
+  letter-spacing: 6px;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+.archives-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  margin-bottom: 28px;
+  color: var(--white);
+}
+.archives-title em {
+  font-style: italic;
+  color: var(--red);
+  font-weight: 400;
+}
+.archives-intro {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--light-grey);
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+
+/* ──────────────── BARRE DE FILTRES (sticky) ──────────────── */
+.archives-toolbar {
+  border-top: 1px solid #1f1f1f;
+  border-bottom: 1px solid #1f1f1f;
+  padding: 20px 0;
+  background: #0d0d0d;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+}
+.archives-toolbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Champ de recherche dans la page */
+.archives-search {
+  position: relative;
+  flex: 1;
+  max-width: 420px;
+  min-width: 220px;
+}
+.archives-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #888;
+  pointer-events: none;
+}
+.archives-search input {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 10px 14px 10px 40px;
+  color: var(--white);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  outline: none;
+  transition: border-color .2s;
+}
+.archives-search input:focus {
+  border-color: var(--red);
+}
+.archives-search input::placeholder {
+  color: #666;
+}
+
+/* Sélecteur de tri */
+.archives-sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.archives-sort label {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 2px;
+  font-size: 13px;
+  color: #888;
+}
+.archives-sort select {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: var(--white);
+  padding: 9px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color .2s;
+}
+.archives-sort select:focus,
+.archives-sort select:hover {
+  border-color: var(--red);
+}
+
+/* Onglets de filtre exclusif */
+.archives-tabs {
+  max-width: 1400px;
+  margin: 16px auto 0;
+  padding: 0 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.archives-tab {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #888;
+  padding: 7px 16px;
+  border-radius: 50px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.archives-tab:hover {
+  color: var(--white);
+  border-color: #555;
+}
+.archives-tab.active {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+
+
+/* ──────────────── GRILLE D'ARCHIVES ──────────────── */
+.archives-grid-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px;
+  min-height: 50vh;
+}
+.archives-count {
+  font-family: 'Bebas Neue', sans-serif;
+  color: #666;
+  letter-spacing: 3px;
+  font-size: 12px;
+  margin-bottom: 24px;
+}
+.archives-count span {
+  color: var(--red);
+}
+
+.archives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 28px 22px;
+}
+
+/* Carte d'archive (Letterboxd-style) */
+.archive-card {
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform .3s ease;
+}
+.archive-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Image affiche (ratio 2:3) */
+.archive-poster {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1a1a1a;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.archive-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease;
+}
+.archive-card:hover .archive-poster img {
+  transform: scale(1.06);
+}
+
+/* Overlay révélé au survol */
+.archive-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.1) 100%);
+  opacity: 0;
+  transition: opacity .3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px 16px;
+}
+.archive-card:hover .archive-overlay {
+  opacity: 1;
+}
+.archive-overlay-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #e8e8e8;
+  line-height: 1.4;
+  transform: translateY(8px);
+  transition: transform .3s ease;
+}
+.archive-card:hover .archive-overlay-sub {
+  transform: translateY(0);
+}
+
+/* Infos hors image (toujours visibles) */
+.archive-info {
+  padding: 12px 4px 0;
+}
+.archive-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px;
+  letter-spacing: 1.5px;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 4px;
+  /* Tronquer à 2 lignes max */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.archive-year {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--red);
+  font-weight: 600;
+}
+
+/* État vide (aucun résultat) */
+.archives-empty {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 80px 20px;
+  font-style: italic;
+}
+
+
+/* ──────────────── RESPONSIVE ──────────────── */
+@media (max-width: 900px) {
+  .archives-hero {
+    padding: 50px 24px 40px;
+  }
+  .archives-toolbar-inner {
+    padding: 0 24px;
+    gap: 14px;
+  }
+  .archives-tabs {
+    padding: 0 24px;
+  }
+  .archives-grid-wrap {
+    padding: 30px 24px;
+  }
+  .archives-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 24px 16px;
+  }
+  .archive-title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .archives-search {
+    max-width: 100%;
+    flex: 1 0 100%;
+  }
+  .archives-sort {
+    flex: 1;
+    justify-content: flex-start;
+  }
+}
