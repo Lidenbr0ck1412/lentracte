@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Entracte • Comment c'est fait — Les archives</title>
+<link rel="preconnect" href="https://jnlfejbcpudkmcphsfej.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://jnlfejbcpudkmcphsfej.supabase.co">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="ccf.css">
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte" style="height:100px;width:auto;display:block;">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+          Cinéma
+          <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+          <div class="dropdown">
+            <a href="full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+            <a href="ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+            <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+          </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" onclick="toggleSearch()" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    </svg>
+  </div>
+  <div class="burger" onclick="toggleMobileNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="full-reviews.html" onclick="toggleMobileNav()">Reviews</a>
+  <a href="ccf-archives.html" onclick="toggleMobileNav()">Comment c'est fait ?</a>
+  <a href="index.html#tops" onclick="toggleMobileNav()">Les tops</a>
+  <a href="index.html#about" onclick="toggleMobileNav()">À propos</a>
+  <a href="index.html#contact" onclick="toggleMobileNav()">Contact</a>
+</div>
+
+<!-- ─── EN-TÊTE DE PAGE ─── -->
+<header class="ccf-hero-header">
+  <div class="ccf-hero-header-inner">
+    <p class="ccf-page-label">— COMMENT C'EST FAIT —</p>
+    <h1 class="ccf-page-title">
+      Tout ce qui se passe <em>derrière le rideau</em>
+    </h1>
+    <p class="ccf-page-intro">
+      Une saga démarre rarement sur grand écran : elle commence dans un atelier, sur un story-board, dans la tête d'un type obsédé. Voici les histoires de ceux qui ont fabriqué les films qu'on aime — à la sueur, à la silicone, à la débrouille.
+    </p>
+  </div>
+</header>
+
+<!-- ─── HERO (dernier CCF mis en avant) ─── -->
+<section class="ccf-featured" id="ccfFeatured">
+  <!-- Injecté par JS -->
+</section>
+
+<!-- ─── LISTE EN ALTERNANCE ─── -->
+<main class="ccf-list" id="ccfList">
+  <!-- Injecté par JS -->
+</main>
+
+<!-- État vide -->
+<p class="ccf-empty" id="ccfEmpty" style="display:none;">
+  Aucun article "Comment c'est fait" publié pour le moment.
+</p>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+
+<!-- ─── SCRIPT PRINCIPAL ─── -->
+<script>
+// ─── SUPABASE CONFIG ───
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+
+// ─── CHARGEMENT DES CCF ───
+async function loadCcf() {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/ccf?select=id,created_at,title,realisateur,banner,intro_1,tagline,genre,duree,annee&order=created_at.desc`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  const items = await res.json();
+
+  if (!items || !items.length) {
+    document.getElementById('ccfEmpty').style.display = 'block';
+    return;
+  }
+
+  // Le premier (le plus récent) → hero featured
+  renderFeatured(items[0]);
+
+  // Les autres → liste en alternance
+  if (items.length > 1) {
+    renderList(items.slice(1));
+  }
+}
+loadCcf();
+
+// ─── UTILITAIRES ───
+
+// Convertit le markdown basique (gras **texte**, italique *texte*) en HTML.
+// Échappe d'abord les caractères HTML pour éviter les injections.
+function mdToHtml(str) {
+  if (!str) return '';
+  let s = String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+  // Gras : **texte** → <strong>texte</strong>
+  s = s.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+  // Italique : *texte* → <em>texte</em> (mais pas si c'est encore un **)
+  s = s.replace(/(^|[^*])\*([^*]+?)\*(?!\*)/g, '$1<em>$2</em>');
+  return s;
+}
+
+// Échappement HTML simple (pour les titres etc.)
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Tronque proprement à la fin d'une phrase (point/!/?), max ~maxChars.
+// Si pas de fin de phrase trouvée dans la limite, coupe au dernier espace.
+function smartTruncate(str, maxChars = 240) {
+  if (!str) return '';
+  // On enlève le markdown brut juste pour mesurer/couper (mais on garde le texte original)
+  if (str.length <= maxChars) return str;
+
+  // Chercher la dernière ponctuation forte avant maxChars
+  const slice = str.slice(0, maxChars);
+  const lastSentence = Math.max(
+    slice.lastIndexOf('. '),
+    slice.lastIndexOf('! '),
+    slice.lastIndexOf('? ')
+  );
+
+  if (lastSentence > maxChars * 0.5) {
+    // On a trouvé une fin de phrase raisonnablement loin → on coupe là
+    return str.slice(0, lastSentence + 1);
+  }
+
+  // Sinon, on coupe au dernier espace pour éviter de couper un mot en deux
+  const lastSpace = slice.lastIndexOf(' ');
+  return str.slice(0, lastSpace > 0 ? lastSpace : maxChars) + '…';
+}
+
+// Construit l'accroche : tagline + début tronqué de intro_1
+// Si intro_1 est NULL (cas Godzilla), renvoie juste la tagline plus présente.
+function buildAccroche(item) {
+  const tagline = item.tagline ? item.tagline.trim() : '';
+  const intro = item.intro_1 ? item.intro_1.trim() : '';
+
+  if (!intro) {
+    // Fallback : seulement la tagline (cas Godzilla)
+    return { tagline, accroche: '' };
+  }
+
+  return {
+    tagline,
+    accroche: smartTruncate(intro, 240)
+  };
+}
+
+// Construit le numéro d'épisode formaté (#01, #02, ...)
+// On utilise l'id ordonné par date de publication ascendante.
+// Pour simplifier, on numérote selon l'ordre dans Supabase (id).
+function formatNumero(id) {
+  const num = Number(id);
+  return '#' + (num < 10 ? '0' + num : num);
+}
+
+// ─── RENDU HERO ───
+function renderFeatured(item) {
+  const featuredEl = document.getElementById('ccfFeatured');
+  const { tagline, accroche } = buildAccroche(item);
+  const href = `ccf.html?id=${item.id}`;
+  const annee = item.annee ? ` · ${item.annee}` : '';
+  const duree = item.duree ? ` · ${item.duree} min` : '';
+  const meta = `CCF ${formatNumero(item.id)}${annee}${duree}`;
+
+  featuredEl.innerHTML = `
+    <a class="ccf-featured-card" href="${href}">
+      <div class="ccf-featured-image">
+        <img src="${escapeHtml(item.banner || '')}" alt="${escapeHtml(item.title)}" onerror="this.style.display='none'">
+      </div>
+      <div class="ccf-featured-text">
+        <div class="ccf-featured-meta">${escapeHtml(meta)}</div>
+        <h2 class="ccf-featured-title">${escapeHtml(item.title)}</h2>
+        ${item.realisateur ? `<p class="ccf-featured-realisateur">Réalisé par ${escapeHtml(item.realisateur)}</p>` : ''}
+        ${tagline ? `<p class="ccf-featured-tagline">« ${escapeHtml(tagline)} »</p>` : ''}
+        ${accroche ? `<p class="ccf-featured-accroche">${mdToHtml(accroche)}</p>` : ''}
+        <span class="ccf-cta">
+          Lire l'article
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+  `;
+}
+
+// ─── RENDU LISTE EN ALTERNANCE ───
+function renderList(items) {
+  const listEl = document.getElementById('ccfList');
+  listEl.innerHTML = items.map((item, idx) => makeRow(item, idx)).join('');
+}
+
+function makeRow(item, idx) {
+  // L'alternance : index pair = image à gauche, impair = image à droite
+  const reverse = (idx % 2 === 1);
+  const { tagline, accroche } = buildAccroche(item);
+  const href = `ccf.html?id=${item.id}`;
+  const annee = item.annee ? ` · ${item.annee}` : '';
+  const duree = item.duree ? ` · ${item.duree} min` : '';
+  const meta = `CCF ${formatNumero(item.id)}${annee}${duree}`;
+
+  return `
+    <a class="ccf-row${reverse ? ' reverse' : ''}" href="${href}">
+      <div class="ccf-row-image">
+        <img src="${escapeHtml(item.banner || '')}" alt="${escapeHtml(item.title)}" onerror="this.style.display='none'">
+      </div>
+      <div class="ccf-row-text">
+        <div class="ccf-row-meta">${escapeHtml(meta)}</div>
+        <h3 class="ccf-row-title">${escapeHtml(item.title)}</h3>
+        ${item.realisateur ? `<p class="ccf-row-realisateur">Réalisé par ${escapeHtml(item.realisateur)}</p>` : ''}
+        ${tagline ? `<p class="ccf-row-tagline">« ${escapeHtml(tagline)} »</p>` : ''}
+        ${accroche ? `<p class="ccf-row-accroche">${mdToHtml(accroche)}</p>` : ''}
+        <span class="ccf-cta">
+          Lire l'article
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </span>
+      </div>
+    </a>
+  `;
+}
+
+// ─── MOBILE NAV ───
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const burger = document.getElementById('burger');
+  const spans = burger.querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+</script>
+
+
+<!-- ─── SEARCH OVERLAY (barre de nav, partagé avec l'accueil) ─── -->
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+  <button class="search-close" onclick="toggleSearch()">✕</button>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+    <button class="search-submit" onclick="doSearch()">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+  <p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<style>
+.search-results { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 640px; }
+.search-result-card { display: flex; align-items: center; gap: 16px; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 16px; text-decoration: none; color: #fff; transition: border-color .2s, background .2s; cursor: pointer; }
+.search-result-card:hover { border-color: #E8253A; background: rgba(232,37,58,.07); }
+.search-result-img { width: 44px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #2a2a2a; }
+.search-result-info { display: flex; flex-direction: column; gap: 4px; }
+.search-result-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: #fff; }
+.search-result-meta { font-size: 11px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+.search-no-result { font-size: 13px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+</style>
+
+<script>
+function toggleSearch() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.toggle('active');
+  if (overlay.classList.contains('active')) {
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  } else {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('searchOverlay').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+  if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+    doSearch();
+  }
+});
+
+async function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  const resultsEl = document.getElementById('searchResults');
+  if (!query) return;
+
+  resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
+
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+
+  if (!data.length) {
+    resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';
+    return;
+  }
+
+  resultsEl.innerHTML = data.map(r => `
+    <a class="search-result-card" href="${r.link || '#'}">
+      ${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
+      <div class="search-result-info">
+        <div class="search-result-title">${r.title}</div>
+        <div class="search-result-meta">${r.year || ''}${r.genre ? ' · ' + r.genre : ''}</div>
+      </div>
+    </a>
+  `).join('');
+}
+</script>
+
+</body>
+</html>
