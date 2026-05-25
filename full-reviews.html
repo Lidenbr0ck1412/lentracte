@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Entracte • Toutes nos reviews</title>
+<link rel="preconnect" href="https://jnlfejbcpudkmcphsfej.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://jnlfejbcpudkmcphsfej.supabase.co">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte" style="height:100px;width:auto;display:block;">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+          Cinéma
+          <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+          <div class="dropdown">
+            <a href="full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+            <a href="index.html#ccf"><span>▸</span>Comment c'est fait ?</a>
+            <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+          </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" onclick="toggleSearch()" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    </svg>
+  </div>
+  <div class="burger" onclick="toggleMobileNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="full-reviews.html" onclick="toggleMobileNav()">Reviews</a>
+  <a href="index.html#ccf" onclick="toggleMobileNav()">Comment c'est fait ?</a>
+  <a href="index.html#tops" onclick="toggleMobileNav()">Les tops</a>
+  <a href="index.html#about" onclick="toggleMobileNav()">À propos</a>
+  <a href="index.html#contact" onclick="toggleMobileNav()">Contact</a>
+</div>
+
+<!-- ─── À L'AFFICHE (films récents : -5 ans) ─── -->
+<section id="affiche">
+  <div class="section-header">
+    <h2>À L'AFFICHE</h2>
+  </div>
+
+  <!-- DESKTOP carousel -->
+  <div class="carousel-outer reviews-desktop" id="afficheDesktop">
+    <button class="carousel-btn prev" onclick="slideCarousel('affiche', -1)">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="carousel-track" id="afficheTrack"></div>
+    <button class="carousel-btn next" onclick="slideCarousel('affiche', 1)">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="carousel-dots" id="afficheDots"></div>
+  </div>
+
+  <!-- MOBILE list -->
+  <div class="reviews-mobile" id="afficheMobile">
+    <div class="reviews-mobile-inner" id="afficheMobileInner">
+      <div class="carousel-track" id="afficheMobileTrack"></div>
+    </div>
+    <div class="reviews-mobile-fade" id="afficheMobileFade"></div>
+    <div class="reviews-mobile-toggle">
+      <button class="btn-voir-plus" onclick="expandMobile('affiche')">
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <p class="bandeau-empty" id="afficheEmpty" style="display:none;">Aucun film à afficher dans cette catégorie pour le moment.</p>
+</section>
+
+<!-- ─── LES CLASSIQUES (films de +25 ans) ─── -->
+<section id="classiques">
+  <div class="section-header">
+    <h2>LES CLASSIQUES</h2>
+  </div>
+
+  <div class="carousel-outer reviews-desktop" id="classiquesDesktop">
+    <button class="carousel-btn prev" onclick="slideCarousel('classiques', -1)">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="carousel-track" id="classiquesTrack"></div>
+    <button class="carousel-btn next" onclick="slideCarousel('classiques', 1)">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="carousel-dots" id="classiquesDots"></div>
+  </div>
+
+  <div class="reviews-mobile" id="classiquesMobile">
+    <div class="reviews-mobile-inner" id="classiquesMobileInner">
+      <div class="carousel-track" id="classiquesMobileTrack"></div>
+    </div>
+    <div class="reviews-mobile-fade" id="classiquesMobileFade"></div>
+    <div class="reviews-mobile-toggle">
+      <button class="btn-voir-plus" onclick="expandMobile('classiques')">
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <p class="bandeau-empty" id="classiquesEmpty" style="display:none;">Aucun film à afficher dans cette catégorie pour le moment.</p>
+</section>
+
+<!-- ─── LES FILMS OUBLIÉS (entre -5 ans et +25 ans) ─── -->
+<section id="oublies">
+  <div class="section-header">
+    <h2>LES FILMS OUBLIÉS</h2>
+  </div>
+
+  <div class="carousel-outer reviews-desktop" id="oubliesDesktop">
+    <button class="carousel-btn prev" onclick="slideCarousel('oublies', -1)">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="carousel-track" id="oubliesTrack"></div>
+    <button class="carousel-btn next" onclick="slideCarousel('oublies', 1)">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="carousel-dots" id="oubliesDots"></div>
+  </div>
+
+  <div class="reviews-mobile" id="oubliesMobile">
+    <div class="reviews-mobile-inner" id="oubliesMobileInner">
+      <div class="carousel-track" id="oubliesMobileTrack"></div>
+    </div>
+    <div class="reviews-mobile-fade" id="oubliesMobileFade"></div>
+    <div class="reviews-mobile-toggle">
+      <button class="btn-voir-plus" onclick="expandMobile('oublies')">
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <p class="bandeau-empty" id="oubliesEmpty" style="display:none;">Aucun film à afficher dans cette catégorie pour le moment.</p>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<style>
+  /* Style spécifique pour les messages "catégorie vide" */
+  .bandeau-empty {
+    text-align: center;
+    color: var(--grey);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 40px 20px;
+    font-family: 'Montserrat', sans-serif;
+  }
+</style>
+
+<script>
+// ─── SUPABASE CONFIG ───
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+
+const CARD_W = 234; // 220 + 14 gap (identique à l'index)
+
+// ─── SEUILS DE FILTRE PAR ANNÉE ───
+const CURRENT_YEAR = new Date().getFullYear();
+const SEUIL_RECENT = CURRENT_YEAR - 5;     // films récents : year >= 2021 (en 2026)
+const SEUIL_CLASSIQUE = CURRENT_YEAR - 25; // classiques    : year <= 2001 (en 2026)
+
+// ─── STATE PAR CAROUSEL ───
+const carouselState = {
+  affiche:    { activeDot: 0, perPage: 5, totalPages: 1, pos: 0, touchStartX: 0, touchStartPos: 0 },
+  classiques: { activeDot: 0, perPage: 5, totalPages: 1, pos: 0, touchStartX: 0, touchStartPos: 0 },
+  oublies:    { activeDot: 0, perPage: 5, totalPages: 1, pos: 0, touchStartX: 0, touchStartPos: 0 }
+};
+
+// ─── INTERSECTION OBSERVER (animations) ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-in'); } });
+}, { threshold: 0.1 });
+
+// ─── RENDER CARD (identique à l'index) ───
+function makeReviewCard(r, mobile = false) {
+  const href = r.contenu ? `review.html?id=${r.id}` : '#';
+  const link = `href="${href}"`;
+  const tag  = r.contenu ? 'a' : 'div';
+
+  if (mobile) {
+    const bannerSrc = r.img_mobile || r.img || '';
+    return `<${tag} class="review-card" ${link} style="text-decoration:none;color:inherit">
+      <div class="card-wrap">
+        <img src="${bannerSrc}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
+      </div>
+      <div class="card-info">
+        <div class="card-title">${r.title} <span>${r.year}</span></div>
+        <div class="card-sub">${r.sub || ''}</div>
+      </div>
+    </${tag}>`;
+  }
+
+  return `<${tag} class="review-card" ${link} style="text-decoration:none;color:inherit">
+    <div class="card-wrap">
+      <img src="${r.img||''}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
+    </div>
+    <div class="card-info">
+      <div class="card-title">${r.title} <span>${r.year}</span></div>
+      <div class="card-sub">${r.sub || ''}</div>
+    </div>
+  </${tag}>`;
+}
+
+// ─── REMPLISSAGE D'UN BANDEAU ───
+function populateBandeau(key, reviews) {
+  const track       = document.getElementById(`${key}Track`);
+  const mobileTrack = document.getElementById(`${key}MobileTrack`);
+  const dotsBox     = document.getElementById(`${key}Dots`);
+  const emptyMsg    = document.getElementById(`${key}Empty`);
+  const desktop     = document.getElementById(`${key}Desktop`);
+  const mobile      = document.getElementById(`${key}Mobile`);
+
+  // Cas vide : on cache les carrousels et on affiche le message
+  if (!reviews.length) {
+    desktop.style.display = 'none';
+    mobile.style.display  = 'none';
+    emptyMsg.style.display = 'block';
+    return;
+  }
+
+  reviews.forEach(r => { track.innerHTML       += makeReviewCard(r, false); });
+  reviews.forEach(r => { mobileTrack.innerHTML += makeReviewCard(r, true);  });
+
+  // Dots
+  const perPage    = Math.floor((window.innerWidth - 80) / CARD_W) || 5;
+  const totalPages = Math.ceil(reviews.length / perPage);
+  for (let i = 0; i < totalPages; i++) {
+    dotsBox.innerHTML += `<div class="dot${i===0?' active':''}" onclick="goToCarousel('${key}', ${i})"></div>`;
+  }
+  carouselState[key].perPage    = perPage;
+  carouselState[key].totalPages = totalPages;
+
+  // Animation au scroll
+  document.querySelectorAll(`#${key}Track .review-card, #${key}MobileTrack .review-card`).forEach(el => {
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
+
+  // Touch support desktop carousel
+  attachTouchSupport(key);
+}
+
+// ─── CHARGEMENT GLOBAL ───
+async function loadAllReviews() {
+  // On récupère TOUTES les reviews en une seule requête, puis on découpe côté JS
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,sub,year,img,img_mobile,banner,color,color2,contenu&order=id.desc`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  const reviews = await res.json();
+
+  // Tri par catégorie en fonction de l'année
+  const affiche    = reviews.filter(r => r.year && r.year >= SEUIL_RECENT);
+  const classiques = reviews.filter(r => r.year && r.year <= SEUIL_CLASSIQUE);
+  const oublies    = reviews.filter(r => r.year && r.year > SEUIL_CLASSIQUE && r.year < SEUIL_RECENT);
+
+  populateBandeau('affiche',    affiche);
+  populateBandeau('classiques', classiques);
+  populateBandeau('oublies',    oublies);
+}
+loadAllReviews();
+
+// ─── NAVIGATION CAROUSEL (générique) ───
+function goToCarousel(key, idx) {
+  const s = carouselState[key];
+  s.activeDot = idx;
+  const track = document.getElementById(`${key}Track`);
+  track.style.transform = `translateX(-${idx * s.perPage * CARD_W}px)`;
+  s.pos = idx * s.perPage * CARD_W;
+  document.querySelectorAll(`#${key}Dots .dot`).forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function slideCarousel(key, dir) {
+  const s = carouselState[key];
+  goToCarousel(key, Math.max(0, Math.min(s.activeDot + dir, s.totalPages - 1)));
+}
+
+// ─── TOUCH SUPPORT ───
+function attachTouchSupport(key) {
+  const desktop = document.getElementById(`${key}Desktop`);
+  const s = carouselState[key];
+
+  desktop.addEventListener('touchstart', (e) => {
+    s.touchStartX = e.touches[0].clientX;
+    s.touchStartPos = s.pos;
+  }, { passive: true });
+
+  desktop.addEventListener('touchmove', (e) => {
+    const diff = s.touchStartX - e.touches[0].clientX;
+    const track = document.getElementById(`${key}Track`);
+    const container = track.parentElement;
+    const maxScroll = track.scrollWidth - container.clientWidth;
+    s.pos = Math.max(0, Math.min(s.touchStartPos + diff, maxScroll));
+    track.style.transform = `translateX(-${s.pos}px)`;
+  }, { passive: true });
+
+  desktop.addEventListener('touchend', () => {
+    const activePage = Math.round(s.pos / (s.perPage * CARD_W));
+    s.activeDot = Math.min(activePage, s.totalPages - 1);
+    document.querySelectorAll(`#${key}Dots .dot`).forEach((d, i) => d.classList.toggle('active', i === s.activeDot));
+  });
+}
+
+// ─── MOBILE : déplier la liste ───
+function expandMobile(key) {
+  const inner  = document.getElementById(`${key}MobileInner`);
+  const fade   = document.getElementById(`${key}MobileFade`);
+  const toggle = document.querySelector(`#${key}Mobile .reviews-mobile-toggle`);
+  inner.classList.add('expanded');
+  fade.style.opacity = '0';
+  toggle.style.opacity = '0';
+  toggle.style.pointerEvents = 'none';
+}
+
+// ─── MOBILE NAV ───
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const burger = document.getElementById('burger');
+  const spans = burger.querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+</script>
+
+<!-- ─── SEARCH OVERLAY ─── -->
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+  <button class="search-close" onclick="toggleSearch()">✕</button>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+    <button class="search-submit" onclick="doSearch()">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+  <p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<style>
+.search-results {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 640px;
+}
+.search-result-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #fff;
+  transition: border-color .2s, background .2s;
+  cursor: pointer;
+}
+.search-result-card:hover {
+  border-color: #E8253A;
+  background: rgba(232,37,58,.07);
+}
+.search-result-img {
+  width: 44px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: #2a2a2a;
+}
+.search-result-info { display: flex; flex-direction: column; gap: 4px; }
+.search-result-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #fff;
+}
+.search-result-meta {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.search-no-result {
+  font-size: 13px;
+  color: #888;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+</style>
+
+<script>
+function toggleSearch() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.toggle('active');
+  if (overlay.classList.contains('active')) {
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  } else {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('searchOverlay').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+  if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+    doSearch();
+  }
+});
+
+async function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  const resultsEl = document.getElementById('searchResults');
+  if (!query) return;
+
+  resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
+
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+
+  if (!data.length) {
+    resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';
+    return;
+  }
+
+  resultsEl.innerHTML = data.map(r => `
+    <a class="search-result-card" href="${r.link || '#'}">
+      ${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
+      <div class="search-result-info">
+        <div class="search-result-title">${r.title}</div>
+        <div class="search-result-meta">${r.year || ''}${r.genre ? ' · ' + r.genre : ''}</div>
+      </div>
+    </a>
+  `).join('');
+}
+</script>
+
+</body>
+</html>
