@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="archives.css">
 </head>
 <body>
 
@@ -68,7 +69,7 @@
 <div class="archives-toolbar">
   <div class="archives-toolbar-inner">
 
-    <!-- Recherche -->
+    <!-- Recherche dans la page -->
     <div class="archives-search">
       <svg class="archives-search-icon" viewBox="0 0 24 24">
         <path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
@@ -76,7 +77,7 @@
       <input type="text" id="archivesSearch" placeholder="Rechercher un film..." autocomplete="off">
     </div>
 
-    <!-- Sélecteur de tri -->
+    <!-- Tri -->
     <div class="archives-sort">
       <label for="archivesSortSelect">Trier :</label>
       <select id="archivesSortSelect">
@@ -88,18 +89,14 @@
 
   </div>
 
-  <!-- Onglets de filtre exclusif -->
-  <div class="archives-tabs" id="archivesTabs">
-    <!-- Rempli par JS -->
-  </div>
+  <!-- Onglets de filtre exclusif (générés par JS) -->
+  <div class="archives-tabs" id="archivesTabs"></div>
 </div>
 
 <!-- ─── GRILLE D'ARCHIVES ─── -->
 <main class="archives-grid-wrap">
   <div class="archives-count" id="archivesCount"></div>
-  <div class="archives-grid" id="archivesGrid">
-    <!-- Cards injected by JS -->
-  </div>
+  <div class="archives-grid" id="archivesGrid"></div>
   <p class="archives-empty" id="archivesEmpty" style="display:none;">
     Aucun film ne correspond à votre recherche dans cette section.
   </p>
@@ -110,324 +107,7 @@
   <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
 </footer>
 
-<!-- ─── STYLES SPÉCIFIQUES ─── -->
-<style>
-  /* ────────── EN-TÊTE ÉDITORIAL ────────── */
-  .archives-hero {
-    padding: 70px 40px 50px;
-    max-width: 1100px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .archives-hero-inner {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  .archives-label {
-    font-family: 'Bebas Neue', sans-serif;
-    color: var(--red);
-    letter-spacing: 6px;
-    font-size: 14px;
-    margin-bottom: 18px;
-  }
-  .archives-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 800;
-    font-size: clamp(36px, 5vw, 64px);
-    line-height: 1.05;
-    margin-bottom: 28px;
-    color: var(--white);
-  }
-  .archives-title em {
-    font-style: italic;
-    color: var(--red);
-    font-weight: 400;
-  }
-  .archives-intro {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--light-grey);
-    max-width: 680px;
-    margin: 0 auto;
-  }
-
-  /* ────────── BARRE DE FILTRES ────────── */
-  .archives-toolbar {
-    border-top: 1px solid #1f1f1f;
-    border-bottom: 1px solid #1f1f1f;
-    padding: 20px 0;
-    background: #0d0d0d;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    backdrop-filter: blur(8px);
-  }
-  .archives-toolbar-inner {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 40px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-
-  /* Recherche */
-  .archives-search {
-    position: relative;
-    flex: 1;
-    max-width: 420px;
-    min-width: 220px;
-  }
-  .archives-search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    color: #888;
-    pointer-events: none;
-  }
-  .archives-search input {
-    width: 100%;
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    border-radius: 6px;
-    padding: 10px 14px 10px 40px;
-    color: var(--white);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    outline: none;
-    transition: border-color .2s;
-  }
-  .archives-search input:focus {
-    border-color: var(--red);
-  }
-  .archives-search input::placeholder {
-    color: #666;
-  }
-
-  /* Tri */
-  .archives-sort {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .archives-sort label {
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: 2px;
-    font-size: 13px;
-    color: #888;
-  }
-  .archives-sort select {
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    border-radius: 6px;
-    color: var(--white);
-    padding: 9px 14px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-    outline: none;
-    transition: border-color .2s;
-  }
-  .archives-sort select:focus,
-  .archives-sort select:hover {
-    border-color: var(--red);
-  }
-
-  /* Onglets de filtre exclusif */
-  .archives-tabs {
-    max-width: 1400px;
-    margin: 16px auto 0;
-    padding: 0 40px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .archives-tab {
-    background: transparent;
-    border: 1px solid #2a2a2a;
-    color: #888;
-    padding: 7px 16px;
-    border-radius: 50px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 13px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all .2s;
-    white-space: nowrap;
-  }
-  .archives-tab:hover {
-    color: var(--white);
-    border-color: #555;
-  }
-  .archives-tab.active {
-    background: var(--red);
-    border-color: var(--red);
-    color: var(--white);
-  }
-
-  /* ────────── GRILLE D'ARCHIVES ────────── */
-  .archives-grid-wrap {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 40px;
-    min-height: 50vh;
-  }
-  .archives-count {
-    font-family: 'Bebas Neue', sans-serif;
-    color: #666;
-    letter-spacing: 3px;
-    font-size: 12px;
-    margin-bottom: 24px;
-  }
-  .archives-count span {
-    color: var(--red);
-  }
-
-  .archives-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 28px 22px;
-  }
-
-  /* Carte d'archive (style Letterboxd) */
-  .archive-card {
-    position: relative;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-    transition: transform .3s ease;
-  }
-  .archive-card:hover {
-    transform: translateY(-4px);
-  }
-
-  /* Image (ratio affiche 2:3) */
-  .archive-poster {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 2 / 3;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #1a1a1a;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
-  }
-  .archive-poster img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform .5s ease;
-  }
-  .archive-card:hover .archive-poster img {
-    transform: scale(1.06);
-  }
-
-  /* Overlay au survol */
-  .archive-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.1) 100%);
-    opacity: 0;
-    transition: opacity .3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 18px 16px;
-  }
-  .archive-card:hover .archive-overlay {
-    opacity: 1;
-  }
-  .archive-overlay-sub {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #e8e8e8;
-    line-height: 1.4;
-    transform: translateY(8px);
-    transition: transform .3s ease;
-  }
-  .archive-card:hover .archive-overlay-sub {
-    transform: translateY(0);
-  }
-
-  /* Infos hors image (toujours visibles) */
-  .archive-info {
-    padding: 12px 4px 0;
-  }
-  .archive-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 17px;
-    letter-spacing: 1.5px;
-    color: var(--white);
-    line-height: 1.2;
-    margin-bottom: 4px;
-    /* Tronquer à 2 lignes max */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .archive-year {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    color: var(--red);
-    font-weight: 600;
-  }
-
-  /* État vide */
-  .archives-empty {
-    text-align: center;
-    color: #666;
-    font-size: 14px;
-    letter-spacing: 1px;
-    padding: 80px 20px;
-    font-style: italic;
-  }
-
-  /* ────────── RESPONSIVE ────────── */
-  @media (max-width: 900px) {
-    .archives-hero {
-      padding: 50px 24px 40px;
-    }
-    .archives-toolbar-inner {
-      padding: 0 24px;
-      gap: 14px;
-    }
-    .archives-tabs {
-      padding: 0 24px;
-    }
-    .archives-grid-wrap {
-      padding: 30px 24px;
-    }
-    .archives-grid {
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 24px 16px;
-    }
-    .archive-title {
-      font-size: 15px;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .archives-search {
-      max-width: 100%;
-      flex: 1 0 100%;
-    }
-    .archives-sort {
-      flex: 1;
-      justify-content: flex-start;
-    }
-  }
-</style>
-
+<!-- ─── SCRIPT PRINCIPAL : chargement + filtres + rendu ─── -->
 <script>
 // ─── SUPABASE CONFIG ───
 const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
@@ -439,11 +119,11 @@ const SEUIL_CLASSIQUE = CURRENT_YEAR - 25;
 
 // ─── ÉTAT GLOBAL ───
 let allReviews = [];
-let activeFilter = 'all';   // ID du filtre actif (un seul à la fois)
+let activeFilter = 'all';   // un seul filtre actif à la fois
 let activeSort = 'recent';
 let searchQuery = '';
 
-// ─── CHARGEMENT INITIAL ───
+// ─── CHARGEMENT ───
 async function loadArchives() {
   const res = await fetch(
     `${SUPABASE_URL}/rest/v1/reviews?select=id,title,sub,year,genre,img,img_mobile,banner,color,color2,contenu&order=id.desc`,
@@ -457,14 +137,10 @@ async function loadArchives() {
 loadArchives();
 
 // ─── CONSTRUCTION DES ONGLETS DE FILTRE ───
-// On génère dynamiquement les onglets :
-// - Catégorie fixe (Tous / À l'Affiche / Classiques / Oubliés)
-// - Décennies présentes dans les données
-// - Genres présents dans les données
+// Onglets : Catégories fixes + décennies présentes + genres présents
 function buildFilterTabs() {
   const tabsEl = document.getElementById('archivesTabs');
 
-  // Onglets de catégorie (toujours présents)
   const categories = [
     { id: 'all',        label: 'Tous' },
     { id: 'affiche',    label: "À l'Affiche" },
@@ -472,7 +148,7 @@ function buildFilterTabs() {
     { id: 'oublies',    label: 'Les Oubliés' }
   ];
 
-  // Détection des décennies présentes dans les données
+  // Décennies présentes dans les données
   const decadesSet = new Set();
   allReviews.forEach(r => {
     if (r.year) {
@@ -485,11 +161,10 @@ function buildFilterTabs() {
     label: `${d}s`
   }));
 
-  // Détection des genres présents
+  // Genres présents (split sur , ; / au cas où un film aurait plusieurs genres)
   const genresSet = new Set();
   allReviews.forEach(r => {
     if (r.genre && r.genre.trim()) {
-      // Si un film a plusieurs genres séparés par virgules, on les éclate
       r.genre.split(/[,;\/]/).map(g => g.trim()).filter(Boolean).forEach(g => genresSet.add(g));
     }
   });
@@ -499,7 +174,6 @@ function buildFilterTabs() {
     rawGenre: g
   }));
 
-  // Render
   const allTabs = [...categories, ...decades, ...genres];
   tabsEl.innerHTML = allTabs.map(tab => `
     <button class="archives-tab${tab.id === activeFilter ? ' active' : ''}" data-filter="${tab.id}"${tab.rawGenre ? ` data-genre="${tab.rawGenre}"` : ''}>
@@ -507,7 +181,6 @@ function buildFilterTabs() {
     </button>
   `).join('');
 
-  // Listeners
   tabsEl.querySelectorAll('.archives-tab').forEach(btn => {
     btn.addEventListener('click', () => {
       activeFilter = btn.dataset.filter;
@@ -521,7 +194,7 @@ function buildFilterTabs() {
 function applyFilters(reviews) {
   let filtered = reviews;
 
-  // 1. Filtre exclusif (catégorie OU décennie OU genre)
+  // 1. Filtre exclusif
   if (activeFilter !== 'all') {
     if (activeFilter === 'affiche') {
       filtered = filtered.filter(r => r.year && r.year >= SEUIL_RECENT);
@@ -542,7 +215,7 @@ function applyFilters(reviews) {
     }
   }
 
-  // 2. Recherche textuelle (sur le titre)
+  // 2. Recherche textuelle
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     filtered = filtered.filter(r => (r.title || '').toLowerCase().includes(q));
@@ -568,12 +241,10 @@ function renderGrid() {
 
   const filtered = applyFilters(allReviews);
 
-  // Compteur
   const total = allReviews.length;
   const shown = filtered.length;
   countEl.innerHTML = `<span>${shown}</span> film${shown > 1 ? 's' : ''} affiché${shown > 1 ? 's' : ''} sur ${total}`;
 
-  // État vide
   if (!filtered.length) {
     grid.innerHTML = '';
     emptyEl.style.display = 'block';
@@ -581,7 +252,6 @@ function renderGrid() {
   }
   emptyEl.style.display = 'none';
 
-  // Render
   grid.innerHTML = filtered.map(r => makeArchiveCard(r)).join('');
 }
 
@@ -608,7 +278,7 @@ function makeArchiveCard(r) {
   </${tag}>`;
 }
 
-// Petit utilitaire pour éviter les injections HTML dans les titres
+// Échappement HTML pour éviter les injections dans les titres
 function escapeHtml(str) {
   if (!str) return '';
   return String(str)
@@ -645,7 +315,7 @@ function toggleMobileNav() {
 }
 </script>
 
-<!-- ─── SEARCH OVERLAY (barre nav) ─── -->
+<!-- ─── SEARCH OVERLAY (barre de nav, partagé avec l'accueil) ─── -->
 <div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
   <button class="search-close" onclick="toggleSearch()">✕</button>
   <div class="search-box">
