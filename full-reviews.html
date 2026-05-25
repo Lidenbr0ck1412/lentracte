@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>L'Entracte • Toutes nos reviews</title>
+<title>L'Entracte • Les Archives</title>
 <link rel="preconnect" href="https://jnlfejbcpudkmcphsfej.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://jnlfejbcpudkmcphsfej.supabase.co">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +43,6 @@
   </div>
 </nav>
 
-<!-- Mobile nav -->
 <div class="mobile-nav" id="mobileNav">
   <a href="full-reviews.html" onclick="toggleMobileNav()">Reviews</a>
   <a href="index.html#ccf" onclick="toggleMobileNav()">Comment c'est fait ?</a>
@@ -52,285 +51,380 @@
   <a href="index.html#contact" onclick="toggleMobileNav()">Contact</a>
 </div>
 
-<!-- ─── À L'AFFICHE ─── -->
-<section id="affiche">
-  <div class="section-header"><h2>À L'AFFICHE</h2></div>
+<!-- ─── EN-TÊTE ÉDITORIAL ─── -->
+<header class="archives-hero">
+  <div class="archives-hero-inner">
+    <p class="archives-label">— LES ARCHIVES —</p>
+    <h1 class="archives-title">
+      Tout ce qui hante <em>nos écrans</em>
+    </h1>
+    <p class="archives-intro">
+      Bienvenue dans les coulisses. Ici dorment toutes nos lectures du septième art, alignées comme des bobines sur leur étagère — les plus récentes, encore chaudes du grand écran, les classiques qui ont traversé les âges sans une ride, et ces films oubliés qu'il faudrait ressortir de leur boîte avant qu'on ne se souvienne plus de leur existence. Servez-vous, fouillez, dérangez l'ordre. C'est fait pour ça.
+    </p>
+  </div>
+</header>
 
-  <div class="feature-carousel" id="afficheDesktop">
-    <button class="carousel-btn prev" onclick="rotateFeature('affiche', -1)">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-    <div class="feature-viewport">
-      <div class="feature-track" id="afficheTrack"></div>
+<!-- ─── BARRE DE FILTRES ─── -->
+<div class="archives-toolbar">
+  <div class="archives-toolbar-inner">
+
+    <!-- Recherche -->
+    <div class="archives-search">
+      <svg class="archives-search-icon" viewBox="0 0 24 24">
+        <path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      <input type="text" id="archivesSearch" placeholder="Rechercher un film..." autocomplete="off">
     </div>
-    <button class="carousel-btn next" onclick="rotateFeature('affiche', 1)">
-      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
+
+    <!-- Sélecteur de tri -->
+    <div class="archives-sort">
+      <label for="archivesSortSelect">Trier :</label>
+      <select id="archivesSortSelect">
+        <option value="recent">Plus récents</option>
+        <option value="ancien">Plus anciens</option>
+        <option value="alpha">A → Z</option>
+      </select>
+    </div>
+
   </div>
 
-  <div class="reviews-mobile" id="afficheMobile">
-    <div class="reviews-mobile-inner" id="afficheMobileInner">
-      <div class="carousel-track" id="afficheMobileTrack"></div>
-    </div>
-    <div class="reviews-mobile-fade" id="afficheMobileFade"></div>
-    <div class="reviews-mobile-toggle">
-      <button class="btn-voir-plus" onclick="expandMobile('affiche')">
-        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
-      </button>
-    </div>
+  <!-- Onglets de filtre exclusif -->
+  <div class="archives-tabs" id="archivesTabs">
+    <!-- Rempli par JS -->
   </div>
+</div>
 
-  <p class="bandeau-empty" id="afficheEmpty" style="display:none;">Aucun film à afficher dans cette catégorie pour le moment.</p>
-</section>
-
-<!-- ─── LES CLASSIQUES ─── -->
-<section id="classiques">
-  <div class="section-header"><h2>LES CLASSIQUES</h2></div>
-
-  <div class="feature-carousel" id="classiquesDesktop">
-    <button class="carousel-btn prev" onclick="rotateFeature('classiques', -1)">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-    <div class="feature-viewport">
-      <div class="feature-track" id="classiquesTrack"></div>
-    </div>
-    <button class="carousel-btn next" onclick="rotateFeature('classiques', 1)">
-      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
+<!-- ─── GRILLE D'ARCHIVES ─── -->
+<main class="archives-grid-wrap">
+  <div class="archives-count" id="archivesCount"></div>
+  <div class="archives-grid" id="archivesGrid">
+    <!-- Cards injected by JS -->
   </div>
-
-  <div class="reviews-mobile" id="classiquesMobile">
-    <div class="reviews-mobile-inner" id="classiquesMobileInner">
-      <div class="carousel-track" id="classiquesMobileTrack"></div>
-    </div>
-    <div class="reviews-mobile-fade" id="classiquesMobileFade"></div>
-    <div class="reviews-mobile-toggle">
-      <button class="btn-voir-plus" onclick="expandMobile('classiques')">
-        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <p class="bandeau-empty" id="classiquesEmpty" style="display:none;">Aucun film à afficher dans cette catégorie pour le moment.</p>
-</section>
-
-<!-- ─── LES FILMS OUBLIÉS ─── -->
-<section id="oublies">
-  <div class="section-header"><h2>LES FILMS OUBLIÉS</h2></div>
-
-  <div class="feature-carousel" id="oubliesDesktop">
-    <button class="carousel-btn prev" onclick="rotateFeature('oublies', -1)">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-    <div class="feature-viewport">
-      <div class="feature-track" id="oubliesTrack"></div>
-    </div>
-    <button class="carousel-btn next" onclick="rotateFeature('oublies', 1)">
-      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
-  </div>
-
-  <div class="reviews-mobile" id="oubliesMobile">
-    <div class="reviews-mobile-inner" id="oubliesMobileInner">
-      <div class="carousel-track" id="oubliesMobileTrack"></div>
-    </div>
-    <div class="reviews-mobile-fade" id="oubliesMobileFade"></div>
-    <div class="reviews-mobile-toggle">
-      <button class="btn-voir-plus" onclick="expandMobile('oublies')">
-        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <p class="bandeau-empty" id="oubliesEmpty" style="display:none;">Aucun film à afficher dans cette catégorie pour le moment.</p>
-</section>
+  <p class="archives-empty" id="archivesEmpty" style="display:none;">
+    Aucun film ne correspond à votre recherche dans cette section.
+  </p>
+</main>
 
 <!-- ─── FOOTER ─── -->
 <footer>
   <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
 </footer>
 
-<!-- ─── STYLES SPÉCIFIQUES AU FEATURE CAROUSEL ─── -->
+<!-- ─── STYLES SPÉCIFIQUES ─── -->
 <style>
-  /* ────────────────────────────────────────────────
-     RÉGLAGES PRINCIPAUX (modifie ici pour ajuster)
-     ────────────────────────────────────────────────
-     --t-duration : vitesse de l'animation
-       0.4s = rapide, snappy
-       0.6s = équilibré (actuel)
-       0.8s = contemplatif, cinématique
-       1.0s = lent, dramatique
-  */
-  :root {
-    --affiche-w: 220px;
-    --affiche-h: 340px;
-    --banner-w: 500px;
-    --gap: 14px;
-    --track-padding: 20px;
-    --t-duration: 0.6s;
-    --t-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* ────────── EN-TÊTE ÉDITORIAL ────────── */
+  .archives-hero {
+    padding: 70px 40px 50px;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .archives-hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .archives-label {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--red);
+    letter-spacing: 6px;
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+  .archives-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.05;
+    margin-bottom: 28px;
+    color: var(--white);
+  }
+  .archives-title em {
+    font-style: italic;
+    color: var(--red);
+    font-weight: 400;
+  }
+  .archives-intro {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--light-grey);
+    max-width: 680px;
+    margin: 0 auto;
   }
 
-  /* Carrousel : pleine largeur, padding vertical uniquement (comme l'accueil) */
-  .feature-carousel {
-    position: relative;
-    padding: 40px 0 50px;
-    margin: 0;
-    background: var(--black);
+  /* ────────── BARRE DE FILTRES ────────── */
+  .archives-toolbar {
+    border-top: 1px solid #1f1f1f;
+    border-bottom: 1px solid #1f1f1f;
+    padding: 20px 0;
+    background: #0d0d0d;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(8px);
   }
-  @media (max-width: 900px) {
-    .feature-carousel { display: none; }
-  }
-
-  /* Dégradé noir à droite (fade-out comme sur l'accueil) */
-  .feature-carousel::after {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 120px;
-    height: 100%;
-    background: linear-gradient(to right, transparent, #0a0a0a);
-    pointer-events: none;
-    z-index: 5;
-  }
-
-  /* Viewport : clip horizontal */
-  .feature-viewport {
-    overflow: hidden;
-    height: var(--affiche-h);
-    width: 100%;
-  }
-
-  /* Track : glisse horizontalement via translateX, avec padding latéral interne */
-  .feature-track {
+  .archives-toolbar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
     display: flex;
-    gap: var(--gap);
-    align-items: stretch;
-    height: 100%;
-    padding: 0 var(--track-padding);
-    will-change: transform;
-    transition: transform var(--t-duration) var(--t-ease);
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
   }
 
-  /* Carte */
-  .feature-card {
-    flex: 0 0 auto;
-    width: var(--affiche-w);
-    height: var(--affiche-h);
-    border-radius: 14px;
-    overflow: hidden;
+  /* Recherche */
+  .archives-search {
     position: relative;
-    cursor: pointer;
-    background: #1a1a1a;
-    transition: width var(--t-duration) var(--t-ease);
-    will-change: width;
+    flex: 1;
+    max-width: 420px;
+    min-width: 220px;
   }
-
-  .feature-card.is-banner {
-    width: var(--banner-w);
-  }
-
-  /* Images superposées : crossfade poster ↔ banner */
-  .feature-img {
+  .archives-search-icon {
     position: absolute;
-    inset: 0;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #888;
+    pointer-events: none;
+  }
+  .archives-search input {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 10px 14px 10px 40px;
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .archives-search input:focus {
+    border-color: var(--red);
+  }
+  .archives-search input::placeholder {
+    color: #666;
+  }
+
+  /* Tri */
+  .archives-sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .archives-sort label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 2px;
+    font-size: 13px;
+    color: #888;
+  }
+  .archives-sort select {
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    color: var(--white);
+    padding: 9px 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .archives-sort select:focus,
+  .archives-sort select:hover {
+    border-color: var(--red);
+  }
+
+  /* Onglets de filtre exclusif */
+  .archives-tabs {
+    max-width: 1400px;
+    margin: 16px auto 0;
+    padding: 0 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .archives-tab {
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    color: #888;
+    padding: 7px 16px;
+    border-radius: 50px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .archives-tab:hover {
+    color: var(--white);
+    border-color: #555;
+  }
+  .archives-tab.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+  }
+
+  /* ────────── GRILLE D'ARCHIVES ────────── */
+  .archives-grid-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px;
+    min-height: 50vh;
+  }
+  .archives-count {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #666;
+    letter-spacing: 3px;
+    font-size: 12px;
+    margin-bottom: 24px;
+  }
+  .archives-count span {
+    color: var(--red);
+  }
+
+  .archives-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 28px 22px;
+  }
+
+  /* Carte d'archive (style Letterboxd) */
+  .archive-card {
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: transform .3s ease;
+  }
+  .archive-card:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Image (ratio affiche 2:3) */
+  .archive-poster {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #1a1a1a;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  }
+  .archive-poster img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: opacity var(--t-duration) var(--t-ease);
+    transition: transform .5s ease;
   }
-  .feature-img.poster { opacity: 1; }
-  .feature-img.banner { opacity: 0; }
-  .feature-card.is-banner .feature-img.poster { opacity: 0; }
-  .feature-card.is-banner .feature-img.banner { opacity: 1; }
-
-  /* Overlay texte */
-  .feature-info {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 20px 22px;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.65) 55%, rgba(0,0,0,0) 100%);
-    color: #fff;
-    z-index: 2;
-    transition: padding var(--t-duration) var(--t-ease);
-  }
-  .feature-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    letter-spacing: 2.5px;
-    line-height: 1.1;
-    transition: font-size var(--t-duration) var(--t-ease);
-  }
-  .feature-title span {
-    color: var(--red);
-    font-size: 15px;
-    margin-left: 6px;
-    transition: font-size var(--t-duration) var(--t-ease);
-  }
-  /* Sous-titre éditorial : caché par défaut, visible uniquement sur la bannière */
-  .feature-sub {
-    margin-top: 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #e8e8e8;
-    line-height: 1.3;
-    /* État caché */
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition:
-      max-height var(--t-duration) var(--t-ease),
-      opacity var(--t-duration) var(--t-ease),
-      margin-top var(--t-duration) var(--t-ease);
-  }
-
-  /* Mode bannière : tout grandit */
-  .feature-card.is-banner .feature-info {
-    padding: 26px 30px;
-  }
-  .feature-card.is-banner .feature-title {
-    font-size: 32px;
-    letter-spacing: 4px;
-  }
-  .feature-card.is-banner .feature-title span {
-    font-size: 22px;
-  }
-  /* Sur la bannière : on révèle le sous-titre */
-  .feature-card.is-banner .feature-sub {
-    max-height: 60px;
-    opacity: 1;
-    margin-top: 10px;
-  }
-
-  /* Hover : zoom léger sur l'image (uniquement sur les affiches, pas sur la bannière) */
-  .feature-card:not(.is-banner) .feature-img {
-    transition: opacity var(--t-duration) var(--t-ease), transform 0.5s ease;
-  }
-  .feature-card:not(.is-banner):hover .feature-img.poster {
+  .archive-card:hover .archive-poster img {
     transform: scale(1.06);
   }
 
-  /* Bandeau vide */
-  .bandeau-empty {
-    text-align: center;
-    color: var(--grey);
-    font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 60px 20px;
+  /* Overlay au survol */
+  .archive-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.1) 100%);
+    opacity: 0;
+    transition: opacity .3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 18px 16px;
+  }
+  .archive-card:hover .archive-overlay {
+    opacity: 1;
+  }
+  .archive-overlay-sub {
     font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e8e8e8;
+    line-height: 1.4;
+    transform: translateY(8px);
+    transition: transform .3s ease;
+  }
+  .archive-card:hover .archive-overlay-sub {
+    transform: translateY(0);
   }
 
-  /* Flèches */
-  .feature-carousel .carousel-btn {
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
+  /* Infos hors image (toujours visibles) */
+  .archive-info {
+    padding: 12px 4px 0;
+  }
+  .archive-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 4px;
+    /* Tronquer à 2 lignes max */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .archive-year {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--red);
+    font-weight: 600;
+  }
+
+  /* État vide */
+  .archives-empty {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 80px 20px;
+    font-style: italic;
+  }
+
+  /* ────────── RESPONSIVE ────────── */
+  @media (max-width: 900px) {
+    .archives-hero {
+      padding: 50px 24px 40px;
+    }
+    .archives-toolbar-inner {
+      padding: 0 24px;
+      gap: 14px;
+    }
+    .archives-tabs {
+      padding: 0 24px;
+    }
+    .archives-grid-wrap {
+      padding: 30px 24px;
+    }
+    .archives-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 24px 16px;
+    }
+    .archive-title {
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .archives-search {
+      max-width: 100%;
+      flex: 1 0 100%;
+    }
+    .archives-sort {
+      flex: 1;
+      justify-content: flex-start;
+    }
   }
 </style>
 
@@ -343,264 +437,199 @@ const CURRENT_YEAR = new Date().getFullYear();
 const SEUIL_RECENT = CURRENT_YEAR - 5;
 const SEUIL_CLASSIQUE = CURRENT_YEAR - 25;
 
-/*
-  ────────────────────────────────────────────────────────────────
-  PRINCIPE D'ANIMATION (façon Netflix)
-  ────────────────────────────────────────────────────────────────
-  1. On rend TOUTES les cartes une seule fois dans le DOM, dans
-     l'ordre du tableau de données.
-  2. La carte à l'index `currentIndex` reçoit la classe .is-banner
-     (donc devient large + crossfade vers l'image banner).
-  3. Pour faire défiler, on calcule combien il faut déplacer le
-     track vers la gauche pour que la nouvelle carte active soit
-     en première position visible, et on applique translateX.
-  4. La translation et le changement de largeur se font SIMULTANÉMENT
-     grâce aux transitions CSS, ce qui donne un effet ultra fluide.
+// ─── ÉTAT GLOBAL ───
+let allReviews = [];
+let activeFilter = 'all';   // ID du filtre actif (un seul à la fois)
+let activeSort = 'recent';
+let searchQuery = '';
 
-  Avantages vs FLIP :
-  - Pas de manipulation DOM pendant l'animation
-  - Une seule transition CSS, donc rien à orchestrer en JS
-  - Accélération GPU garantie (translate + opacity)
-*/
+// ─── CHARGEMENT INITIAL ───
+async function loadArchives() {
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,sub,year,genre,img,img_mobile,banner,color,color2,contenu&order=id.desc`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  allReviews = await res.json();
 
-const bandeauState = {
-  affiche:    { currentIndex: 0, reviews: [], isAnimating: false },
-  classiques: { currentIndex: 0, reviews: [], isAnimating: false },
-  oublies:    { currentIndex: 0, reviews: [], isAnimating: false }
-};
+  buildFilterTabs();
+  renderGrid();
+}
+loadArchives();
 
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-in'); } });
-}, { threshold: 0.1 });
+// ─── CONSTRUCTION DES ONGLETS DE FILTRE ───
+// On génère dynamiquement les onglets :
+// - Catégorie fixe (Tous / À l'Affiche / Classiques / Oubliés)
+// - Décennies présentes dans les données
+// - Genres présents dans les données
+function buildFilterTabs() {
+  const tabsEl = document.getElementById('archivesTabs');
 
-// ─── CARTE MOBILE ───
-function makeMobileCard(r) {
+  // Onglets de catégorie (toujours présents)
+  const categories = [
+    { id: 'all',        label: 'Tous' },
+    { id: 'affiche',    label: "À l'Affiche" },
+    { id: 'classiques', label: 'Les Classiques' },
+    { id: 'oublies',    label: 'Les Oubliés' }
+  ];
+
+  // Détection des décennies présentes dans les données
+  const decadesSet = new Set();
+  allReviews.forEach(r => {
+    if (r.year) {
+      const decade = Math.floor(r.year / 10) * 10;
+      decadesSet.add(decade);
+    }
+  });
+  const decades = Array.from(decadesSet).sort((a, b) => b - a).map(d => ({
+    id: `decade-${d}`,
+    label: `${d}s`
+  }));
+
+  // Détection des genres présents
+  const genresSet = new Set();
+  allReviews.forEach(r => {
+    if (r.genre && r.genre.trim()) {
+      // Si un film a plusieurs genres séparés par virgules, on les éclate
+      r.genre.split(/[,;\/]/).map(g => g.trim()).filter(Boolean).forEach(g => genresSet.add(g));
+    }
+  });
+  const genres = Array.from(genresSet).sort().map(g => ({
+    id: `genre-${g.toLowerCase()}`,
+    label: g,
+    rawGenre: g
+  }));
+
+  // Render
+  const allTabs = [...categories, ...decades, ...genres];
+  tabsEl.innerHTML = allTabs.map(tab => `
+    <button class="archives-tab${tab.id === activeFilter ? ' active' : ''}" data-filter="${tab.id}"${tab.rawGenre ? ` data-genre="${tab.rawGenre}"` : ''}>
+      ${tab.label}
+    </button>
+  `).join('');
+
+  // Listeners
+  tabsEl.querySelectorAll('.archives-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.filter;
+      tabsEl.querySelectorAll('.archives-tab').forEach(b => b.classList.toggle('active', b === btn));
+      renderGrid();
+    });
+  });
+}
+
+// ─── APPLICATION DES FILTRES ───
+function applyFilters(reviews) {
+  let filtered = reviews;
+
+  // 1. Filtre exclusif (catégorie OU décennie OU genre)
+  if (activeFilter !== 'all') {
+    if (activeFilter === 'affiche') {
+      filtered = filtered.filter(r => r.year && r.year >= SEUIL_RECENT);
+    } else if (activeFilter === 'classiques') {
+      filtered = filtered.filter(r => r.year && r.year <= SEUIL_CLASSIQUE);
+    } else if (activeFilter === 'oublies') {
+      filtered = filtered.filter(r => r.year && r.year > SEUIL_CLASSIQUE && r.year < SEUIL_RECENT);
+    } else if (activeFilter.startsWith('decade-')) {
+      const decade = parseInt(activeFilter.replace('decade-', ''), 10);
+      filtered = filtered.filter(r => r.year && r.year >= decade && r.year < decade + 10);
+    } else if (activeFilter.startsWith('genre-')) {
+      const btn = document.querySelector(`.archives-tab[data-filter="${activeFilter}"]`);
+      const target = btn ? btn.dataset.genre.toLowerCase() : activeFilter.replace('genre-', '');
+      filtered = filtered.filter(r => {
+        if (!r.genre) return false;
+        return r.genre.toLowerCase().split(/[,;\/]/).map(g => g.trim()).includes(target);
+      });
+    }
+  }
+
+  // 2. Recherche textuelle (sur le titre)
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(r => (r.title || '').toLowerCase().includes(q));
+  }
+
+  // 3. Tri
+  if (activeSort === 'recent') {
+    filtered = filtered.slice().sort((a, b) => (b.year || 0) - (a.year || 0));
+  } else if (activeSort === 'ancien') {
+    filtered = filtered.slice().sort((a, b) => (a.year || 0) - (b.year || 0));
+  } else if (activeSort === 'alpha') {
+    filtered = filtered.slice().sort((a, b) => (a.title || '').localeCompare(b.title || '', 'fr'));
+  }
+
+  return filtered;
+}
+
+// ─── RENDU DE LA GRILLE ───
+function renderGrid() {
+  const grid = document.getElementById('archivesGrid');
+  const countEl = document.getElementById('archivesCount');
+  const emptyEl = document.getElementById('archivesEmpty');
+
+  const filtered = applyFilters(allReviews);
+
+  // Compteur
+  const total = allReviews.length;
+  const shown = filtered.length;
+  countEl.innerHTML = `<span>${shown}</span> film${shown > 1 ? 's' : ''} affiché${shown > 1 ? 's' : ''} sur ${total}`;
+
+  // État vide
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  // Render
+  grid.innerHTML = filtered.map(r => makeArchiveCard(r)).join('');
+}
+
+// ─── CARTE D'ARCHIVE ───
+function makeArchiveCard(r) {
   const href = r.contenu ? `review.html?id=${r.id}` : '#';
   const tag = r.contenu ? 'a' : 'div';
-  const link = `href="${href}"`;
-  const bannerSrc = r.img_mobile || r.img || '';
-  return `<${tag} class="review-card" ${link} style="text-decoration:none;color:inherit">
-    <div class="card-wrap">
-      <img src="${bannerSrc}" alt="${r.title}" style="background:linear-gradient(135deg,${r.color} 0%,${r.color2} 100%)" onerror="this.src='';this.style.background='linear-gradient(135deg,${r.color},${r.color2})'">
+  const link = r.contenu ? `href="${href}"` : '';
+  const imgSrc = r.img || '';
+  const bgGradient = `linear-gradient(135deg,${r.color || '#111'} 0%,${r.color2 || '#222'} 100%)`;
+  const subline = r.sub ? `<div class="archive-overlay-sub">${escapeHtml(r.sub)}</div>` : '';
+
+  return `<${tag} class="archive-card" ${link} style="text-decoration:none;color:inherit">
+    <div class="archive-poster" style="background:${bgGradient}">
+      <img src="${imgSrc}" alt="${escapeHtml(r.title)}" onerror="this.style.display='none'">
+      <div class="archive-overlay">
+        ${subline}
+      </div>
     </div>
-    <div class="card-info">
-      <div class="card-title">${r.title} <span>${r.year}</span></div>
-      <div class="card-sub">${r.sub || ''}</div>
+    <div class="archive-info">
+      <div class="archive-title">${escapeHtml(r.title)}</div>
+      <div class="archive-year">${r.year || ''}</div>
     </div>
   </${tag}>`;
 }
 
-// ─── CARTE FEATURE (desktop) ───
-function makeFeatureCard(r, isBanner) {
-  const useAnchor = !!r.contenu;
-  const el = document.createElement(useAnchor ? 'a' : 'div');
-  el.className = 'feature-card' + (isBanner ? ' is-banner' : '');
-  if (useAnchor) el.href = `review.html?id=${r.id}`;
-  el.style.textDecoration = 'none';
-  el.style.color = 'inherit';
-  el.style.background = `linear-gradient(135deg,${r.color || '#111'} 0%,${r.color2 || '#222'} 100%)`;
-
-  const posterSrc = r.img || '';
-  const bannerSrc = r.banner || r.img || '';
-  const subline   = r.sub ? `<div class="feature-sub">${r.sub}</div>` : '';
-
-  el.innerHTML = `
-    <img class="feature-img poster" src="${posterSrc}" alt="${r.title}" onerror="this.style.display='none'">
-    <img class="feature-img banner" src="${bannerSrc}" alt="${r.title}" onerror="this.style.display='none'">
-    <div class="feature-info">
-      <div class="feature-title">${r.title} <span>${r.year || ''}</span></div>
-      ${subline}
-    </div>
-  `;
-  return el;
+// Petit utilitaire pour éviter les injections HTML dans les titres
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
-// ─── RENDU INITIAL ───
-// IMPORTANT : on duplique les cartes pour avoir un effet infini visuel.
-// La technique : on rend 3 copies des films à la suite ([films][films][films])
-// et on positionne le carrousel sur la copie du MILIEU.
-// Quand l'utilisateur dépasse les bornes (gauche ou droite), on fait un saut
-// invisible au centre pour qu'il puisse continuer à scroller indéfiniment.
-function renderBandeau(key) {
-  const state = bandeauState[key];
-  const track = document.getElementById(`${key}Track`);
-  track.innerHTML = '';
-
-  const total = state.reviews.length;
-
-  // On rend 3 copies du tableau si on a assez de films pour que ça ait du sens,
-  // sinon juste 1 copie (pas besoin de boucler avec 1-2 films)
-  const copies = total >= 3 ? 3 : 1;
-  state.copies = copies;
-  state.totalCards = total * copies;
-  state.middleStart = total * Math.floor(copies / 2);
-
-  for (let c = 0; c < copies; c++) {
-    state.reviews.forEach((r, i) => {
-      // La bannière initiale est sur la première carte de la copie centrale
-      const isBanner = (c === Math.floor(copies / 2) && i === 0);
-      const card = makeFeatureCard(r, isBanner);
-      track.appendChild(card);
-    });
-  }
-
-  // Index "réel" courant (0 à total-1)
-  state.currentIndex = 0;
-  // Index "virtuel" dans le DOM (toutes copies confondues)
-  state.virtualIndex = state.middleStart;
-
-  track.querySelectorAll('.feature-card').forEach(el => {
-    el.style.opacity = '0';
-    observer.observe(el);
-  });
-
-  updateTrackPosition(key);
-}
-
-// ─── CALCUL & APPLICATION DE LA POSITION ───
-// On utilise virtualIndex (position dans le DOM dupliqué) au lieu de currentIndex
-function updateTrackPosition(key) {
-  const state = bandeauState[key];
-  const track = document.getElementById(`${key}Track`);
-  const cards = Array.from(track.children);
-  if (!cards.length) return;
-
-  const cs = getComputedStyle(document.documentElement);
-  const afficheW = parseFloat(cs.getPropertyValue('--affiche-w'));
-  const gap      = parseFloat(cs.getPropertyValue('--gap'));
-
-  const vIdx = state.virtualIndex !== undefined ? state.virtualIndex : state.currentIndex;
-  const offset = vIdx * (afficheW + gap);
-  track.style.transform = `translateX(-${offset}px)`;
-}
-
-// ─── ROTATION (clic flèches) ───
-// Système : on a 3 copies du tableau dans le DOM ([films][films][films]).
-// On se déplace toujours dans la copie du milieu. Quand on approche d'une borne
-// (entrée copie 0 ou sortie copie 2), on fait un saut invisible vers la position
-// équivalente dans la copie du milieu, sans transition CSS, pour que l'utilisateur
-// ne voit jamais la "fin".
-function rotateFeature(key, dir) {
-  const state = bandeauState[key];
-  if (state.isAnimating) return;
-  if (state.reviews.length < 2) return;
-
-  const total = state.reviews.length;
-  state.isAnimating = true;
-
-  const track = document.getElementById(`${key}Track`);
-  const oldVirtual = state.virtualIndex;
-  const newVirtual = oldVirtual + dir;
-
-  // Cartes concernées par le swap de classe bannière
-  const oldCard = track.children[oldVirtual];
-  const newCard = track.children[newVirtual];
-
-  if (oldCard) oldCard.classList.remove('is-banner');
-  if (newCard) newCard.classList.add('is-banner');
-
-  state.virtualIndex = newVirtual;
-  state.currentIndex = ((state.currentIndex + dir) % total + total) % total;
-  updateTrackPosition(key);
-
-  // Après l'animation : vérifier si on doit faire un saut invisible vers le centre
-  setTimeout(() => {
-    // On considère qu'on doit "recentrer" si on est trop près du début ou de la fin
-    // Seuil : si on est dans la première ou la dernière copie, on saute au milieu
-    const total = state.reviews.length;
-    const middleStart = state.middleStart;
-
-    if (state.virtualIndex < total || state.virtualIndex >= total * (state.copies - 1)) {
-      // Saut invisible : désactiver la transition, repositionner au centre,
-      // forcer un reflow, réactiver la transition
-      const targetVirtual = middleStart + state.currentIndex;
-
-      // Re-attribuer la classe is-banner sur la bonne carte (celle du milieu)
-      track.querySelectorAll('.feature-card.is-banner').forEach(el => el.classList.remove('is-banner'));
-      const newCenterCard = track.children[targetVirtual];
-      if (newCenterCard) newCenterCard.classList.add('is-banner');
-
-      track.style.transition = 'none';
-      state.virtualIndex = targetVirtual;
-      updateTrackPosition(key);
-
-      // Forcer le navigateur à appliquer le saut puis réactiver les transitions
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          track.style.transition = '';
-          state.isAnimating = false;
-        });
-      });
-    } else {
-      state.isAnimating = false;
-    }
-  }, 650);
-}
-
-// ─── REMPLISSAGE BANDEAU ───
-function populateBandeau(key, reviews) {
-  const desktop = document.getElementById(`${key}Desktop`);
-  const mobile  = document.getElementById(`${key}Mobile`);
-  const emptyMsg = document.getElementById(`${key}Empty`);
-
-  if (!reviews.length) {
-    desktop.style.display = 'none';
-    mobile.style.display  = 'none';
-    emptyMsg.style.display = 'block';
-    return;
-  }
-
-  bandeauState[key].reviews = reviews;
-  bandeauState[key].currentIndex = 0;
-  renderBandeau(key);
-
-  const mobileTrack = document.getElementById(`${key}MobileTrack`);
-  reviews.forEach(r => { mobileTrack.innerHTML += makeMobileCard(r); });
-
-  document.querySelectorAll(`#${key}MobileTrack .review-card`).forEach(el => {
-    el.style.opacity = '0';
-    observer.observe(el);
-  });
-}
-
-// ─── CHARGEMENT GLOBAL ───
-async function loadAllReviews() {
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,sub,year,img,img_mobile,banner,color,color2,contenu&order=id.desc`,
-    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
-  );
-  const reviews = await res.json();
-
-  const affiche    = reviews.filter(r => r.year && r.year >= SEUIL_RECENT);
-  const classiques = reviews.filter(r => r.year && r.year <= SEUIL_CLASSIQUE);
-  const oublies    = reviews.filter(r => r.year && r.year > SEUIL_CLASSIQUE && r.year < SEUIL_RECENT);
-
-  populateBandeau('affiche',    affiche);
-  populateBandeau('classiques', classiques);
-  populateBandeau('oublies',    oublies);
-}
-loadAllReviews();
-
-// ─── Recalcul des positions en cas de resize fenêtre ───
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    ['affiche', 'classiques', 'oublies'].forEach(updateTrackPosition);
-  }, 150);
+// ─── LISTENERS RECHERCHE & TRI ───
+document.getElementById('archivesSearch').addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim();
+  renderGrid();
+});
+document.getElementById('archivesSortSelect').addEventListener('change', (e) => {
+  activeSort = e.target.value;
+  renderGrid();
 });
 
-// ─── MOBILE ───
-function expandMobile(key) {
-  const inner  = document.getElementById(`${key}MobileInner`);
-  const fade   = document.getElementById(`${key}MobileFade`);
-  const toggle = document.querySelector(`#${key}Mobile .reviews-mobile-toggle`);
-  inner.classList.add('expanded');
-  fade.style.opacity = '0';
-  toggle.style.opacity = '0';
-  toggle.style.pointerEvents = 'none';
-}
-
+// ─── MOBILE NAV ───
 function toggleMobileNav() {
   const nav = document.getElementById('mobileNav');
   nav.classList.toggle('open');
@@ -616,7 +645,7 @@ function toggleMobileNav() {
 }
 </script>
 
-<!-- ─── SEARCH OVERLAY ─── -->
+<!-- ─── SEARCH OVERLAY (barre nav) ─── -->
 <div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
   <button class="search-close" onclick="toggleSearch()">✕</button>
   <div class="search-box">
