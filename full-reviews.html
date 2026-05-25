@@ -167,7 +167,7 @@
     --banner-w: 500px;
     --gap: 14px;
     --track-padding: 20px;
-    --t-duration: 0.4s;
+    --t-duration: 0.6s;
     --t-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
@@ -416,30 +416,49 @@ function makeFeatureCard(r, isBanner) {
 }
 
 // ─── RENDU INITIAL ───
+// IMPORTANT : on duplique les cartes pour avoir un effet infini visuel.
+// La technique : on rend 3 copies des films à la suite ([films][films][films])
+// et on positionne le carrousel sur la copie du MILIEU.
+// Quand l'utilisateur dépasse les bornes (gauche ou droite), on fait un saut
+// invisible au centre pour qu'il puisse continuer à scroller indéfiniment.
 function renderBandeau(key) {
   const state = bandeauState[key];
   const track = document.getElementById(`${key}Track`);
   track.innerHTML = '';
-  state.reviews.forEach((r, i) => {
-    const card = makeFeatureCard(r, i === state.currentIndex);
-    track.appendChild(card);
-  });
+
+  const total = state.reviews.length;
+
+  // On rend 3 copies du tableau si on a assez de films pour que ça ait du sens,
+  // sinon juste 1 copie (pas besoin de boucler avec 1-2 films)
+  const copies = total >= 3 ? 3 : 1;
+  state.copies = copies;
+  state.totalCards = total * copies;
+  state.middleStart = total * Math.floor(copies / 2);
+
+  for (let c = 0; c < copies; c++) {
+    state.reviews.forEach((r, i) => {
+      // La bannière initiale est sur la première carte de la copie centrale
+      const isBanner = (c === Math.floor(copies / 2) && i === 0);
+      const card = makeFeatureCard(r, isBanner);
+      track.appendChild(card);
+    });
+  }
+
+  // Index "réel" courant (0 à total-1)
+  state.currentIndex = 0;
+  // Index "virtuel" dans le DOM (toutes copies confondues)
+  state.virtualIndex = state.middleStart;
 
   track.querySelectorAll('.feature-card').forEach(el => {
     el.style.opacity = '0';
     observer.observe(el);
   });
 
-  // Position initiale (index 0 → pas de décalage)
   updateTrackPosition(key);
 }
 
 // ─── CALCUL & APPLICATION DE LA POSITION ───
-// On positionne le track pour que la carte active soit visible à gauche.
-// Comme la carte active devient large (banner-w), toutes les cartes avant
-// elle font la largeur d'affiche standard.
-// NB : le padding gauche du track (var(--track-padding)) reste toujours
-// visible, donc on n'a pas besoin de le compenser dans le translateX.
+// On utilise virtualIndex (position dans le DOM dupliqué) au lieu de currentIndex
 function updateTrackPosition(key) {
   const state = bandeauState[key];
   const track = document.getElementById(`${key}Track`);
@@ -450,72 +469,71 @@ function updateTrackPosition(key) {
   const afficheW = parseFloat(cs.getPropertyValue('--affiche-w'));
   const gap      = parseFloat(cs.getPropertyValue('--gap'));
 
-  // Distance à parcourir : (afficheW + gap) × currentIndex
-  const offset = state.currentIndex * (afficheW + gap);
+  const vIdx = state.virtualIndex !== undefined ? state.virtualIndex : state.currentIndex;
+  const offset = vIdx * (afficheW + gap);
   track.style.transform = `translateX(-${offset}px)`;
 }
 
 // ─── ROTATION (clic flèches) ───
-// Boucle infinie : quand on dépasse le dernier (ou avant le premier),
-// on désactive temporairement la transition pour faire un saut instantané
-// invisible, puis on relance l'animation depuis le nouveau point.
+// Système : on a 3 copies du tableau dans le DOM ([films][films][films]).
+// On se déplace toujours dans la copie du milieu. Quand on approche d'une borne
+// (entrée copie 0 ou sortie copie 2), on fait un saut invisible vers la position
+// équivalente dans la copie du milieu, sans transition CSS, pour que l'utilisateur
+// ne voit jamais la "fin".
 function rotateFeature(key, dir) {
   const state = bandeauState[key];
   if (state.isAnimating) return;
   if (state.reviews.length < 2) return;
 
+  const total = state.reviews.length;
   state.isAnimating = true;
 
-  const total = state.reviews.length;
-  const oldIndex = state.currentIndex;
-  const newIndex = (oldIndex + dir + total) % total;
-
   const track = document.getElementById(`${key}Track`);
-  const oldCard = track.children[oldIndex];
-  const newCard = track.children[newIndex];
+  const oldVirtual = state.virtualIndex;
+  const newVirtual = oldVirtual + dir;
 
-  // Détection du wrap : passage du dernier → 0 (dir=1) ou du 0 → dernier (dir=-1)
-  const isWrap =
-    (dir === 1 && oldIndex === total - 1 && newIndex === 0) ||
-    (dir === -1 && oldIndex === 0 && newIndex === total - 1);
+  // Cartes concernées par le swap de classe bannière
+  const oldCard = track.children[oldVirtual];
+  const newCard = track.children[newVirtual];
 
-  if (isWrap) {
-    // 1. On enlève temporairement la transition pour faire un saut instantané
-    track.style.transition = 'none';
-    // 2. On positionne le track juste avant la nouvelle cible (en gardant un offset
-    //    qui simule la continuité du glissement)
-    const cs = getComputedStyle(document.documentElement);
-    const afficheW = parseFloat(cs.getPropertyValue('--afficheW') || cs.getPropertyValue('--affiche-w'));
-    const gap      = parseFloat(cs.getPropertyValue('--gap'));
-    // Position de départ : on "saute" comme si on était à une position virtuelle
-    // adjacente, puis on glisse normalement vers newIndex
-    const startOffset = (newIndex - dir) * (afficheW + gap);
-    track.style.transform = `translateX(-${startOffset}px)`;
+  if (oldCard) oldCard.classList.remove('is-banner');
+  if (newCard) newCard.classList.add('is-banner');
 
-    // Swap des classes en parallèle (mais sans animer la translation immédiate)
-    if (oldCard) oldCard.classList.remove('is-banner');
-    if (newCard) newCard.classList.add('is-banner');
-    state.currentIndex = newIndex;
+  state.virtualIndex = newVirtual;
+  state.currentIndex = ((state.currentIndex + dir) % total + total) % total;
+  updateTrackPosition(key);
 
-    // 3. On force le navigateur à appliquer le saut, puis on rétablit la transition
-    //    et on lance le vrai mouvement vers la cible
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        track.style.transition = '';
-        updateTrackPosition(key);
-      });
-    });
-  } else {
-    // Comportement normal : transition standard
-    if (oldCard) oldCard.classList.remove('is-banner');
-    if (newCard) newCard.classList.add('is-banner');
-    state.currentIndex = newIndex;
-    updateTrackPosition(key);
-  }
-
-  // Déverrouille après la fin de l'animation
+  // Après l'animation : vérifier si on doit faire un saut invisible vers le centre
   setTimeout(() => {
-    state.isAnimating = false;
+    // On considère qu'on doit "recentrer" si on est trop près du début ou de la fin
+    // Seuil : si on est dans la première ou la dernière copie, on saute au milieu
+    const total = state.reviews.length;
+    const middleStart = state.middleStart;
+
+    if (state.virtualIndex < total || state.virtualIndex >= total * (state.copies - 1)) {
+      // Saut invisible : désactiver la transition, repositionner au centre,
+      // forcer un reflow, réactiver la transition
+      const targetVirtual = middleStart + state.currentIndex;
+
+      // Re-attribuer la classe is-banner sur la bonne carte (celle du milieu)
+      track.querySelectorAll('.feature-card.is-banner').forEach(el => el.classList.remove('is-banner'));
+      const newCenterCard = track.children[targetVirtual];
+      if (newCenterCard) newCenterCard.classList.add('is-banner');
+
+      track.style.transition = 'none';
+      state.virtualIndex = targetVirtual;
+      updateTrackPosition(key);
+
+      // Forcer le navigateur à appliquer le saut puis réactiver les transitions
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          track.style.transition = '';
+          state.isAnimating = false;
+        });
+      });
+    } else {
+      state.isAnimating = false;
+    }
   }, 650);
 }
 
