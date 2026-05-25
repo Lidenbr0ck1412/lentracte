@@ -52,13 +52,10 @@
   <a href="index.html#contact" onclick="toggleMobileNav()">Contact</a>
 </div>
 
-<!-- ─── À L'AFFICHE (films récents : -5 ans) ─── -->
+<!-- ─── À L'AFFICHE ─── -->
 <section id="affiche">
-  <div class="section-header">
-    <h2>À L'AFFICHE</h2>
-  </div>
+  <div class="section-header"><h2>À L'AFFICHE</h2></div>
 
-  <!-- DESKTOP : feature carousel -->
   <div class="feature-carousel" id="afficheDesktop">
     <button class="carousel-btn prev" onclick="rotateFeature('affiche', -1)">
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
@@ -69,7 +66,6 @@
     </button>
   </div>
 
-  <!-- MOBILE : reprend exactement l'accueil -->
   <div class="reviews-mobile" id="afficheMobile">
     <div class="reviews-mobile-inner" id="afficheMobileInner">
       <div class="carousel-track" id="afficheMobileTrack"></div>
@@ -85,11 +81,9 @@
   <p class="bandeau-empty" id="afficheEmpty" style="display:none;">Aucun film à afficher dans cette catégorie pour le moment.</p>
 </section>
 
-<!-- ─── LES CLASSIQUES (+25 ans) ─── -->
+<!-- ─── LES CLASSIQUES ─── -->
 <section id="classiques">
-  <div class="section-header">
-    <h2>LES CLASSIQUES</h2>
-  </div>
+  <div class="section-header"><h2>LES CLASSIQUES</h2></div>
 
   <div class="feature-carousel" id="classiquesDesktop">
     <button class="carousel-btn prev" onclick="rotateFeature('classiques', -1)">
@@ -116,11 +110,9 @@
   <p class="bandeau-empty" id="classiquesEmpty" style="display:none;">Aucun film à afficher dans cette catégorie pour le moment.</p>
 </section>
 
-<!-- ─── LES FILMS OUBLIÉS (entre -5 et +25 ans) ─── -->
+<!-- ─── LES FILMS OUBLIÉS ─── -->
 <section id="oublies">
-  <div class="section-header">
-    <h2>LES FILMS OUBLIÉS</h2>
-  </div>
+  <div class="section-header"><h2>LES FILMS OUBLIÉS</h2></div>
 
   <div class="feature-carousel" id="oubliesDesktop">
     <button class="carousel-btn prev" onclick="rotateFeature('oublies', -1)">
@@ -154,119 +146,128 @@
 
 <!-- ─── STYLES SPÉCIFIQUES AU FEATURE CAROUSEL ─── -->
 <style>
-  /* Largeurs : affiche standard 220px, bannière ~ 2x = 460px */
   :root {
     --affiche-w: 220px;
-    --affiche-h: 320px;
-    --banner-w: 460px;
-    --gap: 14px;
+    --affiche-h: 330px;
+    --banner-w: 500px;
+    --gap: 22px;
+    --transition-duration: 0.55s;
+    --transition-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   }
 
-  /* Conteneur extérieur (espace pour les flèches sur les côtés) */
+  /* Conteneur extérieur (espace pour les flèches) */
   .feature-carousel {
     position: relative;
-    padding: 0 60px;
-    margin: 0 auto 40px;
-    max-width: 1600px;
+    padding: 0 70px;
+    margin: 0 auto 50px;
+    max-width: 1700px;
     overflow: hidden;
   }
   @media (max-width: 900px) {
     .feature-carousel { display: none; }
   }
 
-  /* Track interne : flexbox horizontal */
+  /* Track horizontal */
   .feature-track {
     display: flex;
     gap: var(--gap);
     align-items: stretch;
+    height: var(--affiche-h);
   }
 
-  /* Carte générique */
+  /* Carte générique : largeur animée en CSS */
   .feature-card {
     flex: 0 0 auto;
     width: var(--affiche-w);
     height: var(--affiche-h);
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
     position: relative;
     cursor: pointer;
-    transition: width 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
     background: #1a1a1a;
+    transition: width var(--transition-duration) var(--transition-ease);
+    will-change: width, transform;
   }
 
-  /* Carte en mode bannière (la première) */
   .feature-card.is-banner {
     width: var(--banner-w);
   }
 
-  /* Les deux images (affiche + bannière) sont superposées, on fade entre les deux */
+  /* Images poster + banner superposées, crossfade par opacity */
   .feature-img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: opacity 0.4s ease;
+    transition: opacity var(--transition-duration) var(--transition-ease);
+    will-change: opacity;
   }
   .feature-img.poster { opacity: 1; }
   .feature-img.banner { opacity: 0; }
-
   .feature-card.is-banner .feature-img.poster { opacity: 0; }
   .feature-card.is-banner .feature-img.banner { opacity: 1; }
 
-  /* Overlay texte (titre + année) */
+  /* Overlay texte */
   .feature-info {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 16px 18px;
-    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0) 100%);
+    padding: 18px 22px;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0) 100%);
     color: #fff;
     z-index: 2;
+    transition: padding var(--transition-duration) var(--transition-ease);
   }
   .feature-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: 2px;
+    font-size: 20px;
+    letter-spacing: 2.5px;
     line-height: 1.1;
+    transition: font-size var(--transition-duration) var(--transition-ease);
   }
   .feature-title span {
     color: var(--red);
-    font-size: 14px;
-    margin-left: 4px;
+    font-size: 15px;
+    margin-left: 6px;
+    transition: font-size var(--transition-duration) var(--transition-ease);
+  }
+  .feature-card.is-banner .feature-info {
+    padding: 22px 28px;
   }
   .feature-card.is-banner .feature-title {
-    font-size: 26px;
-    letter-spacing: 3px;
+    font-size: 30px;
+    letter-spacing: 3.5px;
   }
   .feature-card.is-banner .feature-title span {
-    font-size: 18px;
+    font-size: 20px;
   }
 
-  /* Hover effect (subtil) */
-  .feature-card:hover .feature-img {
-    transform: scale(1.03);
+  /* Hover effect subtil */
+  .feature-card:not(.is-banner):hover {
+    transform: translateY(-3px);
   }
-  .feature-img {
-    transition: opacity 0.4s ease, transform 0.5s ease;
+  .feature-card {
+    transition: width var(--transition-duration) var(--transition-ease), transform 0.3s ease;
   }
 
-  /* Message bandeau vide */
+  /* Bandeau vide */
   .bandeau-empty {
     text-align: center;
     color: var(--grey);
     font-size: 13px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    padding: 40px 20px;
+    padding: 60px 20px;
     font-family: 'Montserrat', sans-serif;
   }
 
-  /* Flèches : repositionnement vertical */
+  /* Flèches centrées verticalement */
   .feature-carousel .carousel-btn {
     top: 50%;
     transform: translateY(-50%);
+    z-index: 10;
   }
 </style>
 
@@ -275,25 +276,22 @@
 const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
 
-// ─── SEUILS DE FILTRE PAR ANNÉE ───
 const CURRENT_YEAR = new Date().getFullYear();
 const SEUIL_RECENT = CURRENT_YEAR - 5;
 const SEUIL_CLASSIQUE = CURRENT_YEAR - 25;
 
-// ─── STOCKAGE DES DONNÉES PAR BANDEAU ───
-// On garde un tableau interne pour pouvoir faire tourner les éléments
-const bandeauData = {
-  affiche:    [],
-  classiques: [],
-  oublies:    []
+// État des bandeaux : on stocke les éléments DOM et un flag "en cours d'animation"
+const bandeauState = {
+  affiche:    { isAnimating: false },
+  classiques: { isAnimating: false },
+  oublies:    { isAnimating: false }
 };
 
-// ─── INTERSECTION OBSERVER (animations cards) ───
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-in'); } });
 }, { threshold: 0.1 });
 
-// ─── RENDER : carte mobile (réutilise la carte review classique) ───
+// ─── CARTE MOBILE ───
 function makeMobileCard(r) {
   const href = r.contenu ? `review.html?id=${r.id}` : '#';
   const tag = r.contenu ? 'a' : 'div';
@@ -310,71 +308,117 @@ function makeMobileCard(r) {
   </${tag}>`;
 }
 
-// ─── RENDER : carte feature (desktop) ───
-// Affiche les deux images (poster + banner) superposées, on switch via la classe .is-banner
+// ─── CARTE FEATURE (desktop) ───
+// On crée un vrai élément DOM (pas une string) pour pouvoir le manipuler par référence
 function makeFeatureCard(r, isBanner) {
   const href = r.contenu ? `review.html?id=${r.id}` : '#';
-  const tag = r.contenu ? 'a' : 'div';
-  const link = r.contenu ? `href="${href}"` : '';
-  const posterSrc = r.img || '';
-  // Fallback : si pas de banner, on utilise l'affiche en grand
-  const bannerSrc = r.banner || r.img || '';
-  const bgGradient = `linear-gradient(135deg,${r.color || '#111'} 0%,${r.color2 || '#222'} 100%)`;
+  const useAnchor = !!r.contenu;
+  const el = document.createElement(useAnchor ? 'a' : 'div');
+  el.className = 'feature-card' + (isBanner ? ' is-banner' : '');
+  if (useAnchor) el.href = href;
+  el.style.textDecoration = 'none';
+  el.style.color = 'inherit';
+  el.style.background = `linear-gradient(135deg,${r.color || '#111'} 0%,${r.color2 || '#222'} 100%)`;
 
-  return `<${tag} class="feature-card${isBanner ? ' is-banner' : ''}" ${link} style="text-decoration:none;color:inherit;background:${bgGradient}">
+  const posterSrc = r.img || '';
+  const bannerSrc = r.banner || r.img || '';
+
+  el.innerHTML = `
     <img class="feature-img poster" src="${posterSrc}" alt="${r.title}" onerror="this.style.display='none'">
     <img class="feature-img banner" src="${bannerSrc}" alt="${r.title}" onerror="this.style.display='none'">
     <div class="feature-info">
       <div class="feature-title">${r.title} <span>${r.year || ''}</span></div>
     </div>
-  </${tag}>`;
+  `;
+  return el;
 }
 
-// ─── RENDU INITIAL D'UN BANDEAU ───
-function renderBandeau(key) {
+// ─── RENDU INITIAL ───
+function renderBandeau(key, reviews) {
   const track = document.getElementById(`${key}Track`);
-  const data = bandeauData[key];
-  track.innerHTML = data.map((r, i) => makeFeatureCard(r, i === 0)).join('');
+  track.innerHTML = '';
+  reviews.forEach((r, i) => {
+    const card = makeFeatureCard(r, i === 0);
+    track.appendChild(card);
+  });
 
-  // Animation au scroll
   track.querySelectorAll('.feature-card').forEach(el => {
     el.style.opacity = '0';
     observer.observe(el);
   });
 }
 
-// ─── ROTATION (clic flèches) ───
-// dir = +1 : on fait passer l'élément 0 à la fin
-// dir = -1 : on fait passer le dernier au début
+// ─── ROTATION AVEC ANIMATION FLIP ───
+// Principe : on enregistre la position de chaque carte AVANT le changement,
+// on déplace les éléments dans le DOM, puis on les anime depuis leur ancienne position
+// vers la nouvelle (translate qui revient à 0).
 function rotateFeature(key, dir) {
-  const data = bandeauData[key];
-  if (data.length < 2) return; // Rien à faire si on a 1 ou 0 film
+  const state = bandeauState[key];
+  if (state.isAnimating) return; // Empêche les clics rapides
+  const track = document.getElementById(`${key}Track`);
+  const cards = Array.from(track.children);
+  if (cards.length < 2) return;
 
+  state.isAnimating = true;
+
+  // ÉTAPE 1 : First - enregistrer les positions initiales
+  const firstPositions = new Map();
+  cards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    firstPositions.set(card, { left: rect.left, width: rect.width });
+  });
+
+  // ÉTAPE 2 : Modifier le DOM
   if (dir === 1) {
-    // Suivant : le premier élément part à la fin
-    data.push(data.shift());
+    // Suivant : la première carte (bannière) devient la dernière (affiche)
+    const firstCard = cards[0];
+    firstCard.classList.remove('is-banner');
+    track.appendChild(firstCard);
+
+    // La nouvelle première carte devient bannière
+    const newFirstCard = track.children[0];
+    newFirstCard.classList.add('is-banner');
   } else {
-    // Précédent : le dernier élément revient au début
-    data.unshift(data.pop());
+    // Précédent : la dernière carte revient en première position et devient bannière
+    const lastCard = cards[cards.length - 1];
+    const currentBanner = cards[0];
+    currentBanner.classList.remove('is-banner');
+    track.insertBefore(lastCard, currentBanner);
+    lastCard.classList.add('is-banner');
   }
 
-  // On re-render avec animation
-  animateRotation(key, dir);
+  // ÉTAPE 3 : Last - mesurer les nouvelles positions et appliquer un translate inverse
+  const newCards = Array.from(track.children);
+  newCards.forEach(card => {
+    const oldPos = firstPositions.get(card);
+    if (!oldPos) return;
+    const newRect = card.getBoundingClientRect();
+    const dx = oldPos.left - newRect.left;
+
+    if (dx !== 0) {
+      // On annule le déplacement instantanément (sans transition)
+      card.style.transition = 'none';
+      card.style.transform = `translateX(${dx}px)`;
+    }
+  });
+
+  // ÉTAPE 4 : Play - on déclenche les vraies transitions sur la frame suivante
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      newCards.forEach(card => {
+        card.style.transition = ''; // Retour aux transitions CSS définies
+        card.style.transform = '';   // Glissement vers la position finale
+      });
+
+      // Fin de l'animation
+      setTimeout(() => {
+        state.isAnimating = false;
+      }, 600); // Légèrement plus que la durée de transition
+    });
+  });
 }
 
-// Animation de la rotation : on glisse la track avant de re-rendre
-function animateRotation(key, dir) {
-  const track = document.getElementById(`${key}Track`);
-  // Pour une animation simple, on fait un quick fade + re-render
-  track.style.transition = 'opacity 0.18s ease';
-  track.style.opacity = '0.4';
-  setTimeout(() => {
-    renderBandeau(key);
-    track.style.opacity = '1';
-  }, 180);
-}
-
-// ─── REMPLISSAGE D'UN BANDEAU ───
+// ─── REMPLISSAGE BANDEAU ───
 function populateBandeau(key, reviews) {
   const desktop = document.getElementById(`${key}Desktop`);
   const mobile  = document.getElementById(`${key}Mobile`);
@@ -387,12 +431,8 @@ function populateBandeau(key, reviews) {
     return;
   }
 
-  bandeauData[key] = reviews;
+  renderBandeau(key, reviews);
 
-  // Desktop : feature carousel
-  renderBandeau(key);
-
-  // Mobile : on remplit la liste classique
   const mobileTrack = document.getElementById(`${key}MobileTrack`);
   reviews.forEach(r => { mobileTrack.innerHTML += makeMobileCard(r); });
 
@@ -420,7 +460,7 @@ async function loadAllReviews() {
 }
 loadAllReviews();
 
-// ─── MOBILE : déplier la liste ───
+// ─── MOBILE ───
 function expandMobile(key) {
   const inner  = document.getElementById(`${key}MobileInner`);
   const fade   = document.getElementById(`${key}MobileFade`);
@@ -431,7 +471,6 @@ function expandMobile(key) {
   toggle.style.pointerEvents = 'none';
 }
 
-// ─── MOBILE NAV ───
 function toggleMobileNav() {
   const nav = document.getElementById('mobileNav');
   nav.classList.toggle('open');
