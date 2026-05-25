@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Entracte • Les Tops & Rétrospectives</title>
+<link rel="preconnect" href="https://jnlfejbcpudkmcphsfej.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://jnlfejbcpudkmcphsfej.supabase.co">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="tops-archives.css">
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav id="navbar">
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte" style="height:100px;width:auto;display:block;">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+          Cinéma
+          <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+          <div class="dropdown">
+            <a href="full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+            <a href="ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+            <a href="tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
+          </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" onclick="toggleSearch()" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    </svg>
+  </div>
+  <div class="burger" onclick="toggleMobileNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="full-reviews.html" onclick="toggleMobileNav()">Reviews</a>
+  <a href="ccf-archives.html" onclick="toggleMobileNav()">Comment c'est fait ?</a>
+  <a href="tops-archives.html" onclick="toggleMobileNav()">Les tops</a>
+  <a href="index.html#about" onclick="toggleMobileNav()">À propos</a>
+  <a href="index.html#contact" onclick="toggleMobileNav()">Contact</a>
+</div>
+
+<!-- ─── EN-TÊTE DE PAGE ─── -->
+<header class="tops-hero-header">
+  <div class="tops-hero-header-inner">
+    <p class="tops-page-label">— TOPS & RÉTROSPECTIVES —</p>
+    <h1 class="tops-page-title">
+      Quand le cinéma se regarde <em>dans le rétroviseur</em>
+    </h1>
+    <p class="tops-page-intro">
+      Le meilleur d'une année, les pépites d'un genre, les films qu'on aurait tort de ne pas avoir vus. Ici, on classe, on sélectionne, on défend. Pas de fausse modestie — juste nos coups de cœur, défendus avec arguments.
+    </p>
+  </div>
+</header>
+
+<!-- ─── LISTE EN ALTERNANCE ─── -->
+<main class="tops-list" id="topsList">
+  <!-- Injecté par JS -->
+</main>
+
+<!-- État vide -->
+<p class="tops-empty" id="topsEmpty" style="display:none;">
+  Aucun top ou rétrospective publié pour le moment.
+</p>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+
+<!-- ─── SCRIPT PRINCIPAL ─── -->
+<script>
+// ─── SUPABASE CONFIG ───
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+
+
+// ─── CHARGEMENT ───
+// On fait deux requêtes :
+// 1. La table `tops` pour récupérer tous les dossiers
+// 2. La table `tops_films` pour compter combien de films par top
+// Ensuite on fusionne côté JS pour avoir le compteur de films sur chaque carte.
+async function loadTops() {
+  // Récupère tous les tops, ordonnés par date desc
+  const topsRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/tops?select=*&order=created_at.desc`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  const tops = await topsRes.json();
+
+  if (!tops || !tops.length) {
+    document.getElementById('topsEmpty').style.display = 'block';
+    return;
+  }
+
+  // Récupère TOUS les films de TOUS les tops (juste les top_id pour compter)
+  const filmsRes = await fetch(
+    `${SUPABASE_URL}/rest/v1/tops_films?select=top_id`,
+    { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+  );
+  const allFilms = await filmsRes.json();
+
+  // Compte le nombre de films par top_id
+  const filmCounts = {};
+  allFilms.forEach(f => {
+    filmCounts[f.top_id] = (filmCounts[f.top_id] || 0) + 1;
+  });
+
+  // Render
+  renderList(tops, filmCounts);
+}
+loadTops();
+
+
+// ─── UTILITAIRES ───
+
+// Convertit le markdown basique (gras, italique) en HTML.
+function mdToHtml(str) {
+  if (!str) return '';
+  let s = String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+  s = s.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/(^|[^*])\*([^*]+?)\*(?!\*)/g, '$1<em>$2</em>');
+  return s;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Tronque proprement à la fin d'une phrase, max ~maxChars
+function smartTruncate(str, maxChars = 240) {
+  if (!str) return '';
+  if (str.length <= maxChars) return str;
+  const slice = str.slice(0, maxChars);
+  const lastSentence = Math.max(
+    slice.lastIndexOf('. '),
+    slice.lastIndexOf('! '),
+    slice.lastIndexOf('? ')
+  );
+  if (lastSentence > maxChars * 0.5) {
+    return str.slice(0, lastSentence + 1);
+  }
+  const lastSpace = slice.lastIndexOf(' ');
+  return str.slice(0, lastSpace > 0 ? lastSpace : maxChars) + '…';
+}
+
+// Détermine le badge "type" en fonction de la page_url ou autre indice
+// (puisque tu n'as pas de champ `type`, on devine via la page_url)
+function inferType(top) {
+  const url = (top.page_url || '').toLowerCase();
+  if (url.startsWith('top')) return 'CLASSEMENT';
+  if (url.startsWith('retro')) return 'SÉLECTION';
+  return 'RÉTROSPECTIVE';
+}
+
+// Format du compteur "10 films" / "5 films sélectionnés"
+function formatCount(count, type) {
+  if (!count) return '';
+  if (type === 'CLASSEMENT') {
+    return `<strong>${count}</strong> films classés`;
+  }
+  return `<strong>${count}</strong> films sélectionnés`;
+}
+
+
+// ─── RENDU DE LA LISTE ───
+function renderList(tops, filmCounts) {
+  const listEl = document.getElementById('topsList');
+  listEl.innerHTML = tops.map((top, idx) => makeRow(top, idx, filmCounts[top.id] || 0)).join('');
+}
+
+function makeRow(top, idx, count) {
+  // Alternance : index pair = image à gauche, impair = image à droite
+  const reverse = (idx % 2 === 1);
+
+  // Image : on prend `cover` en priorité, fallback sur `banner`, fallback sur dégradé
+  const imageSrc = top.cover || top.banner || '';
+  const hasImage = !!imageSrc;
+
+  // Lien vers la page individuelle : `page_url` du champ Supabase
+  // Si pas de page_url définie, on désactive le clic
+  const hasUrl = !!top.page_url;
+  const tag = hasUrl ? 'a' : 'div';
+  const link = hasUrl ? `href="${escapeHtml(top.page_url)}"` : '';
+
+  // Badge type
+  const typeLabel = inferType(top);
+
+  // Métadonnées en haut (TOP + année si dispo)
+  const yearPart = top.annee ? ` · ${top.annee}` : '';
+  const meta = `TOP${yearPart}`;
+
+  // Accroche : intro tronquée
+  const intro = top.intro ? smartTruncate(top.intro, 280) : '';
+
+  // Footer : compteur de films + CTA
+  const countText = formatCount(count, typeLabel);
+
+  return `
+    <${tag} class="tops-row${reverse ? ' reverse' : ''}" ${link} style="text-decoration:none;color:inherit">
+      <div class="tops-row-image">
+        ${typeLabel ? `<div class="tops-row-type">${typeLabel}</div>` : ''}
+        ${hasImage
+          ? `<img src="${escapeHtml(imageSrc)}" alt="${escapeHtml(top.title)}" onerror="this.style.display='none'">`
+          : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a0505,#3a1010)"></div>`}
+      </div>
+      <div class="tops-row-text">
+        <div class="tops-row-meta">${escapeHtml(meta)}</div>
+        <h2 class="tops-row-title">${escapeHtml(top.title)}</h2>
+        ${top.subtitle ? `<p class="tops-row-subtitle">« ${escapeHtml(top.subtitle)} »</p>` : ''}
+        ${intro ? `<p class="tops-row-intro">${mdToHtml(intro)}</p>` : ''}
+        <div class="tops-row-footer">
+          ${countText ? `<div class="tops-row-count">${countText}</div>` : ''}
+          ${hasUrl ? `
+          <span class="tops-cta">
+            Découvrir
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </span>` : ''}
+        </div>
+      </div>
+    </${tag}>
+  `;
+}
+
+
+// ─── MOBILE NAV ───
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const burger = document.getElementById('burger');
+  const spans = burger.querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+</script>
+
+
+<!-- ─── SEARCH OVERLAY ─── -->
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+  <button class="search-close" onclick="toggleSearch()">✕</button>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+    <button class="search-submit" onclick="doSearch()">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+  <p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<style>
+.search-results { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 640px; }
+.search-result-card { display: flex; align-items: center; gap: 16px; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 16px; text-decoration: none; color: #fff; transition: border-color .2s, background .2s; cursor: pointer; }
+.search-result-card:hover { border-color: #E8253A; background: rgba(232,37,58,.07); }
+.search-result-img { width: 44px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #2a2a2a; }
+.search-result-info { display: flex; flex-direction: column; gap: 4px; }
+.search-result-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: #fff; }
+.search-result-meta { font-size: 11px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+.search-no-result { font-size: 13px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+</style>
+
+<script>
+function toggleSearch() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.toggle('active');
+  if (overlay.classList.contains('active')) {
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  } else {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('searchOverlay').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+  if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+    doSearch();
+  }
+});
+
+async function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  const resultsEl = document.getElementById('searchResults');
+  if (!query) return;
+
+  resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
+
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+
+  if (!data.length) {
+    resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';
+    return;
+  }
+
+  resultsEl.innerHTML = data.map(r => `
+    <a class="search-result-card" href="${r.link || '#'}">
+      ${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
+      <div class="search-result-info">
+        <div class="search-result-title">${r.title}</div>
+        <div class="search-result-meta">${r.year || ''}${r.genre ? ' · ' + r.genre : ''}</div>
+      </div>
+    </a>
+  `).join('');
+}
+</script>
+
+</body>
+</html>
