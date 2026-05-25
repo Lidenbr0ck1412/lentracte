@@ -60,7 +60,9 @@
     <button class="carousel-btn prev" onclick="rotateFeature('affiche', -1)">
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
-    <div class="feature-track" id="afficheTrack"></div>
+    <div class="feature-viewport">
+      <div class="feature-track" id="afficheTrack"></div>
+    </div>
     <button class="carousel-btn next" onclick="rotateFeature('affiche', 1)">
       <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
     </button>
@@ -89,7 +91,9 @@
     <button class="carousel-btn prev" onclick="rotateFeature('classiques', -1)">
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
-    <div class="feature-track" id="classiquesTrack"></div>
+    <div class="feature-viewport">
+      <div class="feature-track" id="classiquesTrack"></div>
+    </div>
     <button class="carousel-btn next" onclick="rotateFeature('classiques', 1)">
       <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
     </button>
@@ -118,7 +122,9 @@
     <button class="carousel-btn prev" onclick="rotateFeature('oublies', -1)">
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
-    <div class="feature-track" id="oubliesTrack"></div>
+    <div class="feature-viewport">
+      <div class="feature-track" id="oubliesTrack"></div>
+    </div>
     <button class="carousel-btn next" onclick="rotateFeature('oublies', 1)">
       <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
     </button>
@@ -148,34 +154,42 @@
 <style>
   :root {
     --affiche-w: 220px;
-    --affiche-h: 330px;
+    --affiche-h: 340px;
     --banner-w: 500px;
     --gap: 22px;
-    --transition-duration: 0.55s;
-    --transition-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --t-duration: 0.6s;
+    --t-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  /* Conteneur extérieur (espace pour les flèches) */
+  /* Espacement vertical autour des carrousels (haut & bas) */
   .feature-carousel {
     position: relative;
-    padding: 0 70px;
-    margin: 0 auto 50px;
+    padding: 50px 70px 60px;
+    margin: 0 auto;
     max-width: 1700px;
-    overflow: hidden;
   }
   @media (max-width: 900px) {
     .feature-carousel { display: none; }
   }
 
-  /* Track horizontal */
+  /* Viewport : c'est lui qui clip ce qui dépasse */
+  .feature-viewport {
+    overflow: hidden;
+    height: var(--affiche-h);
+    width: 100%;
+  }
+
+  /* Track : glisse horizontalement via translateX */
   .feature-track {
     display: flex;
     gap: var(--gap);
     align-items: stretch;
-    height: var(--affiche-h);
+    height: 100%;
+    will-change: transform;
+    transition: transform var(--t-duration) var(--t-ease);
   }
 
-  /* Carte générique : largeur animée en CSS */
+  /* Carte */
   .feature-card {
     flex: 0 0 auto;
     width: var(--affiche-w);
@@ -185,23 +199,22 @@
     position: relative;
     cursor: pointer;
     background: #1a1a1a;
-    transition: width var(--transition-duration) var(--transition-ease);
-    will-change: width, transform;
+    transition: width var(--t-duration) var(--t-ease);
+    will-change: width;
   }
 
   .feature-card.is-banner {
     width: var(--banner-w);
   }
 
-  /* Images poster + banner superposées, crossfade par opacity */
+  /* Images superposées : crossfade poster ↔ banner */
   .feature-img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: opacity var(--transition-duration) var(--transition-ease);
-    will-change: opacity;
+    transition: opacity var(--t-duration) var(--t-ease);
   }
   .feature-img.poster { opacity: 1; }
   .feature-img.banner { opacity: 0; }
@@ -214,42 +227,68 @@
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 18px 22px;
-    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0) 100%);
+    padding: 20px 22px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.65) 55%, rgba(0,0,0,0) 100%);
     color: #fff;
     z-index: 2;
-    transition: padding var(--transition-duration) var(--transition-ease);
+    transition: padding var(--t-duration) var(--t-ease);
   }
   .feature-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 20px;
     letter-spacing: 2.5px;
     line-height: 1.1;
-    transition: font-size var(--transition-duration) var(--transition-ease);
+    transition: font-size var(--t-duration) var(--t-ease);
   }
   .feature-title span {
     color: var(--red);
     font-size: 15px;
     margin-left: 6px;
-    transition: font-size var(--transition-duration) var(--transition-ease);
+    transition: font-size var(--t-duration) var(--t-ease);
   }
-  .feature-card.is-banner .feature-info {
-    padding: 22px 28px;
-  }
-  .feature-card.is-banner .feature-title {
-    font-size: 30px;
-    letter-spacing: 3.5px;
-  }
-  .feature-card.is-banner .feature-title span {
-    font-size: 20px;
+  /* Sous-titre éditorial */
+  .feature-sub {
+    margin-top: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #cccccc;
+    line-height: 1.3;
+    transition: font-size var(--t-duration) var(--t-ease);
+    /* Limiter à 2 lignes max sur les affiches */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  /* Hover effect subtil */
+  /* Mode bannière : tout grandit */
+  .feature-card.is-banner .feature-info {
+    padding: 26px 30px;
+  }
+  .feature-card.is-banner .feature-title {
+    font-size: 32px;
+    letter-spacing: 4px;
+  }
+  .feature-card.is-banner .feature-title span {
+    font-size: 22px;
+  }
+  .feature-card.is-banner .feature-sub {
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-top: 10px;
+    -webkit-line-clamp: 1;
+    color: #e8e8e8;
+  }
+
+  /* Hover subtil sur les affiches uniquement */
   .feature-card:not(.is-banner):hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
   }
   .feature-card {
-    transition: width var(--transition-duration) var(--transition-ease), transform 0.3s ease;
+    transition: width var(--t-duration) var(--t-ease), transform 0.3s ease;
   }
 
   /* Bandeau vide */
@@ -263,7 +302,7 @@
     font-family: 'Montserrat', sans-serif;
   }
 
-  /* Flèches centrées verticalement */
+  /* Flèches */
   .feature-carousel .carousel-btn {
     top: 50%;
     transform: translateY(-50%);
@@ -280,11 +319,30 @@ const CURRENT_YEAR = new Date().getFullYear();
 const SEUIL_RECENT = CURRENT_YEAR - 5;
 const SEUIL_CLASSIQUE = CURRENT_YEAR - 25;
 
-// État des bandeaux : on stocke les éléments DOM et un flag "en cours d'animation"
+/*
+  ────────────────────────────────────────────────────────────────
+  PRINCIPE D'ANIMATION (façon Netflix)
+  ────────────────────────────────────────────────────────────────
+  1. On rend TOUTES les cartes une seule fois dans le DOM, dans
+     l'ordre du tableau de données.
+  2. La carte à l'index `currentIndex` reçoit la classe .is-banner
+     (donc devient large + crossfade vers l'image banner).
+  3. Pour faire défiler, on calcule combien il faut déplacer le
+     track vers la gauche pour que la nouvelle carte active soit
+     en première position visible, et on applique translateX.
+  4. La translation et le changement de largeur se font SIMULTANÉMENT
+     grâce aux transitions CSS, ce qui donne un effet ultra fluide.
+
+  Avantages vs FLIP :
+  - Pas de manipulation DOM pendant l'animation
+  - Une seule transition CSS, donc rien à orchestrer en JS
+  - Accélération GPU garantie (translate + opacity)
+*/
+
 const bandeauState = {
-  affiche:    { isAnimating: false },
-  classiques: { isAnimating: false },
-  oublies:    { isAnimating: false }
+  affiche:    { currentIndex: 0, reviews: [], isAnimating: false },
+  classiques: { currentIndex: 0, reviews: [], isAnimating: false },
+  oublies:    { currentIndex: 0, reviews: [], isAnimating: false }
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -309,36 +367,37 @@ function makeMobileCard(r) {
 }
 
 // ─── CARTE FEATURE (desktop) ───
-// On crée un vrai élément DOM (pas une string) pour pouvoir le manipuler par référence
 function makeFeatureCard(r, isBanner) {
-  const href = r.contenu ? `review.html?id=${r.id}` : '#';
   const useAnchor = !!r.contenu;
   const el = document.createElement(useAnchor ? 'a' : 'div');
   el.className = 'feature-card' + (isBanner ? ' is-banner' : '');
-  if (useAnchor) el.href = href;
+  if (useAnchor) el.href = `review.html?id=${r.id}`;
   el.style.textDecoration = 'none';
   el.style.color = 'inherit';
   el.style.background = `linear-gradient(135deg,${r.color || '#111'} 0%,${r.color2 || '#222'} 100%)`;
 
   const posterSrc = r.img || '';
   const bannerSrc = r.banner || r.img || '';
+  const subline   = r.sub ? `<div class="feature-sub">${r.sub}</div>` : '';
 
   el.innerHTML = `
     <img class="feature-img poster" src="${posterSrc}" alt="${r.title}" onerror="this.style.display='none'">
     <img class="feature-img banner" src="${bannerSrc}" alt="${r.title}" onerror="this.style.display='none'">
     <div class="feature-info">
       <div class="feature-title">${r.title} <span>${r.year || ''}</span></div>
+      ${subline}
     </div>
   `;
   return el;
 }
 
 // ─── RENDU INITIAL ───
-function renderBandeau(key, reviews) {
+function renderBandeau(key) {
+  const state = bandeauState[key];
   const track = document.getElementById(`${key}Track`);
   track.innerHTML = '';
-  reviews.forEach((r, i) => {
-    const card = makeFeatureCard(r, i === 0);
+  state.reviews.forEach((r, i) => {
+    const card = makeFeatureCard(r, i === state.currentIndex);
     track.appendChild(card);
   });
 
@@ -346,76 +405,58 @@ function renderBandeau(key, reviews) {
     el.style.opacity = '0';
     observer.observe(el);
   });
+
+  // Position initiale (index 0 → pas de décalage)
+  updateTrackPosition(key);
 }
 
-// ─── ROTATION AVEC ANIMATION FLIP ───
-// Principe : on enregistre la position de chaque carte AVANT le changement,
-// on déplace les éléments dans le DOM, puis on les anime depuis leur ancienne position
-// vers la nouvelle (translate qui revient à 0).
-function rotateFeature(key, dir) {
+// ─── CALCUL & APPLICATION DE LA POSITION ───
+// On positionne le track pour que la carte active soit visible à gauche.
+// Comme la carte active devient large (banner-w), toutes les cartes avant
+// elle font la largeur d'affiche standard.
+function updateTrackPosition(key) {
   const state = bandeauState[key];
-  if (state.isAnimating) return; // Empêche les clics rapides
   const track = document.getElementById(`${key}Track`);
   const cards = Array.from(track.children);
-  if (cards.length < 2) return;
+  if (!cards.length) return;
+
+  const cs = getComputedStyle(document.documentElement);
+  const afficheW = parseFloat(cs.getPropertyValue('--affiche-w'));
+  const gap      = parseFloat(cs.getPropertyValue('--gap'));
+
+  // Distance à parcourir : (afficheW + gap) × currentIndex
+  // Toutes les cartes AVANT la bannière sont en mode affiche standard.
+  const offset = state.currentIndex * (afficheW + gap);
+  track.style.transform = `translateX(-${offset}px)`;
+}
+
+// ─── ROTATION (clic flèches) ───
+function rotateFeature(key, dir) {
+  const state = bandeauState[key];
+  if (state.isAnimating) return;
+  if (state.reviews.length < 2) return;
 
   state.isAnimating = true;
 
-  // ÉTAPE 1 : First - enregistrer les positions initiales
-  const firstPositions = new Map();
-  cards.forEach(card => {
-    const rect = card.getBoundingClientRect();
-    firstPositions.set(card, { left: rect.left, width: rect.width });
-  });
+  // Mise à jour de l'index avec rotation modulo (boucle infinie)
+  const total = state.reviews.length;
+  const newIndex = (state.currentIndex + dir + total) % total;
 
-  // ÉTAPE 2 : Modifier le DOM
-  if (dir === 1) {
-    // Suivant : la première carte (bannière) devient la dernière (affiche)
-    const firstCard = cards[0];
-    firstCard.classList.remove('is-banner');
-    track.appendChild(firstCard);
+  const track = document.getElementById(`${key}Track`);
+  const oldCard = track.children[state.currentIndex];
+  const newCard = track.children[newIndex];
 
-    // La nouvelle première carte devient bannière
-    const newFirstCard = track.children[0];
-    newFirstCard.classList.add('is-banner');
-  } else {
-    // Précédent : la dernière carte revient en première position et devient bannière
-    const lastCard = cards[cards.length - 1];
-    const currentBanner = cards[0];
-    currentBanner.classList.remove('is-banner');
-    track.insertBefore(lastCard, currentBanner);
-    lastCard.classList.add('is-banner');
-  }
+  // Swap des classes : l'ancienne carte redevient affiche, la nouvelle devient bannière
+  if (oldCard) oldCard.classList.remove('is-banner');
+  if (newCard) newCard.classList.add('is-banner');
 
-  // ÉTAPE 3 : Last - mesurer les nouvelles positions et appliquer un translate inverse
-  const newCards = Array.from(track.children);
-  newCards.forEach(card => {
-    const oldPos = firstPositions.get(card);
-    if (!oldPos) return;
-    const newRect = card.getBoundingClientRect();
-    const dx = oldPos.left - newRect.left;
+  state.currentIndex = newIndex;
+  updateTrackPosition(key);
 
-    if (dx !== 0) {
-      // On annule le déplacement instantanément (sans transition)
-      card.style.transition = 'none';
-      card.style.transform = `translateX(${dx}px)`;
-    }
-  });
-
-  // ÉTAPE 4 : Play - on déclenche les vraies transitions sur la frame suivante
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      newCards.forEach(card => {
-        card.style.transition = ''; // Retour aux transitions CSS définies
-        card.style.transform = '';   // Glissement vers la position finale
-      });
-
-      // Fin de l'animation
-      setTimeout(() => {
-        state.isAnimating = false;
-      }, 600); // Légèrement plus que la durée de transition
-    });
-  });
+  // Déverrouille après la fin de l'animation
+  setTimeout(() => {
+    state.isAnimating = false;
+  }, 650);
 }
 
 // ─── REMPLISSAGE BANDEAU ───
@@ -431,7 +472,9 @@ function populateBandeau(key, reviews) {
     return;
   }
 
-  renderBandeau(key, reviews);
+  bandeauState[key].reviews = reviews;
+  bandeauState[key].currentIndex = 0;
+  renderBandeau(key);
 
   const mobileTrack = document.getElementById(`${key}MobileTrack`);
   reviews.forEach(r => { mobileTrack.innerHTML += makeMobileCard(r); });
@@ -459,6 +502,15 @@ async function loadAllReviews() {
   populateBandeau('oublies',    oublies);
 }
 loadAllReviews();
+
+// ─── Recalcul des positions en cas de resize fenêtre ───
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    ['affiche', 'classiques', 'oublies'].forEach(updateTrackPosition);
+  }, 150);
+});
 
 // ─── MOBILE ───
 function expandMobile(key) {
