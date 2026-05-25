@@ -1,0 +1,336 @@
+/* ════════════════════════════════════════════════════════════════════
+   ccf.css
+   ────────────────────────────────────────────────────────────────────
+   Styles spécifiques à la page "Comment c'est fait — Archives"
+   (ccf-archives.html)
+   Mise en page magazine éditorial : hero principal + alternance
+   gauche/droite des autres articles.
+   ════════════════════════════════════════════════════════════════════ */
+
+
+/* ──────────────── EN-TÊTE DE PAGE ──────────────── */
+.ccf-hero-header {
+  padding: 70px 40px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+.ccf-hero-header-inner {
+  max-width: 780px;
+  margin: 0 auto;
+}
+.ccf-page-label {
+  font-family: 'Bebas Neue', sans-serif;
+  color: var(--red);
+  letter-spacing: 6px;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+.ccf-page-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  margin-bottom: 28px;
+  color: var(--white);
+}
+.ccf-page-title em {
+  font-style: italic;
+  color: var(--red);
+  font-weight: 400;
+}
+.ccf-page-intro {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--light-grey);
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+
+/* ──────────────── HERO PRINCIPAL (le dernier CCF) ──────────────── */
+.ccf-featured {
+  max-width: 1400px;
+  margin: 20px auto 80px;
+  padding: 0 40px;
+}
+.ccf-featured-card {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 50px;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(232,37,58,0.05) 0%, rgba(0,0,0,0) 100%);
+  border-radius: 16px;
+  padding: 30px;
+  border: 1px solid #1f1f1f;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .4s ease, border-color .3s ease;
+}
+.ccf-featured-card:hover {
+  transform: translateY(-4px);
+  border-color: #333;
+}
+
+.ccf-featured-image {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1a1a1a;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.ccf-featured-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .6s ease;
+}
+.ccf-featured-card:hover .ccf-featured-image img {
+  transform: scale(1.04);
+}
+
+.ccf-featured-text {
+  padding: 10px 0;
+}
+.ccf-featured-meta {
+  font-family: 'Bebas Neue', sans-serif;
+  color: var(--red);
+  letter-spacing: 4px;
+  font-size: 13px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.ccf-featured-meta::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--red);
+  display: inline-block;
+}
+.ccf-featured-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: clamp(28px, 3.5vw, 44px);
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.ccf-featured-realisateur {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 26px;
+}
+.ccf-featured-tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--red);
+  line-height: 1.4;
+  margin-bottom: 18px;
+  font-weight: 400;
+}
+.ccf-featured-accroche {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--light-grey);
+  margin-bottom: 30px;
+}
+.ccf-featured-accroche strong { color: var(--white); font-weight: 700; }
+.ccf-featured-accroche em { color: #d8d8d8; }
+
+.ccf-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 3px;
+  font-size: 15px;
+  color: var(--white);
+  border: 1px solid var(--red);
+  background: transparent;
+  padding: 13px 26px;
+  border-radius: 50px;
+  transition: all .25s ease;
+  cursor: pointer;
+}
+.ccf-cta:hover {
+  background: var(--red);
+  color: var(--white);
+}
+.ccf-cta svg {
+  width: 14px;
+  height: 14px;
+  transition: transform .25s ease;
+}
+.ccf-cta:hover svg {
+  transform: translateX(4px);
+}
+
+
+/* ──────────────── ALTERNANCE GAUCHE/DROITE ──────────────── */
+.ccf-list {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+}
+
+.ccf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Inversion : image à droite au lieu de gauche */
+.ccf-row.reverse .ccf-row-image {
+  grid-column: 2;
+  grid-row: 1;
+}
+.ccf-row.reverse .ccf-row-text {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.ccf-row-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #1a1a1a;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.ccf-row-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .6s ease;
+}
+.ccf-row:hover .ccf-row-image img {
+  transform: scale(1.05);
+}
+
+.ccf-row-text {
+  padding: 10px 0;
+}
+.ccf-row-meta {
+  font-family: 'Bebas Neue', sans-serif;
+  color: var(--red);
+  letter-spacing: 4px;
+  font-size: 12px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.ccf-row-meta::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--red);
+  display: inline-block;
+}
+.ccf-row-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: clamp(24px, 2.5vw, 34px);
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 8px;
+  transition: color .25s ease;
+}
+.ccf-row:hover .ccf-row-title {
+  color: var(--red);
+}
+.ccf-row-realisateur {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 20px;
+}
+.ccf-row-tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--red);
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+.ccf-row-accroche {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--light-grey);
+  margin-bottom: 24px;
+}
+.ccf-row-accroche strong { color: var(--white); font-weight: 700; }
+.ccf-row-accroche em { color: #d8d8d8; }
+
+
+/* ──────────────── ÉTAT VIDE (aucun CCF) ──────────────── */
+.ccf-empty {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 80px 20px;
+  font-style: italic;
+}
+
+
+/* ──────────────── RESPONSIVE ──────────────── */
+@media (max-width: 900px) {
+  .ccf-hero-header {
+    padding: 50px 24px 30px;
+  }
+  .ccf-featured {
+    padding: 0 24px;
+    margin-bottom: 60px;
+  }
+  .ccf-featured-card {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 20px;
+  }
+  .ccf-featured-image {
+    aspect-ratio: 16 / 9;
+  }
+
+  .ccf-list {
+    padding: 0 24px 60px;
+    gap: 60px;
+  }
+  .ccf-row,
+  .ccf-row.reverse {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  /* Sur mobile, on remet tout dans l'ordre normal (image puis texte) */
+  .ccf-row.reverse .ccf-row-image,
+  .ccf-row .ccf-row-image {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .ccf-row.reverse .ccf-row-text,
+  .ccf-row .ccf-row-text {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .ccf-row-image {
+    aspect-ratio: 16 / 10;
+  }
+}
