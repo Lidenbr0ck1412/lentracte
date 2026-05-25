@@ -307,12 +307,12 @@
     margin-top: 10px;
   }
 
-  /* Hover subtil sur les affiches uniquement */
-  .feature-card:not(.is-banner):hover {
-    transform: translateY(-4px);
+  /* Hover : zoom léger sur l'image (uniquement sur les affiches, pas sur la bannière) */
+  .feature-card:not(.is-banner) .feature-img {
+    transition: opacity var(--t-duration) var(--t-ease), transform 0.5s ease;
   }
-  .feature-card {
-    transition: width var(--t-duration) var(--t-ease), transform 0.3s ease;
+  .feature-card:not(.is-banner):hover .feature-img.poster {
+    transform: scale(1.06);
   }
 
   /* Bandeau vide */
@@ -456,6 +456,9 @@ function updateTrackPosition(key) {
 }
 
 // ─── ROTATION (clic flèches) ───
+// Boucle infinie : quand on dépasse le dernier (ou avant le premier),
+// on désactive temporairement la transition pour faire un saut instantané
+// invisible, puis on relance l'animation depuis le nouveau point.
 function rotateFeature(key, dir) {
   const state = bandeauState[key];
   if (state.isAnimating) return;
@@ -463,20 +466,52 @@ function rotateFeature(key, dir) {
 
   state.isAnimating = true;
 
-  // Mise à jour de l'index avec rotation modulo (boucle infinie)
   const total = state.reviews.length;
-  const newIndex = (state.currentIndex + dir + total) % total;
+  const oldIndex = state.currentIndex;
+  const newIndex = (oldIndex + dir + total) % total;
 
   const track = document.getElementById(`${key}Track`);
-  const oldCard = track.children[state.currentIndex];
+  const oldCard = track.children[oldIndex];
   const newCard = track.children[newIndex];
 
-  // Swap des classes : l'ancienne carte redevient affiche, la nouvelle devient bannière
-  if (oldCard) oldCard.classList.remove('is-banner');
-  if (newCard) newCard.classList.add('is-banner');
+  // Détection du wrap : passage du dernier → 0 (dir=1) ou du 0 → dernier (dir=-1)
+  const isWrap =
+    (dir === 1 && oldIndex === total - 1 && newIndex === 0) ||
+    (dir === -1 && oldIndex === 0 && newIndex === total - 1);
 
-  state.currentIndex = newIndex;
-  updateTrackPosition(key);
+  if (isWrap) {
+    // 1. On enlève temporairement la transition pour faire un saut instantané
+    track.style.transition = 'none';
+    // 2. On positionne le track juste avant la nouvelle cible (en gardant un offset
+    //    qui simule la continuité du glissement)
+    const cs = getComputedStyle(document.documentElement);
+    const afficheW = parseFloat(cs.getPropertyValue('--afficheW') || cs.getPropertyValue('--affiche-w'));
+    const gap      = parseFloat(cs.getPropertyValue('--gap'));
+    // Position de départ : on "saute" comme si on était à une position virtuelle
+    // adjacente, puis on glisse normalement vers newIndex
+    const startOffset = (newIndex - dir) * (afficheW + gap);
+    track.style.transform = `translateX(-${startOffset}px)`;
+
+    // Swap des classes en parallèle (mais sans animer la translation immédiate)
+    if (oldCard) oldCard.classList.remove('is-banner');
+    if (newCard) newCard.classList.add('is-banner');
+    state.currentIndex = newIndex;
+
+    // 3. On force le navigateur à appliquer le saut, puis on rétablit la transition
+    //    et on lance le vrai mouvement vers la cible
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        track.style.transition = '';
+        updateTrackPosition(key);
+      });
+    });
+  } else {
+    // Comportement normal : transition standard
+    if (oldCard) oldCard.classList.remove('is-banner');
+    if (newCard) newCard.classList.add('is-banner');
+    state.currentIndex = newIndex;
+    updateTrackPosition(key);
+  }
 
   // Déverrouille après la fin de l'animation
   setTimeout(() => {
