@@ -477,3 +477,230 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 @media (max-width: 768px) {
   .hero-bg img { transition: transform .1s ease-out; }
 }
+
+
+/* ════════════════════════════════════════════════════════════════════
+   MOSAÏQUE D'IMAGES (img_mosaic)
+   ────────────────────────────────────────────────────────────────────
+   Structure générée par le JS :
+     .img-mosaic
+       .mosaic-left  → figure (img_1, grande image / affiche)
+       .mosaic-right → 2 figures (img_2 et img_3, empilées)
+   ════════════════════════════════════════════════════════════════════ */
+
+.img-mosaic {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 40px 0;
+  align-items: stretch;
+}
+
+.mosaic-left,
+.mosaic-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mosaic-left figure,
+.mosaic-right figure {
+  margin: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* La colonne de gauche : une seule image qui prend tout l'espace */
+.mosaic-left figure {
+  flex: 1;
+}
+
+/* La colonne de droite : 2 images de même hauteur */
+.mosaic-right figure {
+  flex: 1;
+}
+
+/* Wrap autour de chaque image pour gérer le zoom au survol sans casser le layout */
+.img-mosaic-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+.img-mosaic-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  transition: transform 0.5s ease;
+}
+
+.img-mosaic-wrap:hover img {
+  transform: scale(1.04);
+}
+
+/* Légère ombre dégradée en bas de chaque image (cohérent avec .img-float) */
+.img-mosaic-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+  pointer-events: none;
+}
+
+/* Légendes sous les images */
+.img-mosaic figcaption {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+  font-style: italic;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+
+/* Responsive mobile : on empile tout verticalement */
+@media (max-width: 768px) {
+  .img-mosaic {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 24px 0;
+  }
+}
+
+
+/* ════════════════════════════════════════════════════════════════════
+   PLAYER AUDIO (audio_clip)
+   ────────────────────────────────────────────────────────────────────
+   Structure générée par le JS :
+     .audio-clip
+       .audio-clip-label    → titre (ex: "◆ ÉCOUTER")
+       .audio-clip-btn      → bouton avec 2 SVG (play + pause)
+         .icon-play, .icon-pause
+       .audio-clip-progress → barre de progression
+         .audio-clip-progress-bar
+       .audio-clip-caption  → texte sous le player
+   La classe `playing` est ajoutée/retirée par le JS pour basculer
+   l'affichage entre l'icône play et l'icône pause.
+   ════════════════════════════════════════════════════════════════════ */
+
+.audio-clip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 40px 0;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, rgba(232, 37, 58, 0.06) 0%, rgba(0, 0, 0, 0) 100%);
+  border: 1px solid #1f1f1f;
+  border-left: 3px solid var(--red);
+  border-radius: 10px;
+  max-width: 100%;
+}
+
+/* Label du clip (ex: "◆ LE RUGISSEMENT") */
+.audio-clip-label {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 4px;
+  font-size: 14px;
+  color: var(--red);
+  text-transform: uppercase;
+}
+
+/* Le gros bouton play/pause */
+.audio-clip-btn {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--red);
+  background: var(--red);
+  color: var(--white);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  padding: 0;
+}
+
+.audio-clip-btn:hover {
+  background: var(--red-dark);
+  transform: scale(1.06);
+  box-shadow: 0 8px 24px rgba(232, 37, 58, 0.4);
+}
+
+.audio-clip-btn:active {
+  transform: scale(0.98);
+}
+
+/* SVG play/pause à l'intérieur du bouton */
+.audio-clip-btn svg {
+  width: 26px;
+  height: 26px;
+  fill: var(--white);
+  display: block;
+}
+
+/* État play (par défaut) : icône play visible, pause cachée */
+.audio-clip-btn .icon-pause {
+  display: none;
+}
+
+/* État playing : on inverse via la classe `playing` ajoutée par le JS */
+.audio-clip-btn.playing .icon-play {
+  display: none;
+}
+.audio-clip-btn.playing .icon-pause {
+  display: block;
+}
+
+/* Barre de progression */
+.audio-clip-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.audio-clip-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--red);
+  border-radius: 2px;
+  transition: width 0.15s linear;
+}
+
+/* Caption sous le player */
+.audio-clip-caption {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-style: italic;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  .audio-clip {
+    padding: 20px;
+    gap: 10px;
+  }
+  .audio-clip-btn {
+    width: 56px;
+    height: 56px;
+  }
+  .audio-clip-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+}
