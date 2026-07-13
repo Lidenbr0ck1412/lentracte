@@ -156,7 +156,8 @@ function parseMarkdown(md) {
       continue;
     }
 
-    // ![légende](url) → image insérée dans l'article
+    // ![légende](url) ou ![légende|position](url) → image insérée dans l'article
+    // "position" est optionnelle, ex: 20% (vertical), top, bottom, center — règle l'object-position
     // Plusieurs lignes d'images collées (sans ligne vide entre elles) → galerie côte à côte
     const imgMatch = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
     if (imgMatch) {
@@ -167,21 +168,28 @@ function parseMarkdown(md) {
         i++;
         imgs.push(lines[i].trim().match(/^!\[(.*?)\]\((.*?)\)$/));
       }
+      function parseImg(m) {
+        const rawLabel = m[1].trim();
+        const src = m[2].trim();
+        const parts = rawLabel.split('|');
+        const caption = parts[0].trim();
+        let position = parts[1] ? parts[1].trim() : '';
+        if (position && /^\d+%?$/.test(position)) position = `center ${position.replace('%','')}%`;
+        return { caption, src, position };
+      }
       if (imgs.length === 1) {
-        const caption = imgs[0][1].trim();
-        const src = imgs[0][2].trim();
+        const { caption, src, position } = parseImg(imgs[0]);
         blocks.push(`
           <figure class="article-image reveal">
-            <img src="${src}" alt="${caption || 'Image'}" loading="lazy">
+            <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
             ${caption ? `<figcaption>${caption}</figcaption>` : ''}
           </figure>`);
       } else {
         const figs = imgs.map(m => {
-          const caption = m[1].trim();
-          const src = m[2].trim();
+          const { caption, src, position } = parseImg(m);
           return `
             <figure>
-              <img src="${src}" alt="${caption || 'Image'}" loading="lazy">
+              <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
               ${caption ? `<figcaption>${caption}</figcaption>` : ''}
             </figure>`;
         }).join('');
