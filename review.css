@@ -278,11 +278,27 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 
 /* ARTICLE IMAGE (inline, insérée via ![légende](url) dans le contenu) */
 .article-image {
-  margin: 40px 0;
+  margin: 40px auto;
+  max-width: 500px;
 }
 .article-image img {
   width: 100%; display: block; border-radius: 10px;
   box-shadow: 0 8px 40px rgba(0,0,0,.5);
+}
+.article-gallery {
+  display: grid; gap: 14px; margin: 40px 0;
+}
+.article-gallery.cols-2 { grid-template-columns: 1fr 1fr; }
+.article-gallery.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.article-gallery figure { margin: 0; }
+.article-gallery img {
+  width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.5); aspect-ratio: 3/4;
+}
+.article-gallery figcaption {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--grey); text-align: center; margin-top: 8px;
 }
 .article-image figcaption {
   font-family: 'Bebas Neue', sans-serif;
@@ -329,5 +345,6 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .stars-container { gap: 10px; }
   .star { width: 40px; height: 40px; }
   .rating-score { font-size: 56px; }
+  .article-gallery.cols-2, .article-gallery.cols-3 { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
