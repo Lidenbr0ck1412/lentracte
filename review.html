@@ -156,6 +156,21 @@ function parseMarkdown(md) {
       continue;
     }
 
+    // ![légende](url) → image insérée dans l'article
+    const imgMatch = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
+    if (imgMatch) {
+      flushParagraph();
+      isFirst = false;
+      const caption = imgMatch[1].trim();
+      const src = imgMatch[2].trim();
+      blocks.push(`
+        <figure class="article-image reveal">
+          <img src="${src}" alt="${caption || 'Image'}" loading="lazy">
+          ${caption ? `<figcaption>${caption}</figcaption>` : ''}
+        </figure>`);
+      continue;
+    }
+
     // Ligne qui commence par un emoji → anecdote card
     if (/^[\u{1F300}-\u{1FAFF}✨💡🎬🎥📽🎞🔍⚡🏆💬🎭🎦]/u.test(line.trim())) {
       flushParagraph();
