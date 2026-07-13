@@ -276,6 +276,20 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
+/* ARTICLE IMAGE (inline, insérée via ![légende](url) dans le contenu) */
+.article-image {
+  margin: 40px 0;
+}
+.article-image img {
+  width: 100%; display: block; border-radius: 10px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.5);
+}
+.article-image figcaption {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--grey); text-align: center; margin-top: 10px;
+}
+
 /* Stills */
 .stills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 40px 0; }
 .still { border-radius: 10px; overflow: hidden; aspect-ratio: 16/9; position: relative; }
