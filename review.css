@@ -297,6 +297,15 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-gallery img {
   width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block;
 }
+.article-image, .article-gallery figure {
+  overflow: hidden;
+}
+.article-image img, .article-gallery img {
+  transition: transform 0.4s ease;
+}
+.article-image:hover img, .article-gallery figure:hover img {
+  transform: scale(1.05);
+}
 .article-gallery figcaption {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
