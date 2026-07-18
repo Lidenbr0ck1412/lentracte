@@ -279,7 +279,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 /* ARTICLE IMAGE (inline, insérée via ![légende](url) dans le contenu) */
 .article-image {
   margin: 40px auto;
-  max-width: 500px;
+  max-width: 800px;
 }
 .article-image img {
   width: 100%; display: block; border-radius: 10px;
