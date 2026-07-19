@@ -236,6 +236,10 @@ nav {
 .star svg { width: 100%; height: 100%; filter: drop-shadow(0 0 8px rgba(232,37,58,.5)); }
 .star.filled svg { fill: var(--red); }
 .star.empty svg  { fill: #2a2a2a; }
+.star.half { position: relative; }
+.star.half svg { position: absolute; top: 0; left: 0; }
+.star.half .star-bg { fill: #2a2a2a; }
+.star.half .star-fg { fill: var(--red); clip-path: inset(0 50% 0 0); }
 .star-wrap:hover .star svg { filter: drop-shadow(0 0 16px rgba(232,37,58,.9)) drop-shadow(0 0 32px rgba(232,37,58,.4)); }
 .star-number { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 1px; color: var(--grey); transition: color .2s; }
 .star-wrap:hover .star-number { color: var(--red); }
@@ -279,7 +283,10 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 /* ARTICLE IMAGE (inline, insérée via ![légende](url) dans le contenu) */
 .article-image {
   margin: 40px auto;
-  max-width: 800px;
+  max-width: 500px;
+}
+.article-image.wide {
+  max-width: 100%;
 }
 .article-image img {
   width: 100%; display: block; border-radius: 10px;
@@ -296,15 +303,6 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 }
 .article-gallery img {
   width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block;
-}
-.article-image, .article-gallery figure {
-  overflow: hidden;
-}
-.article-image img, .article-gallery img {
-  transition: transform 0.4s ease;
-}
-.article-image:hover img, .article-gallery figure:hover img {
-  transform: scale(1.05);
 }
 .article-gallery figcaption {
   font-family: 'Bebas Neue', sans-serif;
