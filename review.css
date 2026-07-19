@@ -237,9 +237,9 @@ nav {
 .star.filled svg { fill: var(--red); }
 .star.empty svg  { fill: #2a2a2a; }
 .star.half { position: relative; }
-.star.half svg { position: absolute; top: 0; left: 0; }
-.star.half .star-bg { fill: #2a2a2a; }
-.star.half .star-fg { fill: var(--red); clip-path: inset(0 50% 0 0); }
+.star.half > svg.star-bg { position: absolute; top: 0; left: 0; fill: #2a2a2a; }
+.star-fg-clip { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; }
+.star-fg-clip svg.star-fg { position: absolute; top: 0; left: 0; width: 200%; height: 100%; fill: var(--red); }
 .star-wrap:hover .star svg { filter: drop-shadow(0 0 16px rgba(232,37,58,.9)) drop-shadow(0 0 32px rgba(232,37,58,.4)); }
 .star-number { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 1px; color: var(--grey); transition: color .2s; }
 .star-wrap:hover .star-number { color: var(--red); }
