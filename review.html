@@ -259,7 +259,9 @@ function buildStars(note) {
         <div class="star-wrap">
           <div class="star half">
             <svg class="star-bg" viewBox="0 0 24 24">${starIcon}</svg>
-            <svg class="star-fg" viewBox="0 0 24 24">${starIcon}</svg>
+            <div class="star-fg-clip">
+              <svg class="star-fg" viewBox="0 0 24 24">${starIcon}</svg>
+            </div>
           </div>
           <span class="star-number">${i}</span>
         </div>`;
