@@ -199,7 +199,8 @@ function parseMarkdown(md) {
               <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
               ${caption ? `<figcaption>${caption}</figcaption>` : ''}
             </figure>`).join('');
-        const galleryClass = useStack ? 'stack' : `cols-${Math.min(imgs.length, 3)}`;
+        const colCount = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
+        const galleryClass = useStack ? 'stack' : `cols-${colCount}`;
         blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
       }
       continue;
