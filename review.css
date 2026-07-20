@@ -300,6 +300,17 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-gallery img {
   width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block;
 }
+/* Galerie empilée verticalement (![légende|stack](url)) : images entières, l'une sous l'autre */
+.article-gallery.stack {
+  grid-template-columns: 1fr;
+  max-width: 560px; margin-left: auto; margin-right: auto;
+}
+.article-gallery.stack figure {
+  aspect-ratio: unset;
+}
+.article-gallery.stack img {
+  height: auto; object-fit: contain; object-position: center;
+}
 .article-gallery figcaption {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
