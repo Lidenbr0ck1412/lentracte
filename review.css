@@ -335,12 +335,12 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-gallery figcaption {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--grey); text-align: center; margin-top: 8px;
+  color: #ffffff; text-align: center; margin-top: 8px;
 }
 .article-image figcaption {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--grey); text-align: center; margin-top: 10px;
+  color: #ffffff; text-align: center; margin-top: 10px;
 }
 
 /* Stills */
