@@ -280,6 +280,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-image {
   margin: 40px auto;
   max-width: 500px;
+  position: relative;
 }
 .article-image.wide {
   max-width: 100%;
@@ -338,9 +339,13 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   color: #ffffff; text-align: center; margin-top: 8px;
 }
 .article-image figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
+  padding: 20px 14px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
+  border-radius: 0 0 10px 10px;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: #ffffff; text-align: center; margin-top: 10px;
+  color: #ffffff; text-align: left;
 }
 
 /* Stills */
