@@ -319,11 +319,12 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   max-width: 760px;
 }
 .article-gallery.stack.stack-cols-2 figure {
-  height: 100%;
+  aspect-ratio: 16/9;
+  height: auto;
 }
 .article-gallery.stack.stack-cols-2 img {
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 .article-gallery.stack figcaption {
   position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
