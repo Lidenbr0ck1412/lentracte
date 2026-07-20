@@ -314,6 +314,10 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-gallery.stack img {
   height: auto; object-fit: contain; object-position: center;
 }
+.article-gallery.stack.stack-cols-2 {
+  grid-template-columns: 1fr 1fr;
+  max-width: 760px;
+}
 .article-gallery.stack figcaption {
   position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
   padding: 20px 14px 10px;
@@ -370,6 +374,6 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .stars-container { gap: 10px; }
   .star { width: 40px; height: 40px; }
   .rating-score { font-size: 56px; }
-  .article-gallery.cols-2, .article-gallery.cols-3 { grid-template-columns: 1fr; }
+  .article-gallery.cols-2, .article-gallery.cols-3, .article-gallery.stack-cols-2 { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
