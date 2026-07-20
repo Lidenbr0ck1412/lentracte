@@ -175,12 +175,14 @@ function parseMarkdown(md) {
         const caption = parts[0].trim();
         let position = '';
         let wide = false;
-        if (parts[1]) {
-          const mod = parts[1].trim();
+        let stack = false;
+        parts.slice(1).forEach(p => {
+          const mod = p.trim();
           if (mod === 'large' || mod === 'full') wide = true;
+          else if (mod === 'stack') stack = true;
           else if (/^\d+%?$/.test(mod)) position = `center ${mod.replace('%','')}%`;
-        }
-        return { caption, src, position, wide };
+        });
+        return { caption, src, position, wide, stack };
       }
       if (imgs.length === 1) {
         const { caption, src, position, wide } = parseImg(imgs[0]);
@@ -190,15 +192,15 @@ function parseMarkdown(md) {
             ${caption ? `<figcaption>${caption}</figcaption>` : ''}
           </figure>`);
       } else {
-        const figs = imgs.map(m => {
-          const { caption, src, position } = parseImg(m);
-          return `
+        const parsed = imgs.map(parseImg);
+        const useStack = parsed.some(p => p.stack);
+        const figs = parsed.map(({ caption, src, position }) => `
             <figure>
               <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
               ${caption ? `<figcaption>${caption}</figcaption>` : ''}
-            </figure>`;
-        }).join('');
-        blocks.push(`<div class="article-gallery reveal cols-${Math.min(imgs.length, 3)}">${figs}</div>`);
+            </figure>`).join('');
+        const galleryClass = useStack ? 'stack' : `cols-${Math.min(imgs.length, 3)}`;
+        blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
       }
       continue;
     }
