@@ -296,6 +296,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-gallery.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
 .article-gallery figure {
   margin: 0;
+  position: relative;
 }
 .article-gallery img {
   width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center 20%; display: block;
@@ -334,9 +335,13 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   text-align: left;
 }
 .article-gallery figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
+  padding: 20px 14px 10px;
+  background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
+  border-radius: 0 0 10px 10px;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: #ffffff; text-align: left; margin-top: 8px;
+  color: #ffffff; text-align: left;
 }
 .article-image figcaption {
   position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
