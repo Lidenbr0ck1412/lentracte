@@ -52,13 +52,6 @@
 <!-- ARTICLE (populated by JS) -->
 <div id="article-container"></div>
 
-<div id="lightbox" class="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Fermer">
-    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-  </button>
-  <img id="lightbox-img" src="" alt="">
-</div>
-
 <!-- RELATED (populated by JS) -->
 <div id="related-container"></div>
 
@@ -524,11 +517,6 @@ async function init() {
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Lightbox : clic sur une image de l'article pour l'agrandir
-  document.querySelectorAll('#article-container .article-image img, #article-container .article-gallery img').forEach(img => {
-    img.addEventListener('click', () => openLightbox(img.src, img.alt));
-  });
-
   // Copy button
   const copyBtn = document.getElementById('copyBtn');
   if (copyBtn) {
@@ -569,26 +557,6 @@ function toggleNav() {
     spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
   }
 }
-
-/* ─────────────────────────────────────────────
-   LIGHTBOX
-───────────────────────────────────────────── */
-function openLightbox(src, alt) {
-  const lightbox = document.getElementById('lightbox');
-  const img = document.getElementById('lightbox-img');
-  img.src = src;
-  img.alt = alt || '';
-  lightbox.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-function closeLightbox() {
-  const lightbox = document.getElementById('lightbox');
-  lightbox.classList.remove('active');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeLightbox();
-});
 
 init();
 </script>
