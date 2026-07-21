@@ -205,7 +205,8 @@ function parseMarkdown(md) {
               ${caption ? `<figcaption>${caption}</figcaption>` : ''}
             </figure>`;
         }).join('');
-        blocks.push(`<div class="article-gallery reveal cols-${Math.min(imgs.length, 3)}">${figs}</div>`);
+        const galleryCols = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
+        blocks.push(`<div class="article-gallery reveal cols-${galleryCols}">${figs}</div>`);
       }
       continue;
     }
