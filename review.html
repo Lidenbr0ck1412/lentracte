@@ -514,6 +514,7 @@ async function init() {
   document.getElementById('hero-container').innerHTML = renderHero(review);
   document.getElementById('article-container').innerHTML = renderArticle(review);
   document.getElementById('related-container').innerHTML = renderRelated(allReviews, review.id);
+  bindLightboxImages();
 
   // Reveal observer
   const observer = new IntersectionObserver((entries) => {
@@ -562,10 +563,44 @@ function toggleNav() {
   }
 }
 
+/* ─────────────────────────────────────────────
+   LIGHTBOX (clic sur une image d'article -> plein écran)
+───────────────────────────────────────────── */
+function openLightbox(src, caption) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-caption').textContent = caption || '';
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(e) {
+  if (e && e.target.id === 'lightbox-img') return;
+  const lb = document.getElementById('lightbox');
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+function bindLightboxImages() {
+  document.querySelectorAll('.article-image img, .article-gallery img').forEach(img => {
+    if (img.dataset.lbBound) return;
+    img.dataset.lbBound = '1';
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => {
+      const caption = img.closest('figure')?.querySelector('figcaption')?.textContent || img.alt || '';
+      openLightbox(img.src, caption);
+    });
+  });
+}
+
 init();
 </script>
 <script>
-document.querySelectorAll("a").forEach(a => { if (a.href </body></body> !a.href.startsWith("mailto") </body></body> !a.href.startsWith("#")) a.target = "_blank"; });
+document.querySelectorAll("a").forEach(a => { if (a.href && !a.href.startsWith("mailto") && !a.href.startsWith("#")) a.target = "_blank"; });
 </script>
+<div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+  <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+  <img id="lightbox-img" src="" alt="">
+  <div id="lightbox-caption" class="lightbox-caption"></div>
+</div>
 </body>
 </html>
