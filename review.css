@@ -280,7 +280,6 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-image {
   margin: 40px auto;
   max-width: 500px;
-  position: relative;
 }
 .article-image.wide {
   max-width: 100%;
@@ -301,51 +300,15 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-gallery img {
   width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block;
 }
-/* Galerie empilée verticalement (![légende|stack](url)) : images entières, l'une sous l'autre */
-.article-gallery.stack {
-  grid-template-columns: 1fr;
-  max-width: 440px; margin: 40px auto;
-  gap: 10px;
-}
-.article-gallery.stack figure {
-  aspect-ratio: unset;
-  position: relative;
-  box-shadow: 0 6px 20px rgba(0,0,0,.35);
-}
-.article-gallery.stack img {
-  height: auto; object-fit: contain; object-position: center;
-}
-.article-gallery.stack.stack-cols-2 {
-  grid-template-columns: 1fr 1fr;
-  max-width: 760px;
-}
-.article-gallery.stack.stack-cols-2 figure {
-  aspect-ratio: 16/9;
-  height: auto;
-}
-.article-gallery.stack.stack-cols-2 img {
-  height: 100%;
-  object-fit: cover;
-}
-.article-gallery.stack figcaption {
-  position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
-  padding: 20px 14px 10px;
-  background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
-  text-align: left;
-}
 .article-gallery figcaption {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: #ffffff; text-align: center; margin-top: 8px;
+  color: var(--grey); text-align: center; margin-top: 8px;
 }
 .article-image figcaption {
-  position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
-  padding: 20px 14px 10px;
-  background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
-  border-radius: 0 0 10px 10px;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  color: #ffffff; text-align: left;
+  color: var(--grey); text-align: center; margin-top: 10px;
 }
 
 /* Stills */
@@ -387,6 +350,50 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .stars-container { gap: 10px; }
   .star { width: 40px; height: 40px; }
   .rating-score { font-size: 56px; }
-  .article-gallery.cols-2, .article-gallery.cols-3, .article-gallery.stack-cols-2 { grid-template-columns: 1fr; }
+  .article-gallery.cols-2, .article-gallery.cols-3 { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
+
+/* LIGHTBOX */
+.article-image img, .article-gallery img {
+  cursor: zoom-in;
+}
+.lightbox {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.92);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  padding: 40px;
+}
+.lightbox.active { opacity: 1; visibility: visible; }
+.lightbox img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 20px 80px rgba(0,0,0,.6);
+  cursor: default;
+  animation: lightboxZoom 0.3s ease;
+}
+@keyframes lightboxZoom {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.lightbox-close {
+  position: absolute; top: 24px; right: 24px;
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,.08);
+  border: none; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.18); }
+.lightbox-close svg {
+  width: 20px; height: 20px;
+  fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round;
+}
+@media (max-width: 768px) {
+  .lightbox { padding: 16px; }
+  .lightbox-close { top: 16px; right: 16px; width: 38px; height: 38px; }
+}
