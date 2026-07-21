@@ -52,6 +52,13 @@
 <!-- ARTICLE (populated by JS) -->
 <div id="article-container"></div>
 
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Fermer">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
 <!-- RELATED (populated by JS) -->
 <div id="related-container"></div>
 
@@ -175,14 +182,12 @@ function parseMarkdown(md) {
         const caption = parts[0].trim();
         let position = '';
         let wide = false;
-        let stack = false;
-        parts.slice(1).forEach(p => {
-          const mod = p.trim();
+        if (parts[1]) {
+          const mod = parts[1].trim();
           if (mod === 'large' || mod === 'full') wide = true;
-          else if (mod === 'stack') stack = true;
           else if (/^\d+%?$/.test(mod)) position = `center ${mod.replace('%','')}%`;
-        });
-        return { caption, src, position, wide, stack };
+        }
+        return { caption, src, position, wide };
       }
       if (imgs.length === 1) {
         const { caption, src, position, wide } = parseImg(imgs[0]);
@@ -192,18 +197,15 @@ function parseMarkdown(md) {
             ${caption ? `<figcaption>${caption}</figcaption>` : ''}
           </figure>`);
       } else {
-        const parsed = imgs.map(parseImg);
-        const useStack = parsed.some(p => p.stack);
-        const figs = parsed.map(({ caption, src, position }) => `
+        const figs = imgs.map(m => {
+          const { caption, src, position } = parseImg(m);
+          return `
             <figure>
               <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
               ${caption ? `<figcaption>${caption}</figcaption>` : ''}
-            </figure>`).join('');
-        const colCount = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
-        const galleryClass = useStack
-          ? (imgs.length >= 4 ? 'stack stack-cols-2' : 'stack')
-          : `cols-${colCount}`;
-        blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
+            </figure>`;
+        }).join('');
+        blocks.push(`<div class="article-gallery reveal cols-${Math.min(imgs.length, 3)}">${figs}</div>`);
       }
       continue;
     }
@@ -521,6 +523,11 @@ async function init() {
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+  // Lightbox : clic sur une image de l'article pour l'agrandir
+  document.querySelectorAll('#article-container .article-image img, #article-container .article-gallery img').forEach(img => {
+    img.addEventListener('click', () => openLightbox(img.src, img.alt));
+  });
+
   // Copy button
   const copyBtn = document.getElementById('copyBtn');
   if (copyBtn) {
@@ -562,10 +569,30 @@ function toggleNav() {
   }
 }
 
+/* ─────────────────────────────────────────────
+   LIGHTBOX
+───────────────────────────────────────────── */
+function openLightbox(src, alt) {
+  const lightbox = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = src;
+  img.alt = alt || '';
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  lightbox.classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
 init();
 </script>
 <script>
-document.querySelectorAll("a").forEach(a => { if (a.href </body></body> !a.href.startsWith("mailto") </body></body> !a.href.startsWith("#")) a.target = "_blank"; });
+document.querySelectorAll("a").forEach(a => { if (a.href && !a.href.startsWith("mailto") && !a.href.startsWith("#")) a.target = "_blank"; });
 </script>
 </body>
 </html>
