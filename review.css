@@ -295,11 +295,11 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .article-gallery.cols-2 { grid-template-columns: 1fr 1fr; }
 .article-gallery.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
 .article-gallery figure {
-  margin: 0; aspect-ratio: 3/4; border-radius: 10px; overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0,0,0,.5);
+  margin: 0;
 }
 .article-gallery img {
-  width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block;
+  width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center 20%; display: block;
+  border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,.5);
 }
 /* Galerie empilée verticalement (![légende|stack](url)) : images entières, l'une sous l'autre */
 .article-gallery.stack {
@@ -313,7 +313,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   box-shadow: 0 6px 20px rgba(0,0,0,.35);
 }
 .article-gallery.stack img {
-  height: auto; object-fit: contain; object-position: center;
+  aspect-ratio: auto; height: auto; object-fit: contain; object-position: center;
 }
 .article-gallery.stack.stack-cols-2 {
   grid-template-columns: 1fr 1fr;
