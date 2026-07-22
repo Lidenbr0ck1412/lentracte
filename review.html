@@ -594,9 +594,6 @@ function bindLightboxImages() {
 
 init();
 </script>
-<script>
-document.querySelectorAll("a").forEach(a => { if (a.href && !a.href.startsWith("mailto") && !a.href.startsWith("#")) a.target = "_blank"; });
-</script>
 <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
   <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
   <img id="lightbox-img" src="" alt="">
