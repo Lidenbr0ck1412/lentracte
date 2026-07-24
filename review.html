@@ -416,8 +416,18 @@ function renderArticle(r) {
 /* ─────────────────────────────────────────────
    RENDER RELATED
 ───────────────────────────────────────────── */
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 function renderRelated(reviews, currentId) {
-  const others = reviews.filter(r => r.id !== currentId).slice(0, 3);
+  const pool = reviews.filter(r => r.id !== currentId);
+  const others = shuffleArray(pool).slice(0, 3);
   if (others.length === 0) return '';
 
   const cards = others.map(r => {
@@ -437,8 +447,15 @@ function renderRelated(reviews, currentId) {
   return `
   <section class="related-section">
     <div class="related-inner">
-      <div class="related-header"><h3>À lire aussi</h3></div>
+      <div class="related-header">
+        <span class="related-eyebrow">CONTINUER LA SÉANCE</span>
+        <h3>À lire <em>aussi</em></h3>
+      </div>
       <div class="related-grid">${cards}</div>
+      <a href="full-reviews.html" class="related-cta">
+        Voir toutes les critiques
+        <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </a>
     </div>
   </section>`;
 }
