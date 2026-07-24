@@ -55,7 +55,7 @@
   padding: 20px 0;
   background: #0d0d0d;
   position: sticky;
-  top: 0;
+  top: 100px; /* hauteur de la nav principale, pour ne pas passer dessous */
   z-index: 50;
   backdrop-filter: blur(8px);
 }
