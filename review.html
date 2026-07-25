@@ -416,17 +416,25 @@ function renderArticle(r) {
 /* ─────────────────────────────────────────────
    RENDER RELATED
 ───────────────────────────────────────────── */
+let relatedIndex = 0;
+
 function relatedScroll(dir) {
   const grid = document.getElementById('relatedGrid');
   if (!grid) return;
   const cards = grid.querySelectorAll('.related-card');
   if (!cards.length) return;
   const step = cards[0].getBoundingClientRect().width;
-  const currentIndex = Math.round(grid.scrollLeft / step);
-  let nextIndex = currentIndex + dir;
-  if (nextIndex < 0) nextIndex = cards.length - 1;
-  if (nextIndex >= cards.length) nextIndex = 0;
-  grid.scrollTo({ left: nextIndex * step, behavior: 'smooth' });
+
+  relatedIndex = (relatedIndex + dir + cards.length) % cards.length;
+
+  // le scroll-snap peut couper court une animation smooth sur un grand saut
+  // (ex: dernière carte -> première), donc on le désactive le temps du scroll
+  grid.style.scrollSnapType = 'none';
+  grid.scrollTo({ left: relatedIndex * step, behavior: 'smooth' });
+  clearTimeout(grid._snapRestoreTimeout);
+  grid._snapRestoreTimeout = setTimeout(() => {
+    grid.style.scrollSnapType = '';
+  }, 500);
 }
 
 function shuffleArray(arr) {
@@ -553,6 +561,19 @@ async function init() {
   document.getElementById('article-container').innerHTML = renderArticle(review);
   document.getElementById('related-container').innerHTML = renderRelated(allReviews, review.id);
   bindLightboxImages();
+  const relatedGridEl = document.getElementById('relatedGrid');
+  if (relatedGridEl) {
+    let swipeSyncTimeout;
+    relatedGridEl.addEventListener('scroll', () => {
+      clearTimeout(swipeSyncTimeout);
+      swipeSyncTimeout = setTimeout(() => {
+        const cards = relatedGridEl.querySelectorAll('.related-card');
+        if (!cards.length) return;
+        const step = cards[0].getBoundingClientRect().width;
+        relatedIndex = Math.round(relatedGridEl.scrollLeft / step);
+      }, 120);
+    });
+  }
 
   // Reveal observer
   const observer = new IntersectionObserver((entries) => {
