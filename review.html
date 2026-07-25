@@ -416,6 +416,14 @@ function renderArticle(r) {
 /* ─────────────────────────────────────────────
    RENDER RELATED
 ───────────────────────────────────────────── */
+function relatedScroll(dir) {
+  const grid = document.getElementById('relatedGrid');
+  if (!grid) return;
+  const card = grid.querySelector('.related-card');
+  const step = card ? card.getBoundingClientRect().width : grid.clientWidth;
+  grid.scrollBy({ left: dir * step, behavior: 'smooth' });
+}
+
 function shuffleArray(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -451,7 +459,15 @@ function renderRelated(reviews, currentId) {
         <span class="related-eyebrow">CONTINUER LA SÉANCE</span>
         <h3>À lire <em>aussi</em></h3>
       </div>
-      <div class="related-grid">${cards}</div>
+      <div class="related-carousel">
+        <button class="related-arrow prev" onclick="relatedScroll(-1)" aria-label="Précédent">
+          <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <div class="related-grid" id="relatedGrid">${cards}</div>
+        <button class="related-arrow next" onclick="relatedScroll(1)" aria-label="Suivant">
+          <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </button>
+      </div>
       <a href="full-reviews.html" class="related-cta">
         Voir toutes les critiques
         <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
