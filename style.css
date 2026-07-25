@@ -197,7 +197,7 @@ nav {
 /* ─── DROPDOWN ─── */
 .dropdown {
   position: absolute;
-  top: calc(100% + 6px);
+  top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(-6px);
   background: linear-gradient(180deg, #161616, #0d0d0d);
@@ -253,15 +253,15 @@ nav {
   justify-content: center;
   width: 24px;
   height: 24px;
-  border-radius: 7px;
-  background: rgba(232,37,58,.15);
-  color: var(--red);
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--white);
   font-size: 11px;
   flex-shrink: 0;
   margin-right: 0;
-  transition: background .2s, color .2s;
+  transition: background .2s, transform .2s;
 }
-.dropdown a:hover span { background: var(--red); color: var(--white); }
+.dropdown a:hover span { background: var(--red-dark); transform: scale(1.08); }
 
 .nav-icons {
   display: flex;
