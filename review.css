@@ -454,7 +454,25 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .rating-score { font-size: 56px; }
   .article-gallery.cols-2, .article-gallery.cols-3, .article-gallery.stack-cols-2 { grid-template-columns: 1fr; }
 }
-@media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) {
+  .related-grid {
+    display: flex;
+    grid-template-columns: unset;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 14px;
+    margin: 28px -24px 0;
+    padding: 0 24px 6px;
+    scrollbar-width: thin;
+  }
+  .related-grid::-webkit-scrollbar { height: 4px; }
+  .related-grid::-webkit-scrollbar-thumb { background: #333; border-radius: 50px; }
+  .related-card {
+    flex: 0 0 62%;
+    scroll-snap-align: start;
+  }
+}
 
 /* LIGHTBOX (clic sur une image d'article) */
 .lightbox {
