@@ -44,7 +44,7 @@ nav {
 .nav-cinema:hover svg { transform: rotate(180deg); fill: var(--red); }
 .nav-links .contact-link { color: var(--red); }
 .dropdown {
-  position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%) translateY(-6px);
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(-6px);
   background: linear-gradient(180deg, #161616, #0d0d0d); border: 1px solid rgba(255,255,255,.08);
   border-top: 2px solid var(--red); border-radius: 14px;
   min-width: 270px; padding: 10px; opacity: 0; pointer-events: none;
@@ -55,8 +55,8 @@ nav {
 .dropdown a { display: flex; align-items: center; gap: 12px; padding: 12px 12px; border-radius: 9px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #cccccc !important; transition: color .2s, background .2s, transform .2s; white-space: nowrap; }
 .dropdown a + a { margin-top: 2px; }
 .dropdown a:hover { color: var(--white) !important; background: rgba(232,37,58,0.1); transform: translateX(3px); }
-.dropdown a span { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 7px; background: rgba(232,37,58,.15); color: var(--red); font-size: 11px; flex-shrink: 0; margin-right: 0; transition: background .2s, color .2s; }
-.dropdown a:hover span { background: var(--red); color: var(--white); }
+.dropdown a span { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--red); color: var(--white); font-size: 11px; flex-shrink: 0; margin-right: 0; transition: background .2s, transform .2s; }
+.dropdown a:hover span { background: var(--red-dark); transform: scale(1.08); }
 .search-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 50%; transition: transform .25s ease; flex-shrink: 0; }
 .search-btn:hover { transform: scale(1.18); }
 .search-btn svg { width: 20px; height: 20px; }
