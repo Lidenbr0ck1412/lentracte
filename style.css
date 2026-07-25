@@ -187,6 +187,8 @@ nav {
   text-transform: uppercase;
   color: var(--white);
   transition: color .2s;
+  padding: 38px 0;
+  margin: -38px 0;
 }
 .nav-cinema:hover { color: var(--red); }
 .nav-cinema svg { width: 12px; height: 12px; fill: var(--white); display: block; position: relative; top: 1px; transition: transform .25s; }
@@ -195,7 +197,7 @@ nav {
 /* ─── DROPDOWN ─── */
 .dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 10px);
   left: 50%;
   transform: translateX(-50%) translateY(0);
   background: var(--dark);
@@ -208,6 +210,15 @@ nav {
   transition: opacity .2s ease;
   z-index: 200;
   box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: transparent;
 }
 .nav-cinema:hover .dropdown {
   opacity: 1;
