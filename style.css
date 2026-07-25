@@ -195,7 +195,7 @@ nav {
 /* ─── DROPDOWN ─── */
 .dropdown {
   position: absolute;
-  top: calc(100% + 2px);
+  top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(0);
   background: var(--dark);
