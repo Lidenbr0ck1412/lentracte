@@ -96,7 +96,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 async function loadTops() {
   // Récupère tous les tops, ordonnés par date desc
   const topsRes = await fetch(
-    `${SUPABASE_URL}/rest/v1/tops?select=*&order=created_at.desc`,
+    `${SUPABASE_URL}/rest/v1/tops?select=*&order=ordre.asc.nullslast,created_at.desc`,
     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
   );
   const tops = await topsRes.json();
