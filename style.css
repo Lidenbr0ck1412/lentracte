@@ -220,6 +220,7 @@ nav {
   right: 0;
   height: 6px;
   background: transparent;
+  pointer-events: auto;
 }
 .nav-cinema:hover .dropdown {
   opacity: 1;
