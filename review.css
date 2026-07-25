@@ -50,7 +50,7 @@ nav {
   min-width: 270px; padding: 10px; opacity: 0; pointer-events: none;
   transition: opacity .22s ease, transform .22s ease; z-index: 200; box-shadow: 0 20px 45px rgba(0,0,0,.55);
 }
-.dropdown::before { content: ''; position: absolute; top: -6px; left: 0; right: 0; height: 6px; background: transparent; }
+.dropdown::before { content: ''; position: absolute; top: -6px; left: 0; right: 0; height: 6px; background: transparent; pointer-events: auto; }
 .nav-cinema:hover .dropdown { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
 .dropdown a { display: flex; align-items: center; gap: 12px; padding: 12px 12px; border-radius: 9px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #cccccc !important; transition: color .2s, background .2s, transform .2s; white-space: nowrap; }
 .dropdown a + a { margin-top: 2px; }
