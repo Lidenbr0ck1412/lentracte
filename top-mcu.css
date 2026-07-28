@@ -1,0 +1,185 @@
+/* ============================================================
+   TOP MCU — feuille AUTONOME (ne dépend pas de style.css,
+   même logique que top.css : tout le nécessaire est ici).
+   Signature : une jauge de puissance verticale par tier, qui
+   monte du gris éteint (fond du tiroir) au rouge/or (sommet).
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --red: #E8253A;
+  --red-dark: #c01e2e;
+  --black: #0a0a0a;
+  --dark: #111111;
+  --dark2: #181818;
+  --white: #ffffff;
+  --grey: #888888;
+  --light-grey: #cccccc;
+  --tier-1: #4a4a4a;   /* fond du tiroir : gris éteint */
+  --tier-2: #7a3d3d;   /* tout-venant : rouille sourde */
+  --tier-3: #c23548;   /* tient la route : rouge de la maison, adouci */
+  --tier-4-a: var(--red);
+  --tier-4-b: #f0b429;  /* sommet : dégradé rouge -> or */
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
+
+/* ─── NAVBAR (identique au reste du site) ─── */
+nav {
+  background: var(--dark);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 100px;
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 2px solid var(--red);
+}
+.logo img { height: 100px; width: auto; display: block; }
+.nav-right { display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 60px; }
+.nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+.nav-links a { font-weight: 400; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--white); transition: color .2s; }
+.nav-links a:hover { color: var(--red); }
+.nav-links .contact-link { color: var(--red); }
+.nav-cinema {
+  display: flex; align-items: center; gap: 4px; cursor: pointer; line-height: 1; position: relative;
+  font-weight: 700; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--white); transition: color .2s;
+}
+.nav-cinema:hover { color: var(--red); }
+.nav-cinema svg { width: 12px; height: 12px; fill: var(--white); display: block; position: relative; top: 1px; transition: transform .25s; }
+.nav-cinema:hover svg { transform: rotate(180deg); fill: var(--red); }
+.dropdown {
+  position: absolute; top: calc(100% + 2px); left: 50%; transform: translateX(-50%);
+  background: var(--dark); border-top: 2px solid var(--red); border-radius: 0 0 10px 10px;
+  min-width: 260px; padding: 8px 0; opacity: 0; pointer-events: none;
+  transition: opacity .2s ease; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.nav-cinema:hover .dropdown { opacity: 1; pointer-events: all; }
+.dropdown a { display: block; padding: 11px 20px; font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #cccccc !important; transition: color .2s, background .2s; white-space: nowrap; }
+.dropdown a:hover { color: var(--red) !important; background: rgba(232,37,58,0.08); }
+.dropdown a span { color: var(--red); margin-right: 8px; }
+.burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+.burger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
+.mobile-nav {
+  display: flex; position: fixed; top: 100px; left: 0; right: 0; bottom: 0;
+  background: rgba(10,10,10,.97); z-index: 99;
+  flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+  opacity: 0; pointer-events: none; transition: opacity .35s ease;
+}
+.mobile-nav.open { opacity: 1; pointer-events: all; }
+.mobile-nav a { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--white); text-transform: uppercase; transition: color .2s; }
+.mobile-nav a:hover, .mobile-nav a.active { color: var(--red); }
+
+@media (max-width: 900px) {
+  .nav-links, .nav-right .nav-links { display: none; }
+  .burger { display: flex; }
+}
+
+/* ─── FOOTER ─── */
+footer { background: #050505; text-align: center; padding: 20px; font-size: 11px; color: #444; letter-spacing: 1px; border-top: 1px solid #1a1a1a; }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+.mcu-hero-fallback { position: absolute; inset: 0; background: linear-gradient(135deg, #1a0505, #3a1010); }
+
+/* ─── HERO ─── */
+.mcu-loading { min-height: 40vh; display: flex; align-items: center; justify-content: center; color: var(--light-grey); font-family: 'Montserrat', sans-serif; }
+
+.mcu-hero { position: relative; min-height: 62vh; display: flex; align-items: flex-end; overflow: hidden; }
+.mcu-hero-bg { position: absolute; inset: 0; }
+.mcu-hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+.mcu-hero-gradient { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,10,.2) 0%, var(--black) 92%); }
+.mcu-hero-content { position: relative; z-index: 2; padding: 0 48px 56px; max-width: 900px; }
+.mcu-hero-eyebrow { display: flex; align-items: center; gap: 8px; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 2px; font-size: 13px; color: var(--red); margin-bottom: 14px; }
+.mcu-hero-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); display: inline-block; }
+.mcu-hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 7vw, 92px); line-height: .95; color: var(--white); letter-spacing: .5px; }
+.mcu-hero-subtitle { font-family: 'Montserrat', sans-serif; font-size: 18px; color: var(--light-grey); margin-top: 16px; max-width: 640px; }
+
+/* ─── INTRO / THÈSE ─── */
+.mcu-intro { max-width: 720px; margin: 64px auto 0; padding: 0 24px; font-family: 'Montserrat', sans-serif; font-size: 17px; line-height: 1.8; color: var(--light-grey); }
+.mcu-intro p { margin-bottom: 20px; }
+.mcu-intro strong { color: var(--white); }
+
+/* ─── TIERS ─── */
+.mcu-tiers { max-width: 980px; margin: 0 auto; padding: 40px 24px 20px; }
+.mcu-tier { margin-top: 84px; }
+.mcu-tier:first-child { margin-top: 48px; }
+
+.mcu-tier-header { display: flex; gap: 22px; align-items: flex-end; margin-bottom: 32px; }
+.mcu-tier-gauge { width: 6px; height: 88px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; position: relative; flex-shrink: 0; }
+.mcu-tier-gauge-fill { position: absolute; bottom: 0; left: 0; width: 100%; border-radius: 3px; }
+.mcu-tier[data-tier="fond-du-tiroir"] .mcu-tier-gauge-fill { background: var(--tier-1); }
+.mcu-tier[data-tier="tout-venant"] .mcu-tier-gauge-fill { background: var(--tier-2); }
+.mcu-tier[data-tier="tient-la-route"] .mcu-tier-gauge-fill { background: var(--tier-3); }
+.mcu-tier[data-tier="sommet"] .mcu-tier-gauge-fill { background: linear-gradient(0deg, var(--tier-4-a), var(--tier-4-b)); box-shadow: 0 0 14px rgba(240,180,41,.5); }
+
+.mcu-tier-count { font-family: 'Montserrat', sans-serif; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--grey); margin-bottom: 4px; }
+.mcu-tier-label { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 4vw, 44px); color: var(--white); line-height: 1; letter-spacing: .5px; }
+.mcu-tier-sub { font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 14px; color: var(--grey); margin-top: 6px; }
+
+.mcu-tier-entries { display: flex; flex-direction: column; gap: 14px; }
+
+/* ─── ENTRÉE COMMUNE ─── */
+.mcu-entry { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
+.mcu-entry.visible { opacity: 1; transform: translateY(0); }
+.mcu-entry-rank { font-family: 'Bebas Neue', sans-serif; color: var(--grey); font-size: 20px; flex-shrink: 0; }
+.mcu-entry-title { font-family: 'Montserrat', sans-serif; font-weight: 700; color: var(--white); font-size: 16px; }
+.mcu-entry-year { font-weight: 400; color: var(--grey); }
+.mcu-entry-meta { font-family: 'Montserrat', sans-serif; font-size: 13px; color: var(--grey); margin-top: 2px; }
+.mcu-entry-meta .sep { margin: 0 6px; }
+.mcu-entry-meta .red { color: var(--red); }
+.mcu-entry-text { font-family: 'Montserrat', sans-serif; font-size: 15px; line-height: 1.75; color: var(--light-grey); margin-top: 8px; }
+.mcu-entry-text p { margin-bottom: 12px; }
+.mcu-entry-link { display: inline-block; margin-top: 10px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 13px; color: var(--red); text-decoration: none; border-bottom: 1px solid var(--red); }
+
+/* ─── FOND DU TIROIR / TOUT-VENANT : entrée minimale, dense ─── */
+.mcu-entry-minimal {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  padding: 12px 16px; background: var(--dark2); border-radius: 6px; border-left: 3px solid var(--tier-1);
+}
+.mcu-tier[data-tier="tout-venant"] .mcu-entry-minimal { border-left-color: var(--tier-2); }
+.mcu-entry-minimal .mcu-entry-rank { font-size: 16px; }
+.mcu-entry-minimal .mcu-entry-title { font-size: 14.5px; }
+.mcu-entry-punch { font-family: 'Montserrat', sans-serif; font-style: italic; font-size: 13.5px; color: var(--grey); flex-basis: 100%; }
+@media (min-width: 640px) { .mcu-entry-punch { flex-basis: auto; margin-left: auto; text-align: right; } }
+
+/* ─── TIENT LA ROUTE : entrée standard ─── */
+.mcu-entry-standard {
+  display: flex; gap: 18px; padding: 20px 22px; background: var(--dark2); border-radius: 8px; border-left: 3px solid var(--tier-3);
+}
+.mcu-entry-standard .mcu-entry-rank { font-size: 26px; }
+
+/* ─── SOMMET : entrée avec citation en exergue ─── */
+.mcu-entry-citation {
+  padding: 28px 26px; background: linear-gradient(135deg, var(--dark2), var(--dark)); border-radius: 10px;
+  border: 1px solid rgba(240,180,41,.18);
+}
+.mcu-entry-citation .mcu-entry-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+.mcu-entry-citation .mcu-entry-rank { font-size: 30px; color: var(--tier-4-b); }
+.mcu-entry-quote {
+  font-family: 'Playfair Display', serif; font-style: italic; font-weight: 700; font-size: 21px; line-height: 1.5;
+  color: var(--white); border-left: 2px solid var(--tier-4-b); padding-left: 18px; margin: 0 0 16px;
+}
+
+/* ─── SOMMET : entrée avec image (poster ou plan clé) ─── */
+.mcu-entry-image {
+  display: flex; gap: 24px; padding: 24px; background: linear-gradient(135deg, var(--dark2), var(--dark));
+  border-radius: 10px; border: 1px solid rgba(240,180,41,.18);
+}
+.mcu-entry-poster { flex-shrink: 0; width: 140px; border-radius: 6px; overflow: hidden; }
+.mcu-entry-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mcu-entry-image .mcu-entry-rank { font-size: 30px; color: var(--tier-4-b); }
+.mcu-entry-image .mcu-entry-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 4px; }
+
+@media (max-width: 640px) {
+  .mcu-hero-content { padding: 0 20px 40px; }
+  .mcu-entry-image, .mcu-entry-standard { flex-direction: column; }
+  .mcu-entry-poster { width: 100%; max-width: 220px; }
+}
+
+/* ─── MENTIONS ─── */
+.mcu-mentions { max-width: 720px; margin: 80px auto 60px; padding: 0 24px; text-align: center; }
+.mcu-mentions-label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 2px; color: var(--red); display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px; }
+.mcu-mentions-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+.mcu-mentions p { font-family: 'Montserrat', sans-serif; font-size: 15px; color: var(--grey); line-height: 1.7; }
