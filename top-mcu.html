@@ -98,9 +98,16 @@ function renderEntry(f, tierKey) {
   if (type === 'minimal') {
     return `
     <div class="mcu-entry mcu-entry-minimal" data-tier="${tierKey}">
-      <span class="mcu-entry-rank">#${f.position}</span>
-      <span class="mcu-entry-title">${f.title}${f.annee ? ` <span class="mcu-entry-year">(${f.annee})</span>` : ''}</span>
-      ${f.contenu ? `<span class="mcu-entry-punch">${inlineMd(f.contenu)}</span>` : ''}
+      <button class="mcu-entry-toggle" aria-expanded="false">
+        <span class="mcu-entry-rank">#${f.position}</span>
+        <span class="mcu-entry-title">${f.title}${f.annee ? ` <span class="mcu-entry-year">(${f.annee})</span>` : ''}</span>
+        <svg class="mcu-entry-chevron" viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+      </button>
+      <div class="mcu-entry-panel">
+        <div class="mcu-entry-panel-inner">
+          ${f.contenu ? `<div class="mcu-entry-text">${parseContenu(f.contenu)}</div>` : ''}
+        </div>
+      </div>
     </div>`;
   }
 
@@ -210,6 +217,14 @@ async function init() {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
   document.querySelectorAll('.mcu-entry').forEach(el => observer.observe(el));
+
+  document.querySelectorAll('.mcu-entry-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const entry = btn.closest('.mcu-entry-minimal');
+      const isOpen = entry.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
 }
 
 function toggleNav() {
