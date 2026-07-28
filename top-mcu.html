@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le classement complet du MCU • L'Entracte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="top-mcu.css">
+</head>
+<body>
+
+<!-- NAVBAR (identique au reste du site) -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+        Cinéma
+        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        <div class="dropdown">
+          <a href="index.html#reviews"><span>▸</span>Nos dernières reviews</a>
+          <a href="index.html#ccf"><span>▸</span>Comment c'est fait ?</a>
+          <a href="index.html#tops"><span>▸</span>Les tops & rétrospectives</a>
+        </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="burger" onclick="toggleNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html#reviews" onclick="toggleNav()">Reviews</a>
+  <a href="index.html#ccf" onclick="toggleNav()">Comment c'est fait ?</a>
+  <a href="index.html#tops" onclick="toggleNav()">Les tops</a>
+  <a href="index.html#about" onclick="toggleNav()">À propos</a>
+  <a href="index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<div id="hero-container">
+  <div class="mcu-loading"><p>Chargement du classement…</p></div>
+</div>
+
+<div id="content-container"></div>
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+
+/* ─── ORDRE ET IDENTITÉ DES TIERS ───
+   L'ordre ci-dessous pilote l'affichage : du fond du classement vers le sommet.
+   "power" (0 à 1) sert à remplir la jauge verticale, le signature element de la page. */
+const TIERS = [
+  { key: 'fond-du-tiroir',     label: 'Le fond du tiroir',        sub: 'Ceux qu\u2019on n\u2019aurait pas dû regarder deux fois', power: 0.18 },
+  { key: 'tout-venant',        label: 'Le tout-venant',           sub: 'La matière première du MCU, correcte et oubliable',      power: 0.42 },
+  { key: 'tient-la-route',     label: 'Ceux qui tiennent la route', sub: 'Là où l\u2019usine tourne enfin rond',                  power: 0.68 },
+  { key: 'sommet',             label: 'Le sommet',                'sub': 'Ce que Marvel a fait de mieux malgré lui',            power: 1 }
+];
+
+function inlineMd(text) {
+  if (!text) return '';
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+}
+
+function parseContenu(text) {
+  if (!text) return '';
+  return text.split(/\n\n+/).map(p => `<p>${inlineMd(p.trim())}</p>`).join('');
+}
+
+function renderHero(top) {
+  return `
+  <section class="mcu-hero">
+    <div class="mcu-hero-bg">
+      <img src="${top.banner || ''}" alt="${top.title || ''}">
+      <div class="mcu-hero-gradient"></div>
+    </div>
+    <div class="mcu-hero-content">
+      <div class="mcu-hero-eyebrow"><span class="dot"></span>RÉTROSPECTIVE</div>
+      <h1 class="mcu-hero-title">${top.title || ''}</h1>
+      ${top.subtitle ? `<p class="mcu-hero-subtitle">${top.subtitle}</p>` : ''}
+    </div>
+  </section>`;
+}
+
+function renderEntry(f, tierKey) {
+  const type = f.entry_type || 'standard';
+
+  if (type === 'minimal') {
+    return `
+    <div class="mcu-entry mcu-entry-minimal" data-tier="${tierKey}">
+      <span class="mcu-entry-rank">#${f.position}</span>
+      <span class="mcu-entry-title">${f.title}${f.annee ? ` <span class="mcu-entry-year">(${f.annee})</span>` : ''}</span>
+      ${f.contenu ? `<span class="mcu-entry-punch">${inlineMd(f.contenu)}</span>` : ''}
+    </div>`;
+  }
+
+  if (type === 'citation') {
+    return `
+    <div class="mcu-entry mcu-entry-citation" data-tier="${tierKey}">
+      <div class="mcu-entry-head">
+        <span class="mcu-entry-rank">#${f.position}</span>
+        <div>
+          <div class="mcu-entry-title">${f.title}</div>
+          <div class="mcu-entry-meta">
+            ${f.realisateur ? `<span>${f.realisateur}</span><span class="sep">·</span>` : ''}
+            ${f.annee ? `<span class="red">${f.annee}</span>` : ''}
+          </div>
+        </div>
+      </div>
+      ${f.citation ? `<blockquote class="mcu-entry-quote">${inlineMd(f.citation)}</blockquote>` : ''}
+      ${f.contenu ? `<div class="mcu-entry-text">${parseContenu(f.contenu)}</div>` : ''}
+    </div>`;
+  }
+
+  if (type === 'image') {
+    return `
+    <div class="mcu-entry mcu-entry-image" data-tier="${tierKey}">
+      ${f.img ? `<div class="mcu-entry-poster"><img src="${f.img}" alt="${f.title}"></div>` : ''}
+      <div class="mcu-entry-body">
+        <div class="mcu-entry-head">
+          <span class="mcu-entry-rank">#${f.position}</span>
+          <div>
+            <div class="mcu-entry-title">${f.title}</div>
+            <div class="mcu-entry-meta">
+              ${f.realisateur ? `<span>${f.realisateur}</span><span class="sep">·</span>` : ''}
+              ${f.annee ? `<span class="red">${f.annee}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="mcu-entry-text">${parseContenu(f.contenu)}</div>
+        ${f.review_id ? `<a href="review.html?id=${f.review_id}" class="mcu-entry-link">Lire notre critique</a>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // standard
+  return `
+  <div class="mcu-entry mcu-entry-standard" data-tier="${tierKey}">
+    <span class="mcu-entry-rank">#${f.position}</span>
+    <div class="mcu-entry-body">
+      <div class="mcu-entry-title">${f.title}${f.annee ? ` <span class="mcu-entry-year">(${f.annee})</span>` : ''}</div>
+      ${f.realisateur ? `<div class="mcu-entry-meta"><span>${f.realisateur}</span></div>` : ''}
+      <div class="mcu-entry-text">${parseContenu(f.contenu)}</div>
+      ${f.review_id ? `<a href="review.html?id=${f.review_id}" class="mcu-entry-link">Lire notre critique</a>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderTier(tier, films) {
+  const entries = films.filter(f => f.tier === tier.key).sort((a, b) => b.position - a.position);
+  if (!entries.length) return '';
+  return `
+  <section class="mcu-tier" data-tier="${tier.key}">
+    <div class="mcu-tier-header">
+      <div class="mcu-tier-gauge"><div class="mcu-tier-gauge-fill" style="height:${tier.power * 100}%"></div></div>
+      <div class="mcu-tier-heading">
+        <div class="mcu-tier-count">${entries.length} film${entries.length > 1 ? 's' : ''}</div>
+        <h2 class="mcu-tier-label">${tier.label}</h2>
+        <p class="mcu-tier-sub">${tier.sub}</p>
+      </div>
+    </div>
+    <div class="mcu-tier-entries">
+      ${entries.map(f => renderEntry(f, tier.key)).join('')}
+    </div>
+  </section>`;
+}
+
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id') || 1;
+
+  const topRes = await fetch(`${SUPABASE_URL}/rest/v1/top_mcu?id=eq.${id}&select=*`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  const topData = await topRes.json();
+  const top = topData[0];
+  if (!top) {
+    document.getElementById('hero-container').innerHTML = '<div class="mcu-loading"><p>Classement introuvable.</p></div>';
+    return;
+  }
+
+  const filmsRes = await fetch(`${SUPABASE_URL}/rest/v1/top_mcu_films?top_mcu_id=eq.${id}&select=*&order=position.asc`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  const films = await filmsRes.json();
+
+  document.title = `${top.title || 'Le classement du MCU'} • L'Entracte`;
+  document.getElementById('hero-container').innerHTML = renderHero(top);
+
+  let html = '';
+  if (top.intro) html += `<div class="mcu-intro">${parseContenu(top.intro)}</div>`;
+  html += `<div class="mcu-tiers">${TIERS.map(t => renderTier(t, films)).join('')}</div>`;
+  if (top.mentions) {
+    html += `<div class="mcu-mentions"><div class="mcu-mentions-label"><span class="dot"></span>MENTIONS HONORABLES</div><p>${inlineMd(top.mentions)}</p></div>`;
+  }
+
+  document.getElementById('content-container').innerHTML = html;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.mcu-entry').forEach(el => observer.observe(el));
+}
+
+function toggleNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const spans = document.getElementById('burger').querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+init();
+</script>
+</body>
+</html>
