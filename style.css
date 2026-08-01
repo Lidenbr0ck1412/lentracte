@@ -876,7 +876,6 @@ footer {
     opacity: 0;
     pointer-events: none;
     transition: opacity .35s ease;
-    counter-reset: menuitem;
   }
   .mobile-nav.open {
     opacity: 1;
@@ -888,27 +887,24 @@ footer {
     gap: 16px;
     width: 100%;
     max-width: 320px;
-    padding: 18px 8px;
+    padding: 20px 8px;
     border-bottom: 1px solid rgba(255,255,255,.08);
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
+    font-size: 38px;
     letter-spacing: 3px;
     color: var(--white);
     text-transform: uppercase;
-    counter-increment: menuitem;
     opacity: 0;
     transform: translateX(-14px);
     transition: opacity .4s ease, transform .4s ease, color .2s;
   }
   .mobile-nav a:last-child { border-bottom: none; }
   .mobile-nav a::before {
-    content: counter(menuitem, decimal-leading-zero);
+    content: '▸';
     flex-shrink: 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    font-size: 22px;
     color: var(--red);
+    transition: color .2s;
   }
   .mobile-nav.open a {
     opacity: 1;
