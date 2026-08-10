@@ -6,6 +6,10 @@
    et les styles partagés (navbar, footer, search overlay).
    ════════════════════════════════════════════════════════════════════ */
 
+/* Ce fichier utilise aussi --border, --input-bg, --input-border,
+   --toolbar-bg, --muted, --muted-2 définies dans le :root de style.css.
+   style.css doit être chargé AVANT archives.css sur la page. */
+
 
 /* ──────────────── EN-TÊTE ÉDITORIAL ──────────────── */
 .archives-hero {
@@ -50,10 +54,10 @@
 
 /* ──────────────── BARRE DE FILTRES (sticky) ──────────────── */
 .archives-toolbar {
-  border-top: 1px solid #1f1f1f;
-  border-bottom: 1px solid #1f1f1f;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
   padding: 20px 0;
-  background: #0d0d0d;
+  background: var(--toolbar-bg);
   position: sticky;
   top: 100px; /* hauteur de la nav principale, pour ne pas passer dessous */
   z-index: 50;
@@ -83,13 +87,13 @@
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  color: #888;
+  color: var(--muted);
   pointer-events: none;
 }
 .archives-search input {
   width: 100%;
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 10px 14px 10px 40px;
   color: var(--white);
@@ -103,7 +107,7 @@
   border-color: var(--red);
 }
 .archives-search input::placeholder {
-  color: #666;
+  color: var(--muted-2);
 }
 
 /* Sélecteur de tri */
@@ -116,11 +120,11 @@
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 2px;
   font-size: 13px;
-  color: #888;
+  color: var(--muted);
 }
 .archives-sort select {
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--white);
   padding: 9px 14px;
@@ -153,13 +157,13 @@
   height: 4px;
 }
 .archives-tabs::-webkit-scrollbar-thumb {
-  background: #333;
+  background: var(--border);
   border-radius: 50px;
 }
 .archives-tab {
   background: transparent;
-  border: 1px solid #2a2a2a;
-  color: #888;
+  border: 1px solid var(--border);
+  color: var(--muted);
   padding: 7px 16px;
   border-radius: 50px;
   font-family: 'Bebas Neue', sans-serif;
@@ -190,7 +194,7 @@
 }
 .archives-count {
   font-family: 'Bebas Neue', sans-serif;
-  color: #666;
+  color: var(--muted-2);
   letter-spacing: 3px;
   font-size: 12px;
   margin-bottom: 24px;
@@ -224,7 +228,7 @@
   aspect-ratio: 2 / 3;
   border-radius: 8px;
   overflow: hidden;
-  background: #1a1a1a;
+  background: var(--input-bg);
   box-shadow: 0 4px 14px rgba(0,0,0,0.4);
 }
 .archive-poster img {
@@ -295,7 +299,7 @@
 /* État vide (aucun résultat) */
 .archives-empty {
   text-align: center;
-  color: #666;
+  color: var(--muted-2);
   font-size: 14px;
   letter-spacing: 1px;
   padding: 80px 20px;
