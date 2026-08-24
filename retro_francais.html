@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ces films français à découvrir • L'Entracte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="retro.css">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+        Cinéma
+        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+        <div class="dropdown">
+          <a href="index.html#reviews"><span>▸</span>Nos dernières reviews</a>
+          <a href="ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+          <a href="tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
+        </div>
+      </li>
+      <li><a href="index.html#about">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </div>
+  <button id="theme-toggle" class="search-btn" aria-label="Changer de theme" title="Theme clair/sombre" style="border:none;background:none;">
+    <svg id="theme-icon" viewBox="0 0 24 24" width="20" height="20" fill="#ffffff"></svg>
+  </button>
+  <div class="burger" onclick="toggleNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html#reviews" onclick="toggleNav()">Reviews</a>
+  <a href="ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
+  <a href="tops-archives.html" onclick="toggleNav()">Les tops</a>
+  <a href="index.html#about" onclick="toggleNav()">À propos</a>
+  <a href="index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="images/banner_retro_francais.jpg" alt="Films français à découvrir">
+    <div class="hero-bg-gradient"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-category"><span class="dot"></span>RÉTROSPECTIVE</div>
+    <h1 class="hero-title">CES FILMS FRANÇAIS<br>À DÉCOUVRIR</h1>
+    <p class="hero-subtitle">Non, il n'y a pas que la comédie en France.</p>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="retro-intro">
+  <div class="retro-section-title">NOTRE SÉLECTION</div>
+  <p class="retro-intro-first">Le cinéma français traîne une réputation qu'il ne mérite qu'à moitié, coincé entre la comédie familiale du dimanche soir et le drame social qui parle beaucoup et filme peu.</p>
+  <p>Entre les deux, il y a pourtant tout un pan de production qui ose le body horror, la science-fiction intimiste, le polar nocturne ou la fable érotique en costume, sans jamais perdre ce goût très français du texte et du regard.</p>
+  <p>Voici neuf films qui méritent d'être vus, connus, défendus, et qui prouvent que le cinéma hexagonal sait aussi surprendre quand on lui laisse le temps.</p>
+</div>
+
+<!-- GRILLE -->
+<div class="films-grid">
+
+  <!-- LA PASSION DE DODIN BOUFFANT -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/dodin_bouffant.jpg" alt="La Passion de Dodin Bouffant">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2023</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">LA PASSION DE DODIN BOUFFANT</div>
+      <div class="film-card-meta">Tran Anh Hung · <span class="red">2023</span> · Drame gastronomique</div>
+      <div class="film-card-text">
+        <p>Tran Anh Hung filme la cuisine du XIXe siècle comme d'autres filment des scènes d'amour, en plans séquences qui prennent le temps de regarder mijoter un bouillon. <strong>Le prix de la mise en scène à Cannes n'a rien d'un hasard.</strong></p>
+        <p>Binoche et Magimel y sont pour beaucoup, mais c'est surtout la patience du film qui marque, dans une époque où tout va vite. Rarement un film aura donné autant faim.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TITANE -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/titane.jpg" alt="Titane">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2021</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">TITANE</div>
+      <div class="film-card-meta">Julia Ducournau · <span class="red">2021</span> · Body horror</div>
+      <div class="film-card-text">
+        <p>Une femme couche avec une voiture, tue beaucoup de monde, puis se fait passer pour un fils disparu depuis vingt ans. Résumé ainsi, ça ne rend pas justice à la Palme d'or. <strong>Julia Ducournau filme les corps qui débordent comme personne en France.</strong></p>
+        <p>Sous le chaos apparent se cache un film sur la paternité et la métamorphose, porté par une Agathe Rousselle habitée du début à la fin.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAGARINE -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/gagarine.jpg" alt="Gagarine">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2020</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">GAGARINE</div>
+      <div class="film-card-meta">Fanny Liatard & Jérémy Trouilh · <span class="red">2020</span> · Drame · Fantastique</div>
+      <div class="film-card-text">
+        <p>Youri a seize ans, vit dans une cité promise à la démolition, et rêve de devenir cosmonaute. Le duo Liatard-Trouilh transforme sa tour d'Ivry en vaisseau spatial le temps d'un premier film. <strong>Le réalisme social y côtoie le merveilleux sans jamais forcer le trait.</strong></p>
+        <p>Tourné avec d'anciens habitants du lieu, le film garde une tendresse rare pour ce qu'il filme, jusque dans sa destruction annoncée.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LE DAIM -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/le_daim.jpg" alt="Le Daim">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2019</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">LE DAIM</div>
+      <div class="film-card-meta">Quentin Dupieux · <span class="red">2019</span> · Comédie absurde</div>
+      <div class="film-card-text">
+        <p>Un homme achète une veste en daim et décide qu'il doit être le seul au monde à porter une veste. Le pitch est aussi simple que ça, et Dupieux n'a besoin de rien d'autre. <strong>Jean Dujardin n'a jamais été aussi drôle et inquiétant à la fois.</strong></p>
+        <p>Le film dure à peine plus d'une heure et n'en a pas besoin de plus pour installer son absurdité méthodique jusqu'à un dernier acte totalement dérangé.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- INEXORABLE -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/inexorable.jpg" alt="Inexorable">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2021</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">INEXORABLE</div>
+      <div class="film-card-meta">Fabrice du Welz · <span class="red">2021</span> · Thriller</div>
+      <div class="film-card-text">
+        <p>Un écrivain en manque d'inspiration s'installe avec sa famille dans la maison de son défunt éditeur, sans se douter qu'une jeune femme rôde déjà dans les parages depuis bien plus longtemps qu'eux. <strong>Fabrice du Welz construit un huis clos qui resserre son étau sans un geste de trop.</strong></p>
+        <p>Benoît Poelvoorde y est glaçant dans un rôle à contre-emploi, porté par une mise en scène qui prend son temps pour mieux frapper.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BENEDETTA -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/benedetta.jpg" alt="Benedetta">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2021</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">BENEDETTA</div>
+      <div class="film-card-meta">Paul Verhoeven · <span class="red">2021</span> · Drame</div>
+      <div class="film-card-text">
+        <p>Une nonne du XVIIe siècle prétend recevoir des visions du Christ, et tombe amoureuse d'une autre religieuse dans un couvent italien. Verhoeven adapte un fait réel sans en gommer une once de provocation. <strong>Virginie Efira y est totale, entre mysticisme et désir assumé.</strong></p>
+        <p>Le film a fait scandale à sa sortie, ce qui n'a jamais empêché un bon film d'en être un, et celui-ci en est un.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÉDECIN DE NUIT -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/medecin_de_nuit.jpg" alt="Médecin de nuit">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2020</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">MÉDECIN DE NUIT</div>
+      <div class="film-card-meta">Elie Wajeman · <span class="red">2020</span> · Thriller social</div>
+      <div class="film-card-text">
+        <p>Mikaël soigne les toxicomanes que personne d'autre ne veut voir, et couvre en parallèle le trafic d'ordonnances de son cousin pharmacien. Une nuit, tout doit se régler. <strong>Vincent Macaigne trouve ici l'un de ses rôles les plus sombres.</strong></p>
+        <p>Wajeman filme un Paris nocturne et populaire rarement montré ainsi, quelque part entre le polar et le portrait social, sans jamais choisir entre les deux.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LES OLYMPIADES -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/les_olympiades.jpg" alt="Les Olympiades">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2021</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">LES OLYMPIADES</div>
+      <div class="film-card-meta">Jacques Audiard · <span class="red">2021</span> · Romance</div>
+      <div class="film-card-text">
+        <p>Audiard troque son cinéma viril habituel pour un noir et blanc élégant, et suit trois jeunes gens qui se cherchent, se ratent et se retrouvent dans le 13e arrondissement de Paris. <strong>Le film adapte les comics d'Adrian Tomine avec une fluidité surprenante.</strong></p>
+        <p>Lucie Zhang, Makita Samba et Noémie Merlant portent un récit sur le sexe et la solitude contemporaine sans jamais tomber dans le cliché.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PENDANT CE TEMPS SUR TERRE -->
+  <div class="film-card">
+    <div class="film-card-poster">
+      <img src="images/pendant_ce_temps_sur_terre.jpg" alt="Pendant ce temps sur Terre">
+      <div class="film-card-overlay">
+        <div class="film-card-overlay-year">2024</div>
+      </div>
+    </div>
+    <div class="film-card-body">
+      <div class="film-card-title">PENDANT CE TEMPS SUR TERRE</div>
+      <div class="film-card-meta">Jérémy Clapin · <span class="red">2024</span> · Science-fiction · Drame</div>
+      <div class="film-card-text">
+        <p>Elsa n'a jamais fait le deuil de son frère spationaute, disparu en mission trois ans plus tôt. Une entité venue de l'espace lui propose alors de le lui rendre, à un prix qu'elle découvrira trop tard. <strong>Clapin mélange prises de vue réelles et animation avec la même sensibilité que dans J'ai perdu mon corps.</strong></p>
+        <p>Le film avance à hauteur d'Elsa, dans un deuil suspendu plus que dans le grand spectacle, et c'est précisément ce qui le rend si particulier.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fin films-grid -->
+
+<!-- SHARE -->
+<div class="share-bar">
+  <span class="share-label">Partager</span>
+  <button class="share-btn" onclick="shareTwitter()">
+    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    X / Twitter
+  </button>
+  <button class="share-btn" onclick="shareFacebook()">
+    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    Facebook
+  </button>
+  <button class="share-btn" id="copyBtn">
+    <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+    Copier le lien
+  </button>
+</div>
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script src="theme.js"></script>
+<script>
+function toggleNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const spans = document.getElementById('burger').querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.film-card').forEach(el => observer.observe(el));
+
+function shareTwitter() {
+  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`, '_blank');
+}
+function shareFacebook() {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
+}
+document.getElementById('copyBtn').addEventListener('click', function() {
+  navigator.clipboard?.writeText(location.href);
+  this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+  setTimeout(() => {
+    this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+  }, 2000);
+});
+</script>
+</body>
+</html>
