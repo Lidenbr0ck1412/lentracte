@@ -83,21 +83,37 @@
     opacity: .4;
   }
 
-  .slate-block { max-width: 720px; margin: 0 auto 70px; }
+  .portrait-block {
+    max-width: 1000px; margin: 0 auto 80px;
+    display: grid; grid-template-columns: 320px 1fr; gap: 50px; align-items: center;
+  }
+  .portrait-photo {
+    aspect-ratio: 3/4; border-radius: 6px; overflow: hidden;
+    border: 1px solid #2a2a2a; background: #151515;
+  }
+  .portrait-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .slate-number {
     font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 3px;
     color: var(--work-light); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
   }
   .slate-number::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.1); }
   .slate-text {
-    font-family: 'Playfair Display', serif; font-size: clamp(16px, 1.8vw, 19px);
-    line-height: 1.85; color: rgba(255,255,255,.85);
+    font-family: 'Playfair Display', serif; font-size: clamp(15px, 1.6vw, 17px);
+    line-height: 1.8; color: rgba(255,255,255,.85);
   }
   .slate-text strong { color: var(--white); font-weight: 700; font-style: normal; }
   .slate-signature {
-    margin-top: 24px; font-family: 'Montserrat', sans-serif; font-size: 12px;
+    margin-top: 20px; font-family: 'Montserrat', sans-serif; font-size: 12px;
     letter-spacing: 1px; color: var(--grey);
   }
+  @media (max-width: 720px) {
+    .portrait-block { grid-template-columns: 1fr; }
+    .portrait-photo { max-width: 220px; margin: 0 auto; }
+  }
+
+  /* Apparition progressive au scroll */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
   .callsheet {
     max-width: 900px; margin: 0 auto 80px; background: var(--black);
@@ -127,26 +143,29 @@
     color: rgba(255,255,255,.5); margin-top: 8px;
   }
   .fiches-grid {
-    max-width: 1000px; margin: 0 auto; display: grid;
-    grid-template-columns: repeat(3, 1fr); gap: 30px; padding-bottom: 90px;
+    max-width: 760px; margin: 0 auto; display: grid;
+    grid-template-columns: repeat(2, 1fr); gap: 30px; padding-bottom: 90px;
   }
   .fiche {
     position: relative; background: #151515; border: 1px solid #2a2a2a;
-    padding: 26px 22px 22px; transform: rotate(var(--tilt, 0deg));
+    overflow: hidden; transform: rotate(var(--tilt, 0deg));
     transition: transform .3s, border-color .3s;
   }
-  .fiche:nth-child(1) { --tilt: -1.4deg; }
+  .fiche:nth-child(1) { --tilt: -1deg; }
   .fiche:nth-child(2) { --tilt: 0.8deg; }
-  .fiche:nth-child(3) { --tilt: -0.6deg; }
   .fiche:hover { transform: rotate(0deg) translateY(-4px); border-color: var(--red); }
   .fiche::before {
     content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%) rotate(-3deg);
-    width: 36px; height: 14px; background: rgba(232,185,35,.35); border: 1px solid rgba(232,185,35,.5);
+    width: 36px; height: 14px; background: rgba(159,180,196,.35); border: 1px solid rgba(159,180,196,.5);
+    z-index: 2;
   }
-  .fiche-tag { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--red); margin-bottom: 12px; }
+  .fiche-poster { width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #0a0a0a; }
+  .fiche-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .fiche-body { padding: 20px 22px 24px; }
+  .fiche-tag { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--red); margin-bottom: 10px; }
   .fiche h4 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--white); margin-bottom: 10px; line-height: 1.4; }
   .fiche p { font-family: 'Montserrat', sans-serif; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,.6); }
-  @media (max-width: 800px) { .fiches-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .fiches-grid { grid-template-columns: 1fr; } }
 
   .apropos-cta { text-align: center; padding: 0 40px 90px; }
   .apropos-cta a {
@@ -238,18 +257,23 @@
 
 <div class="backstage-content">
 
-  <div class="slate-block">
-    <div class="slate-number">SCÈNE 1 — POURQUOI</div>
-    <p class="slate-text">
-      Difficile de faire plus cliché que <strong>Jurassic Park</strong> comme porte d'entrée dans ma cinéphilie. Le reste aussi sonne cliché : un poster de <strong>Pulp Fiction</strong> au-dessus de mon lit, et un attrait pour les films d'horreur, ceux qui dégoulinent, qui sentent le silicone et le travail bien fait. J'ai toujours aimé l'envers du décor.
-    </p>
-    <p class="slate-text" style="margin-top:20px;">
-      Savoir que pour <strong>L'Étrange Noël de Mr Jack</strong>, il a fallu 3 ans pour bouger image par image les figurines de Tim Burton et Henry Selick. Ou que Rob Bottin, derrière les effets de <strong>The Thing</strong>, n'avait que 22 ans quand il a passé un an en studio à inventer ses créatures. Ce que j'aime le plus, c'est de transmettre ça, de le partager à ceux qui veulent bien le lire. Voilà pourquoi j'ai créé L'Entracte.
-    </p>
-    <div class="slate-signature">— Jeremy, fondateur de L'Entracte</div>
+  <div class="portrait-block reveal">
+    <div class="portrait-photo">
+      <img src="images/jeremy-portrait.jpg" alt="Jeremy, fondateur de L'Entracte">
+    </div>
+    <div>
+      <div class="slate-number">SCÈNE 1 — POURQUOI</div>
+      <p class="slate-text">
+        Difficile de faire plus cliché que <strong>Jurassic Park</strong> comme porte d'entrée dans ma cinéphilie. Le reste aussi sonne cliché : un poster de <strong>Pulp Fiction</strong> au-dessus de mon lit, un attrait pour l'horreur qui dégouline, et une obsession pour <strong>Lynch, Anderson, Raimi et Verhoeven</strong> qui n'a jamais vraiment disparu.
+      </p>
+      <p class="slate-text" style="margin-top:16px;">
+        Savoir que pour <strong>L'Étrange Noël de Mr Jack</strong>, il a fallu 3 ans pour bouger image par image les figurines de Tim Burton. Ou que Rob Bottin, derrière <strong>The Thing</strong>, n'avait que 22 ans. Ce que j'aime le plus, c'est de transmettre ça. Voilà pourquoi j'ai créé L'Entracte.
+      </p>
+      <div class="slate-signature">— Jeremy, fondateur de L'Entracte</div>
+    </div>
   </div>
 
-  <div class="callsheet">
+  <div class="callsheet reveal">
     <div class="callsheet-header">FEUILLE DE SERVICE — LIGNE ÉDITORIALE</div>
     <div class="callsheet-rows">
       <div class="callsheet-row">
@@ -263,29 +287,30 @@
     </div>
   </div>
 
-  <div class="fiches-header">
+  <div class="fiches-header reveal">
     <h3>FICHES TECHNIQUES</h3>
     <p>Épinglées au mur du bureau, pas vraiment destinées à être vues.</p>
   </div>
-  <div class="fiches-grid">
+  <div class="fiches-grid reveal">
     <div class="fiche">
-      <div class="fiche-tag">▸ RÉALISATEURS DE CHEVET</div>
-      <h4>Lynch, Anderson, Raimi, Verhoeven.</h4>
-      <p>Quatre visions du monde qui n'ont rien en commun, sinon celle de ne jamais faire les choses à moitié.</p>
+      <div class="fiche-poster"><img src="images/chef-poster.jpg" alt="Chef, de Jon Favreau"></div>
+      <div class="fiche-body">
+        <div class="fiche-tag">▸ PLAISIR COUPABLE</div>
+        <h4>Chef, de Jon Favreau</h4>
+        <p>Un feelgood movie sur la cuisine, souvent boudé, que je repasse dès que j'ai besoin de croire que tout peut bien se terminer.</p>
+      </div>
     </div>
     <div class="fiche">
-      <div class="fiche-tag">▸ PLAISIR COUPABLE</div>
-      <h4>Chef, de Jon Favreau</h4>
-      <p>Un feelgood movie sur la cuisine, souvent boudé, que je repasse dès que j'ai besoin de croire que tout peut bien se terminer.</p>
-    </div>
-    <div class="fiche">
-      <div class="fiche-tag">▸ LE PLUS INCOMPRIS</div>
-      <h4>Starship Troopers, de Paul Verhoeven</h4>
-      <p>Le grand public y voit un film d'action bourrin sur des insectes géants. C'est surtout une satire féroce du militarisme et de la propagande, filmée avec un sérieux qui trompe encore aujourd'hui.</p>
+      <div class="fiche-poster"><img src="images/starship-troopers-poster.jpg" alt="Starship Troopers, de Paul Verhoeven"></div>
+      <div class="fiche-body">
+        <div class="fiche-tag">▸ LE PLUS INCOMPRIS</div>
+        <h4>Starship Troopers</h4>
+        <p>Le grand public y voit un film d'action bourrin sur des insectes géants. C'est surtout une satire féroce du militarisme, filmée avec un sérieux qui trompe encore aujourd'hui.</p>
+      </div>
     </div>
   </div>
 
-  <div class="apropos-cta">
+  <div class="apropos-cta reveal">
     <a href="index.html#contact">
       Discuter cinéma avec moi
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -348,6 +373,13 @@ function onScroll() {
 
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
+
+// Apparition progressive du contenu des coulisses
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+revealEls.forEach(el => revealObserver.observe(el));
 </script>
 </body>
 </html>
