@@ -16,14 +16,14 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
 <style>
-  :root { --work-light: #E8B923; }
+  :root { --work-light: #9FB4C4; }
   body { background: var(--black); }
 
   .tear-wrapper { position: relative; height: 260vh; }
   .tear-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
   .poster-layer {
-    position: absolute; inset: 0;
+    position: absolute; inset: 0; z-index: 2;
     background: linear-gradient(160deg, #1a0505 0%, #0a0a0a 55%, #050505 100%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
@@ -57,15 +57,16 @@
   @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 
   .backstage-layer {
-    position: absolute; inset: 0;
+    position: absolute; inset: 0; z-index: 1;
     background:
-      repeating-linear-gradient(45deg, rgba(232,185,35,.025) 0, rgba(232,185,35,.025) 2px, transparent 2px, transparent 14px),
+      repeating-linear-gradient(45deg, rgba(159,180,196,.025) 0, rgba(159,180,196,.025) 2px, transparent 2px, transparent 14px),
       var(--dark2);
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: 60px;
   }
   .backstage-glow {
     position: absolute; width: 60vw; height: 60vw; max-width: 700px; max-height: 700px;
-    background: radial-gradient(circle, rgba(232,185,35,.10), transparent 70%);
+    background: radial-gradient(circle, rgba(159,180,196,.10), transparent 70%);
     pointer-events: none;
   }
   .backstage-tag {
@@ -154,6 +155,15 @@
     padding: 14px 30px; border-radius: 6px; transition: background .2s;
   }
   .apropos-cta a:hover { background: var(--red-dark); }
+  .apropos-mail {
+    margin-top: 22px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12.5px;
+    letter-spacing: .5px;
+    color: rgba(255,255,255,.5);
+  }
+  .apropos-mail a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
+  .apropos-mail a:hover { color: var(--red); }
 
   @media (prefers-reduced-motion: reduce) {
     .poster-layer { transition: none !important; }
@@ -269,9 +279,9 @@
       <p>Un feelgood movie sur la cuisine, souvent boudé, que je repasse dès que j'ai besoin de croire que tout peut bien se terminer.</p>
     </div>
     <div class="fiche">
-      <div class="fiche-tag">▸ LE FILM QUE JE DÉTESTE</div>
-      <h4>Aucun.</h4>
-      <p>Je préfère chercher ce qui fonctionne plutôt que m'acharner sur ce qui rate. Même les navets ont souvent quelque chose à offrir.</p>
+      <div class="fiche-tag">▸ LE PLUS INCOMPRIS</div>
+      <h4>Starship Troopers, de Paul Verhoeven</h4>
+      <p>Le grand public y voit un film d'action bourrin sur des insectes géants. C'est surtout une satire féroce du militarisme et de la propagande, filmée avec un sérieux qui trompe encore aujourd'hui.</p>
     </div>
   </div>
 
@@ -280,6 +290,7 @@
       Discuter cinéma avec moi
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
     </a>
+    <p class="apropos-mail">Ou directement par mail : <a href="mailto:jeremy.mahieu@outlook.be">jeremy.mahieu@outlook.be</a></p>
   </div>
 </div>
 
