@@ -59,77 +59,81 @@
   .backstage-layer {
     position: absolute; inset: 0; z-index: 1;
     background:
-      repeating-linear-gradient(45deg, rgba(159,180,196,.025) 0, rgba(159,180,196,.025) 2px, transparent 2px, transparent 14px),
+      repeating-linear-gradient(45deg, rgba(159,180,196,.02) 0, rgba(159,180,196,.02) 2px, transparent 2px, transparent 14px),
       var(--dark2);
     display: flex; align-items: center; justify-content: center;
     padding: 0 40px;
   }
-  .backstage-glow {
-    position: absolute; width: 60vw; height: 60vw; max-width: 700px; max-height: 700px;
-    background: radial-gradient(circle, rgba(159,180,196,.10), transparent 70%);
-    pointer-events: none;
+
+  .reveal-block {
+    position: relative; z-index: 2;
+    max-width: 980px; margin: 0 auto;
+    display: grid; grid-template-columns: 300px 1fr; gap: 56px; align-items: center;
+  }
+  .reveal-photo-wrap {
+    position: relative;
+    aspect-ratio: 3/4;
+  }
+  .reveal-photo-glow {
+    position: absolute; inset: -30px;
+    background: radial-gradient(circle at 50% 40%, rgba(232,37,58,.35), transparent 70%);
+    filter: blur(4px);
+    z-index: 0;
+  }
+  .reveal-photo {
+    position: relative; z-index: 1;
+    width: 100%; height: 100%; border-radius: 10px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 20px 50px rgba(0,0,0,.5);
+  }
+  .reveal-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .reveal-photo::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(200deg, rgba(232,37,58,.18), transparent 55%);
+    mix-blend-mode: overlay;
+  }
+  .reveal-clap {
+    position: absolute; bottom: -14px; right: -14px; z-index: 2;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--red); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px rgba(232,37,58,.4);
+  }
+  .reveal-clap svg { width: 18px; height: 18px; stroke: var(--white); }
+
+  .reveal-lead {
+    font-family: 'Montserrat', sans-serif; font-size: clamp(14.5px, 1.6vw, 16px);
+    line-height: 1.8; color: rgba(255,255,255,.75);
+  }
+  .reveal-lead strong { color: var(--white); }
+  .reveal-lead p + p { margin-top: 16px; }
+
+  .reveal-contact {
+    margin-top: 24px;
+    font-family: 'Montserrat', sans-serif; font-size: 13.5px; color: rgba(255,255,255,.55);
+  }
+  .reveal-contact a {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 6px;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; font-size: 16px;
+    color: var(--white); text-decoration: none;
+  }
+  .reveal-contact a svg { width: 14px; height: 14px; stroke: var(--red); transition: transform .2s; }
+  .reveal-contact a:hover { color: var(--red); }
+  .reveal-contact a:hover svg { transform: translateX(4px); }
+
+  .reveal-signature {
+    margin-top: 28px; display: flex; align-items: center; gap: 12px;
+  }
+  .reveal-signature .bar { width: 3px; height: 18px; background: var(--red); }
+  .reveal-signature span {
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 1.5px; font-size: 14px; color: var(--white);
   }
 
-  .backstage-content { position: relative; background: var(--dark2); padding: 90px 40px 20px; }
-  .backstage-content::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(to right, transparent, var(--work-light), transparent);
-    opacity: .4;
+  @media (max-width: 720px) {
+    .reveal-block { grid-template-columns: 1fr; text-align: center; gap: 30px; }
+    .reveal-photo-wrap { max-width: 200px; margin: 0 auto; }
+    .reveal-signature { justify-content: center; }
   }
-
-  .edito-line {
-    max-width: 760px; margin: 60px auto 60px; text-align: center;
-    font-family: 'Montserrat', sans-serif; font-size: 14.5px; line-height: 1.85;
-    color: rgba(255,255,255,.6);
-  }
-  .edito-line strong { color: var(--white); }
-
-  .fiches-header { text-align: center; margin-bottom: 50px; }
-  .fiches-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--white); }
-  .fiches-header p {
-    font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px;
-    color: rgba(255,255,255,.5); margin-top: 8px;
-  }
-  .fiches-grid {
-    max-width: 1050px; margin: 0 auto; display: grid;
-    grid-template-columns: repeat(3, 1fr); gap: 34px; padding-bottom: 90px;
-  }
-  .fiche {
-    position: relative; background: #151515; border: 1px solid #2a2a2a;
-    overflow: visible; margin-top: 16px;
-    transition: transform .25s, border-color .25s;
-  }
-  .fiche:hover { transform: translateY(-5px); border-color: var(--red); }
-  .fiche::before {
-    content: ''; position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
-    width: 46px; height: 18px;
-    background: rgba(159,180,196,.55);
-    border: 1px solid rgba(159,180,196,.75);
-    box-shadow: 0 2px 6px rgba(0,0,0,.35);
-    z-index: 3;
-  }
-  .fiche-inner { overflow: hidden; border-radius: 2px; }
-  .fiche-poster { width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #0a0a0a; }
-  .fiche-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .fiche-photo { width: 100%; aspect-ratio: 3/4; overflow: hidden; background: #0a0a0a; }
-  .fiche-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .fiche-body { padding: 20px 22px 24px; }
-  .fiche-tag { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--red); margin-bottom: 10px; }
-  .fiche h4 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--white); margin-bottom: 10px; line-height: 1.4; }
-  .fiche p { font-family: 'Montserrat', sans-serif; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,.6); }
-  .fiche .slate-signature {
-    margin-top: 12px; font-family: 'Montserrat', sans-serif; font-size: 11px;
-    letter-spacing: 1px; color: var(--grey);
-  }
-  @media (max-width: 800px) { .fiches-grid { grid-template-columns: 1fr; max-width: 420px; } }
-
-  .apropos-cta { text-align: center; padding: 0 40px 90px; }
-  .apropos-mail {
-    font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; font-size: 15px;
-    color: rgba(255,255,255,.55);
-  }
-  .apropos-mail a { color: var(--white); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--red); }
-  .apropos-mail a:hover { color: var(--red); }
 
   @media (prefers-reduced-motion: reduce) {
     .poster-layer { transition: none !important; }
@@ -182,7 +186,32 @@
 <div class="tear-wrapper" id="tearWrapper">
   <div class="tear-sticky">
     <div class="backstage-layer">
-      <div class="backstage-glow"></div>
+      <div class="reveal-block">
+        <div class="reveal-photo-wrap">
+          <div class="reveal-photo-glow"></div>
+          <div class="reveal-photo">
+            <img src="images/jeremy-portrait.jpg" alt="Jeremy, fondateur de L'Entracte">
+          </div>
+          <div class="reveal-clap">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+          </div>
+        </div>
+        <div class="reveal-lead">
+          <p><strong>Sur L'Entracte</strong>, vous trouverez des blockbusters comme des films d'auteur, de l'horreur qui saigne et qui dégouline, de l'animation qu'on prend trop rarement au sérieux, des rétrospectives thématiques et les coulisses de fabrication qu'on ne raconte jamais assez.</p>
+          <p>On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une étiquette indélébile. <strong>On garde toujours un œil sur l'envers du décor</strong> : les effets pratiques, les tournages presque impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Vous ne retrouverez ni cynisme gratuit, ni démolition gratuite, mais juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
+          <div class="reveal-contact">
+            Tu veux nous parler de ton film préféré ou nous contacter ?<br>
+            <a href="mailto:jeremy.mahieu@outlook.be">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              jeremy.mahieu@outlook.be
+            </a>
+          </div>
+          <div class="reveal-signature">
+            <div class="bar"></div>
+            <span>JEREMY, FONDATEUR DE L'ENTRACTE</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="poster-layer" id="posterLayer">
       <div class="poster-billing">
@@ -193,53 +222,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="backstage-content">
-
-  <p class="edito-line">Ici, on couvre les <strong>blockbusters</strong> comme les <strong>films d'auteur</strong>, l'horreur qui saigne, l'animation qu'on prend trop rarement au sérieux, les rétrospectives thématiques et les coulisses de fabrication qu'on ne raconte jamais assez. On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une note froide, et on garde toujours un œil sur l'envers du décor : les effets pratiques, les tournages impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Pas de cynisme gratuit, pas de démolition gratuite non plus, juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
-
-  <div class="fiches-header">
-    <h3>FICHES TECHNIQUES</h3>
-    <p>Épinglées au mur du bureau, pas vraiment destinées à être vues.</p>
-  </div>
-  <div class="fiches-grid">
-    <div class="fiche">
-      <div class="fiche-inner">
-        <div class="fiche-photo"><img src="images/jeremy-portrait.jpg" alt="Jeremy, fondateur de L'Entracte"></div>
-      </div>
-      <div class="fiche-body">
-        <div class="fiche-tag">▸ POURQUOI</div>
-        <p>Difficile de faire plus cliché que <strong>Jurassic Park</strong> comme porte d'entrée monumentale dans ma cinéphilie et mon amour pour le cinéma. Le reste aussi sonne cliché : un poster de <strong>Pulp Fiction</strong> au-dessus de mon lit et un attrait pour les films d'horreur, ceux qui dégoulinent, qui sentent le silicone et le travail bien fait. J'ai toujours aimé l'envers du décor.</p>
-        <p style="margin-top:10px;">Savoir que pour <strong>L'Étrange Noël de Mr Jack</strong>, il a fallu 3 ans pour bouger image par image les figurines articulées imaginées par Tim Burton et Henry Selick. Ou encore que Rob Bottin, créateur des effets spéciaux complètement déments de <strong>The Thing</strong>, n'avait à peine que 22 ans et n'avait vécu qu'un an dans le studio pour concevoir les effets de créatures. Mais ce que j'aime le plus, c'est de transmettre mon savoir, le partager à ceux qui veulent écouter et en l'occurrence… le lire. Voilà pourquoi j'ai créé L'Entracte. Parce que parfois, la meilleure chose d'un film, c'est de savoir ce qui se cache derrière le rideau.</p>
-        <div class="slate-signature">— Jeremy, fondateur de L'Entracte</div>
-      </div>
-    </div>
-    <div class="fiche">
-      <div class="fiche-inner">
-        <div class="fiche-poster"><img src="images/chef-poster.jpg" alt="Chef, de Jon Favreau"></div>
-      </div>
-      <div class="fiche-body">
-        <div class="fiche-tag">▸ PLAISIR COUPABLE</div>
-        <h4>Chef, de Jon Favreau</h4>
-        <p>Un feelgood movie sur la cuisine, souvent boudé, que je repasse dès que j'ai besoin de croire que tout peut bien se terminer.</p>
-      </div>
-    </div>
-    <div class="fiche">
-      <div class="fiche-inner">
-        <div class="fiche-poster"><img src="images/starship-troopers-poster.jpg" alt="Starship Troopers, de Paul Verhoeven"></div>
-      </div>
-      <div class="fiche-body">
-        <div class="fiche-tag">▸ LE PLUS INCOMPRIS</div>
-        <h4>Starship Troopers</h4>
-        <p>Le grand public y voit un film d'action bourrin sur des insectes géants. C'est surtout une satire féroce du militarisme, filmée avec un sérieux qui trompe encore aujourd'hui.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="apropos-cta">
-    <p class="apropos-mail">Envie d'en parler ? <a href="mailto:jeremy.mahieu@outlook.be">jeremy.mahieu@outlook.be</a></p>
   </div>
 </div>
 
