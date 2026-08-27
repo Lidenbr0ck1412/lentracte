@@ -256,6 +256,44 @@
     color: rgba(255,255,255,.5);
   }
 
+  /* ── VERSION PC : mur en éventail ── */
+  .favoris-wall {
+    position: relative;
+    max-width: 1000px; margin: 0 auto;
+    display: flex; justify-content: center; align-items: flex-end;
+    gap: 0;
+  }
+  .favoris-poster {
+    position: relative;
+    width: 240px; aspect-ratio: 2/3;
+    margin: 0 -24px;
+    border-radius: 4px; overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,.6);
+    border: 2px solid rgba(255,255,255,.08);
+    transition: transform .4s ease, margin .4s ease, border-color .3s ease, z-index 0s;
+    cursor: default;
+  }
+  .favoris-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .favoris-poster:nth-child(1) { transform: rotate(-8deg) translateY(10px); z-index: 1; }
+  .favoris-poster:nth-child(2) { transform: rotate(-3deg) translateY(-8px); z-index: 2; }
+  .favoris-poster:nth-child(3) { transform: rotate(3deg) translateY(-8px); z-index: 2; }
+  .favoris-poster:nth-child(4) { transform: rotate(8deg) translateY(10px); z-index: 1; }
+  .favoris-wall:hover .favoris-poster { margin: 0 4px; }
+  .favoris-poster:hover {
+    transform: rotate(0deg) translateY(-24px) scale(1.06) !important;
+    z-index: 10 !important;
+    border-color: var(--red);
+    box-shadow: 0 30px 60px rgba(0,0,0,.7);
+  }
+  .favoris-poster .favoris-caption {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    padding: 14px 12px 10px;
+    background: linear-gradient(to top, rgba(0,0,0,.92), transparent);
+  }
+  .favoris-poster .favoris-caption .title { font-size: 14px; }
+  .favoris-poster .favoris-caption .dir { font-size: 10.5px; }
+
+  /* ── VERSION MOBILE : carrousel avec flèches ── */
   .favoris-carousel {
     position: relative;
     max-width: 340px; margin: 0 auto;
@@ -272,7 +310,7 @@
     width: 100%; height: 100%; object-fit: cover; display: block;
     transition: opacity .3s ease;
   }
-  .favoris-caption {
+  .favoris-card .favoris-caption {
     position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
     padding: 16px 14px 12px;
     background: linear-gradient(to top, rgba(0,0,0,.92), transparent);
@@ -303,6 +341,13 @@
   }
   .favoris-dots span.active { background: var(--red); }
 
+  /* ── BASCULE RESPONSIVE : wall sur PC, carrousel sur mobile ── */
+  .favoris-carousel, .favoris-dots { display: none; }
+  @media (max-width: 780px) {
+    .favoris-wall { display: none; }
+    .favoris-carousel { display: flex; }
+    .favoris-dots { display: flex; }
+  }
   @media (max-width: 480px) {
     .favoris-carousel { gap: 10px; max-width: 280px; }
     .favoris-card { width: 220px; }
@@ -399,6 +444,36 @@
   <div class="favoris-header">
     <div class="favoris-label">"Je ne connaîtrai pas la peur, car la peur tue l'esprit. La peur est la petite mort qui conduit à l'oblitération totale."</div>
     <h2 class="favoris-title">Mes quatre favoris du moment</h2>
+  </div>
+  <div class="favoris-wall">
+    <div class="favoris-poster">
+      <img src="images/lost-highway.jpg" alt="Lost Highway">
+      <div class="favoris-caption">
+        <div class="title">Lost Highway</div>
+        <div class="dir">David Lynch, 1997</div>
+      </div>
+    </div>
+    <div class="favoris-poster">
+      <img src="images/donnie-darko.jpg" alt="Donnie Darko">
+      <div class="favoris-caption">
+        <div class="title">Donnie Darko</div>
+        <div class="dir">Richard Kelly, 2001</div>
+      </div>
+    </div>
+    <div class="favoris-poster">
+      <img src="images/perfect-days.jpg" alt="Perfect Days">
+      <div class="favoris-caption">
+        <div class="title">Perfect Days</div>
+        <div class="dir">Wim Wenders, 2023</div>
+      </div>
+    </div>
+    <div class="favoris-poster">
+      <img src="images/dune.jpg" alt="Dune">
+      <div class="favoris-caption">
+        <div class="title">Dune</div>
+        <div class="dir">Denis Villeneuve, 2021</div>
+      </div>
+    </div>
   </div>
   <div class="favoris-carousel">
     <div class="favoris-nav" id="favPrev" onclick="favShift(-1)">
