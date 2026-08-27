@@ -38,37 +38,33 @@
   }
 
   .viewfinder-corner {
-    position: absolute; width: 26px; height: 26px; z-index: 3;
-    border-color: rgba(255,255,255,.35);
+    position: absolute; width: 20px; height: 20px; z-index: 3;
+    border-color: rgba(255,255,255,.28);
     pointer-events: none;
   }
-  .viewfinder-corner.tl { top: 34px; left: 34px; border-top: 2px solid; border-left: 2px solid; }
-  .viewfinder-corner.tr { top: 34px; right: 34px; border-top: 2px solid; border-right: 2px solid; }
-  .viewfinder-corner.bl { bottom: 34px; left: 34px; border-bottom: 2px solid; border-left: 2px solid; }
-  .viewfinder-corner.br { bottom: 34px; right: 34px; border-bottom: 2px solid; border-right: 2px solid; }
-
-  .rec-indicator {
-    position: absolute; top: 44px; right: 68px; z-index: 3;
-    display: flex; align-items: center; gap: 7px;
-    font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 2px;
-    color: rgba(255,255,255,.5);
-    pointer-events: none;
-  }
-  .rec-indicator .dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--red);
-    animation: recBlink 1.6s ease-in-out infinite;
-  }
-  @keyframes recBlink { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+  .viewfinder-corner.tl { top: 34px; left: 34px; border-top: 1px solid; border-left: 1px solid; }
+  .viewfinder-corner.tr { top: 34px; right: 34px; border-top: 1px solid; border-right: 1px solid; }
+  .viewfinder-corner.bl { bottom: 34px; left: 34px; border-bottom: 1px solid; border-left: 1px solid; }
+  .viewfinder-corner.br { bottom: 34px; right: 34px; border-bottom: 1px solid; border-right: 1px solid; }
 
   .poster-layer {
     position: absolute; inset: 0; z-index: 2;
-    background:
-      linear-gradient(180deg, rgba(10,10,10,.35) 0%, rgba(10,10,10,.25) 45%, rgba(10,10,10,.9) 100%),
-      linear-gradient(160deg, rgba(232,37,58,.5) 0%, rgba(10,10,10,.35) 60%),
-      url('images/bg_propos.jpg') center 25%/cover no-repeat;
+    background: linear-gradient(160deg, #E8253A 0%, #6b0f1a 45%, #0a0a0a 100%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     will-change: clip-path;
+    overflow: hidden;
+  }
+  .poster-sweep {
+    position: absolute; top: -50%; left: -20%;
+    width: 60%; height: 200%;
+    background: linear-gradient(75deg, transparent 40%, rgba(255,255,255,.06) 50%, transparent 60%);
+    animation: sweep 7s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes sweep {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(280%); }
   }
   .poster-layer::before {
     content: '';
@@ -159,11 +155,31 @@
   .reveal-clap svg { width: 18px; height: 18px; stroke: var(--white); }
 
   .reveal-lead {
+    position: relative;
     font-family: 'Montserrat', sans-serif; font-size: clamp(14.5px, 1.6vw, 16px);
     line-height: 1.8; color: rgba(255,255,255,.75);
   }
   .reveal-lead strong { color: var(--white); }
   .reveal-lead p + p { margin-top: 16px; }
+
+  .eye-medallion {
+    float: right;
+    width: 64px; height: 64px; border-radius: 50%;
+    margin: 2px 0 8px 16px;
+    background: url('images/bg_propos.jpg') center 30%/220% no-repeat;
+    border: 2px solid var(--red);
+    box-shadow: 0 0 0 4px rgba(10,10,10,1), 0 4px 16px rgba(232,37,58,.4);
+    position: relative;
+  }
+  .eye-medallion::after {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    border: 1px dashed rgba(232,37,58,.4);
+    animation: medallionSpin 20s linear infinite;
+  }
+  @keyframes medallionSpin { to { transform: rotate(360deg); } }
+  @media (max-width: 720px) { .eye-medallion { float: none; margin: 0 auto 10px; display: block; } }
 
   .reveal-contact {
     margin-top: 24px;
@@ -256,7 +272,7 @@
         </div>
         <div class="reveal-lead">
           <p><strong>Sur L'Entracte</strong>, vous trouverez des blockbusters comme des films d'auteur, de l'horreur qui saigne et qui dégouline, de l'animation qu'on prend trop rarement au sérieux, des rétrospectives thématiques et les coulisses de fabrication qu'on ne raconte jamais assez.</p>
-          <p>On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une étiquette indélébile. <strong>On garde toujours un œil sur l'envers du décor</strong> : les effets pratiques, les tournages presque impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Vous ne retrouverez ni cynisme gratuit, ni démolition gratuite, mais juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
+          <p><span class="eye-medallion"></span>On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une étiquette indélébile. <strong>On garde toujours un œil sur l'envers du décor</strong> : les effets pratiques, les tournages presque impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Vous ne retrouverez ni cynisme gratuit, ni démolition gratuite, mais juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
           <div class="reveal-contact">
             Tu veux nous parler de ton film préféré ou nous contacter ?<br>
             <a href="mailto:jeremy.mahieu@outlook.be">
@@ -272,6 +288,7 @@
       </div>
     </div>
     <div class="poster-layer" id="posterLayer">
+      <div class="poster-sweep"></div>
       <div class="film-perf top">
         <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
@@ -282,7 +299,6 @@
       <div class="viewfinder-corner tr"></div>
       <div class="viewfinder-corner bl"></div>
       <div class="viewfinder-corner br"></div>
-      <div class="rec-indicator"><span class="dot"></span>REC</div>
       <div class="poster-billing">
         <h1 class="poster-title">À propos</h1>
       </div>
