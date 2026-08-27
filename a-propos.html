@@ -256,65 +256,57 @@
     color: rgba(255,255,255,.5);
   }
 
-  .favoris-wall {
+  .favoris-carousel {
     position: relative;
-    max-width: 1000px; margin: 0 auto;
-    display: flex; justify-content: center; align-items: flex-end;
-    gap: 0;
+    max-width: 340px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center; gap: 20px;
   }
-  .favoris-poster {
+  .favoris-card {
     position: relative;
-    width: 240px; aspect-ratio: 2/3;
-    margin: 0 -24px;
-    border-radius: 4px; overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,.6);
+    width: 320px; aspect-ratio: 2/3;
+    border-radius: 6px; overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,.6);
     border: 2px solid rgba(255,255,255,.08);
-    transition: transform .4s ease, margin .4s ease, border-color .3s ease, z-index 0s;
-    cursor: default;
   }
-  .favoris-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .favoris-poster:nth-child(1) { transform: rotate(-8deg) translateY(10px); z-index: 1; }
-  .favoris-poster:nth-child(2) { transform: rotate(-3deg) translateY(-8px); z-index: 2; }
-  .favoris-poster:nth-child(3) { transform: rotate(3deg) translateY(-8px); z-index: 2; }
-  .favoris-poster:nth-child(4) { transform: rotate(8deg) translateY(10px); z-index: 1; }
-  .favoris-wall:hover .favoris-poster { margin: 0 4px; }
-  .favoris-poster:hover {
-    transform: rotate(0deg) translateY(-24px) scale(1.06) !important;
-    z-index: 10 !important;
-    border-color: var(--red);
-    box-shadow: 0 30px 60px rgba(0,0,0,.7);
+  .favoris-card img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: opacity .3s ease;
   }
   .favoris-caption {
     position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
-    padding: 14px 12px 10px;
+    padding: 16px 14px 12px;
     background: linear-gradient(to top, rgba(0,0,0,.92), transparent);
-    opacity: 1; transform: translateY(0);
-    transition: opacity .3s ease, transform .3s ease;
-  }
-  .favoris-poster:hover .favoris-caption { opacity: 1; transform: translateY(0); }
-  .favoris-caption .badge {
-    display: inline-block;
-    font-family: 'Bebas Neue', sans-serif; font-size: 9.5px; letter-spacing: 2px;
-    color: var(--red); border: 1px solid var(--red); border-radius: 3px;
-    padding: 1px 6px; margin-bottom: 5px;
-  }
-  .favoris-caption .num {
-    font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--red);
   }
   .favoris-caption .title {
-    font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: var(--white);
-    margin-top: 2px;
+    font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--white);
+    margin-top: 3px;
   }
   .favoris-caption .dir {
-    font-family: 'Montserrat', sans-serif; font-size: 10.5px; color: rgba(255,255,255,.5);
-    margin-top: 1px;
+    font-family: 'Montserrat', sans-serif; font-size: 11px; color: rgba(255,255,255,.5);
+    margin-top: 2px;
   }
+  .favoris-nav {
+    flex-shrink: 0;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .2s, border-color .2s;
+  }
+  .favoris-nav:hover { background: var(--red); border-color: var(--red); }
+  .favoris-nav svg { width: 18px; height: 18px; stroke: var(--white); }
+  .favoris-dots {
+    display: flex; justify-content: center; gap: 8px; margin-top: 24px;
+  }
+  .favoris-dots span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,.2); cursor: pointer; transition: background .2s;
+  }
+  .favoris-dots span.active { background: var(--red); }
 
-  @media (max-width: 800px) {
-    .favoris-wall { flex-wrap: wrap; gap: 24px 0; }
-    .favoris-poster { width: 46%; margin: 0; }
-    .favoris-poster:nth-child(n) { transform: rotate(0deg) translateY(0); }
-    .favoris-wall:hover .favoris-poster { margin: 0; }
+  @media (max-width: 480px) {
+    .favoris-carousel { gap: 10px; max-width: 280px; }
+    .favoris-card { width: 220px; }
+    .favoris-nav { width: 34px; height: 34px; }
   }
 </style>
 </head>
@@ -405,46 +397,29 @@
 
 <section class="favoris-section">
   <div class="favoris-header">
-    <div class="favoris-label">"Je ne connaîtrai pas la peur, car la peur tue l’esprit. La peur est la petite mort qui conduit à l’oblitération totale."</div>
+    <div class="favoris-label">"Je ne connaîtrai pas la peur, car la peur tue l'esprit. La peur est la petite mort qui conduit à l'oblitération totale."</div>
     <h2 class="favoris-title">Mes quatre favoris du moment</h2>
   </div>
-  <div class="favoris-wall">
-    <div class="favoris-poster">
-      <img src="images/lost-highway.jpg" alt="Lost Highway">
+  <div class="favoris-carousel">
+    <div class="favoris-nav" id="favPrev" onclick="favShift(-1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </div>
+    <div class="favoris-card">
+      <img id="favImg" src="images/lost-highway.jpg" alt="Lost Highway">
       <div class="favoris-caption">
-        <span class="badge">FAVORI</span><br>
-        <div class="num">01</div>
-        <div class="title">Lost Highway</div>
-        <div class="dir">David Lynch, 1997</div>
+        <div class="title" id="favTitle">Lost Highway</div>
+        <div class="dir" id="favDir">David Lynch, 1997</div>
       </div>
     </div>
-    <div class="favoris-poster">
-      <img src="images/donnie-darko.jpg" alt="Donnie Darko">
-      <div class="favoris-caption">
-        <span class="badge">FAVORI</span><br>
-        <div class="num">02</div>
-        <div class="title">Donnie Darko</div>
-        <div class="dir">Richard Kelly, 2001</div>
-      </div>
+    <div class="favoris-nav" id="favNext" onclick="favShift(1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
     </div>
-    <div class="favoris-poster">
-      <img src="images/perfect-days.jpg" alt="Perfect Days">
-      <div class="favoris-caption">
-        <span class="badge">FAVORI</span><br>
-        <div class="num">03</div>
-        <div class="title">Perfect Days</div>
-        <div class="dir">Wim Wenders, 2023</div>
-      </div>
-    </div>
-    <div class="favoris-poster">
-      <img src="images/dune.jpg" alt="Dune">
-      <div class="favoris-caption">
-        <span class="badge">FAVORI</span><br>
-        <div class="num">04</div>
-        <div class="title">Dune</div>
-        <div class="dir">Denis Villeneuve, 2021</div>
-      </div>
-    </div>
+  </div>
+  <div class="favoris-dots" id="favDots">
+    <span class="active" onclick="favGoTo(0)"></span>
+    <span onclick="favGoTo(1)"></span>
+    <span onclick="favGoTo(2)"></span>
+    <span onclick="favGoTo(3)"></span>
   </div>
 </section>
 
@@ -501,6 +476,42 @@ function onScroll() {
 
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
+
+// ═══ CARROUSEL QUATRE FAVORIS ═══
+const favFilms = [
+  { img: 'images/lost-highway.jpg', num: '01', title: 'Lost Highway', dir: 'David Lynch, 1997' },
+  { img: 'images/donnie-darko.jpg', num: '02', title: 'Donnie Darko', dir: 'Richard Kelly, 2001' },
+  { img: 'images/perfect-days.jpg', num: '03', title: 'Perfect Days', dir: 'Wim Wenders, 2023' },
+  { img: 'images/dune.jpg', num: '04', title: 'Dune', dir: 'Denis Villeneuve, 2021' }
+];
+let favIndex = 0;
+const favImgEl = document.getElementById('favImg');
+const favTitleEl = document.getElementById('favTitle');
+const favDirEl = document.getElementById('favDir');
+const favDots = document.querySelectorAll('#favDots span');
+
+function favRender() {
+  const f = favFilms[favIndex];
+  favImgEl.style.opacity = '0';
+  setTimeout(() => {
+    favImgEl.src = f.img;
+    favImgEl.alt = f.title;
+    favTitleEl.textContent = f.title;
+    favDirEl.textContent = f.dir;
+    favImgEl.style.opacity = '1';
+  }, 200);
+  favDots.forEach((d, i) => d.classList.toggle('active', i === favIndex));
+}
+
+function favShift(dir) {
+  favIndex = (favIndex + dir + favFilms.length) % favFilms.length;
+  favRender();
+}
+
+function favGoTo(i) {
+  favIndex = i;
+  favRender();
+}
 </script>
 </body>
 </html>
