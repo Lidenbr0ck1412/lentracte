@@ -48,7 +48,7 @@
     letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.5);
   }
   .poster-scroll-hint {
-    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
     font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 3px;
     color: rgba(255,255,255,.45); display: flex; flex-direction: column; align-items: center; gap: 8px;
     z-index: 2; opacity: 1; transition: opacity .3s;
@@ -77,82 +77,51 @@
     opacity: .4;
   }
 
-  .portrait-block {
-    position: relative; z-index: 2;
-    max-width: 820px; margin: 0 auto;
-    display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: center;
-  }
-  .portrait-photo {
-    aspect-ratio: 3/4; border-radius: 6px; overflow: hidden;
-    border: 1px solid #2a2a2a; background: #151515;
-  }
-  .portrait-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .slate-number {
-    font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 3px;
-    color: var(--work-light); margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
-  }
-  .slate-number::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.1); }
-  .slate-text {
-    font-family: 'Playfair Display', serif; font-size: clamp(13.5px, 1.4vw, 15.5px);
-    line-height: 1.7; color: rgba(255,255,255,.85);
-  }
-  .slate-text strong { color: var(--white); font-weight: 700; font-style: normal; }
-  .slate-signature {
-    margin-top: 14px; font-family: 'Montserrat', sans-serif; font-size: 11px;
-    letter-spacing: 1px; color: var(--grey);
-  }
-  @media (max-width: 720px) {
-    .portrait-block { grid-template-columns: 1fr; text-align: center; }
-    .portrait-photo { max-width: 160px; margin: 0 auto 16px; }
-  }
-
   .edito-line {
-    max-width: 720px; margin: 0 auto 70px; text-align: center;
-    font-family: 'Montserrat', sans-serif; font-size: 14px; line-height: 1.8;
-    color: rgba(255,255,255,.55);
+    max-width: 760px; margin: 60px auto 60px; text-align: center;
+    font-family: 'Montserrat', sans-serif; font-size: 14.5px; line-height: 1.85;
+    color: rgba(255,255,255,.6);
   }
   .edito-line strong { color: var(--white); }
 
-  .slate-block {
-    max-width: 680px; margin: 0 auto 60px;
-    font-family: 'Playfair Display', serif; font-size: clamp(15px, 1.7vw, 17px);
-    line-height: 1.85; color: rgba(255,255,255,.85);
-  }
-  .slate-block .slate-signature {
-    margin-top: 18px; font-family: 'Montserrat', sans-serif; font-size: 12px;
-    letter-spacing: 1px; color: var(--grey);
-  }
-
-  .fiches-header { text-align: center; margin-bottom: 40px; }
+  .fiches-header { text-align: center; margin-bottom: 50px; }
   .fiches-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--white); }
   .fiches-header p {
     font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px;
     color: rgba(255,255,255,.5); margin-top: 8px;
   }
   .fiches-grid {
-    max-width: 760px; margin: 0 auto; display: grid;
-    grid-template-columns: repeat(2, 1fr); gap: 30px; padding-bottom: 90px;
+    max-width: 1050px; margin: 0 auto; display: grid;
+    grid-template-columns: repeat(3, 1fr); gap: 34px; padding-bottom: 90px;
   }
   .fiche {
     position: relative; background: #151515; border: 1px solid #2a2a2a;
-    overflow: hidden; transform: rotate(var(--tilt, 0deg));
-    transition: transform .3s, border-color .3s;
+    overflow: visible; margin-top: 16px;
+    transition: transform .25s, border-color .25s;
   }
-  .fiche:nth-child(1) { --tilt: -1deg; }
-  .fiche:nth-child(2) { --tilt: 0.8deg; }
-  .fiche:hover { transform: rotate(0deg) translateY(-4px); border-color: var(--red); }
+  .fiche:hover { transform: translateY(-5px); border-color: var(--red); }
   .fiche::before {
-    content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%) rotate(-3deg);
-    width: 36px; height: 14px; background: rgba(159,180,196,.35); border: 1px solid rgba(159,180,196,.5);
-    z-index: 2;
+    content: ''; position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+    width: 46px; height: 18px;
+    background: rgba(159,180,196,.55);
+    border: 1px solid rgba(159,180,196,.75);
+    box-shadow: 0 2px 6px rgba(0,0,0,.35);
+    z-index: 3;
   }
+  .fiche-inner { overflow: hidden; border-radius: 2px; }
   .fiche-poster { width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #0a0a0a; }
   .fiche-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .fiche-photo { width: 100%; aspect-ratio: 3/4; overflow: hidden; background: #0a0a0a; }
+  .fiche-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .fiche-body { padding: 20px 22px 24px; }
   .fiche-tag { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--red); margin-bottom: 10px; }
   .fiche h4 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--white); margin-bottom: 10px; line-height: 1.4; }
   .fiche p { font-family: 'Montserrat', sans-serif; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,.6); }
-  @media (max-width: 640px) { .fiches-grid { grid-template-columns: 1fr; } }
+  .fiche .slate-signature {
+    margin-top: 12px; font-family: 'Montserrat', sans-serif; font-size: 11px;
+    letter-spacing: 1px; color: var(--grey);
+  }
+  @media (max-width: 800px) { .fiches-grid { grid-template-columns: 1fr; max-width: 420px; } }
 
   .apropos-cta { text-align: center; padding: 0 40px 90px; }
   .apropos-mail {
@@ -214,27 +183,13 @@
   <div class="tear-sticky">
     <div class="backstage-layer">
       <div class="backstage-glow"></div>
-      <div class="portrait-block">
-        <div class="portrait-photo">
-          <img src="images/jeremy-portrait.jpg" alt="Jeremy, fondateur de L'Entracte">
-        </div>
-        <div>
-          <div class="slate-number">SCÈNE 1 — POURQUOI</div>
-          <p class="slate-text">
-            Je ne vais pas mentir, c'est <strong>Jurassic Park</strong> qui a tout déclenché chez moi, même si je sais que c'est le cliché ultime comme réponse. J'avais l'âge parfait pour le voir au bon moment, et depuis je n'ai jamais vraiment décroché. Il y a un poster de <strong>Pulp Fiction</strong> au-dessus de mon lit depuis un paquet d'années, et oui, j'ai un faible assumé pour l'horreur bien crade.
-          </p>
-          <div class="slate-signature">— Jeremy, fondateur de L'Entracte</div>
-        </div>
-      </div>
     </div>
     <div class="poster-layer" id="posterLayer">
       <div class="poster-billing">
-        <div class="poster-eyebrow">L'ENTRACTE PRÉSENTE</div>
         <h1 class="poster-title">À propos</h1>
-        <div class="poster-credits">Un site écrit, filmé et démonté par Jeremy</div>
       </div>
       <div class="poster-scroll-hint" id="scrollHint">
-        DÉCHIREZ L'AFFICHE
+        SCROLLEZ POUR NOUS DÉCOUVRIR
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </div>
     </div>
@@ -243,17 +198,7 @@
 
 <div class="backstage-content">
 
-  <div class="slate-block">
-    <p class="slate-text">
-      Ce qui m'obsède vraiment, ce n'est pas tant les films que la façon dont ils sont faits. Apprendre qu'il a fallu trois ans à Tim Burton et son équipe pour animer image par image les figurines de <strong>L'Étrange Noël de Mr Jack</strong>, ou que Rob Bottin avait 22 ans quand il s'est enfermé un an en studio pour inventer les créatures de <strong>The Thing</strong>, ça me fascine plus que n'importe quel twist scénaristique. Lynch, Anderson, Raimi, Verhoeven : quatre types qui ne font jamais rien à moitié, et c'est probablement ce que j'admire le plus au monde.
-    </p>
-    <p class="slate-text" style="margin-top:16px;">
-      Bref, j'ai créé L'Entracte parce que j'avais besoin de partager tout ça avec quelqu'un, même si ce quelqu'un c'est un inconnu qui tombe sur cette page un mardi soir par hasard. Voilà, c'est à peu près tout.
-    </p>
-    <div class="slate-signature">— Jeremy, fondateur de L'Entracte</div>
-  </div>
-
-  <p class="edito-line">Ici, on couvre les <strong>blockbusters</strong> comme les <strong>films d'auteur</strong>, l'horreur qui saigne, l'animation qu'on prend trop rarement au sérieux, et les coulisses de fabrication qu'on ne raconte jamais assez. Sans cynisme gratuit, sans note chiffrée froide.</p>
+  <p class="edito-line">Ici, on couvre les <strong>blockbusters</strong> comme les <strong>films d'auteur</strong>, l'horreur qui saigne, l'animation qu'on prend trop rarement au sérieux, les rétrospectives thématiques et les coulisses de fabrication qu'on ne raconte jamais assez. On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une note froide, et on garde toujours un œil sur l'envers du décor : les effets pratiques, les tournages impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Pas de cynisme gratuit, pas de démolition gratuite non plus, juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
 
   <div class="fiches-header">
     <h3>FICHES TECHNIQUES</h3>
@@ -261,7 +206,20 @@
   </div>
   <div class="fiches-grid">
     <div class="fiche">
-      <div class="fiche-poster"><img src="images/chef-poster.jpg" alt="Chef, de Jon Favreau"></div>
+      <div class="fiche-inner">
+        <div class="fiche-photo"><img src="images/jeremy-portrait.jpg" alt="Jeremy, fondateur de L'Entracte"></div>
+      </div>
+      <div class="fiche-body">
+        <div class="fiche-tag">▸ POURQUOI</div>
+        <p>Difficile de faire plus cliché que <strong>Jurassic Park</strong> comme porte d'entrée monumentale dans ma cinéphilie et mon amour pour le cinéma. Le reste aussi sonne cliché : un poster de <strong>Pulp Fiction</strong> au-dessus de mon lit et un attrait pour les films d'horreur, ceux qui dégoulinent, qui sentent le silicone et le travail bien fait. J'ai toujours aimé l'envers du décor.</p>
+        <p style="margin-top:10px;">Savoir que pour <strong>L'Étrange Noël de Mr Jack</strong>, il a fallu 3 ans pour bouger image par image les figurines articulées imaginées par Tim Burton et Henry Selick. Ou encore que Rob Bottin, créateur des effets spéciaux complètement déments de <strong>The Thing</strong>, n'avait à peine que 22 ans et n'avait vécu qu'un an dans le studio pour concevoir les effets de créatures. Mais ce que j'aime le plus, c'est de transmettre mon savoir, le partager à ceux qui veulent écouter et en l'occurrence… le lire. Voilà pourquoi j'ai créé L'Entracte. Parce que parfois, la meilleure chose d'un film, c'est de savoir ce qui se cache derrière le rideau.</p>
+        <div class="slate-signature">— Jeremy, fondateur de L'Entracte</div>
+      </div>
+    </div>
+    <div class="fiche">
+      <div class="fiche-inner">
+        <div class="fiche-poster"><img src="images/chef-poster.jpg" alt="Chef, de Jon Favreau"></div>
+      </div>
       <div class="fiche-body">
         <div class="fiche-tag">▸ PLAISIR COUPABLE</div>
         <h4>Chef, de Jon Favreau</h4>
@@ -269,7 +227,9 @@
       </div>
     </div>
     <div class="fiche">
-      <div class="fiche-poster"><img src="images/starship-troopers-poster.jpg" alt="Starship Troopers, de Paul Verhoeven"></div>
+      <div class="fiche-inner">
+        <div class="fiche-poster"><img src="images/starship-troopers-poster.jpg" alt="Starship Troopers, de Paul Verhoeven"></div>
+      </div>
       <div class="fiche-body">
         <div class="fiche-tag">▸ LE PLUS INCOMPRIS</div>
         <h4>Starship Troopers</h4>
