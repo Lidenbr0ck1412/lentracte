@@ -97,12 +97,12 @@
   .backstage-layer {
     position: absolute; inset: 0; z-index: 1;
     background:
+      radial-gradient(ellipse at center, rgba(10,10,10,.82) 0%, rgba(10,10,10,.94) 55%, rgba(10,10,10,.99) 100%),
       repeating-linear-gradient(45deg, rgba(159,180,196,.02) 0, rgba(159,180,196,.02) 2px, transparent 2px, transparent 14px),
-      var(--dark2);
+      url('images/bg-propos.jpg') center 30%/cover no-repeat;
     display: flex; align-items: center; justify-content: center;
     padding: 0 40px;
   }
-
   .reveal-block {
     position: relative; z-index: 2;
     max-width: 980px; margin: 0 auto;
