@@ -91,10 +91,19 @@
   }
   .backstage-edition strong { color: var(--red); }
   @media (max-width: 640px) { .backstage-edition { display: none; } }
+
+  .backstage-vertical {
+    position: absolute; left: 44px; top: 50%; z-index: 2;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 6px; font-size: 11px;
+    color: rgba(255,255,255,.22); white-space: nowrap;
+  }
+  @media (max-width: 900px) { .backstage-vertical { display: none; } }
   .reveal-block {
     position: relative; z-index: 2;
-    max-width: 980px; margin: 0 auto;
-    display: grid; grid-template-columns: 300px 1fr; gap: 56px; align-items: center;
+    max-width: 1080px; margin: 0 auto;
+    display: grid; grid-template-columns: 320px 1fr; gap: 64px; align-items: center;
   }
   .reveal-photo-wrap {
     position: relative;
@@ -311,6 +320,7 @@
   <div class="tear-sticky">
     <div class="backstage-layer">
       <div class="backstage-edition"><strong>N°1</strong> — L'ENVERS DU DÉCOR</div>
+      <div class="backstage-vertical">L'ENTRACTE • DU GRAND ÉCRAN À VOTRE ÉCRAN</div>
       <div class="reveal-block">
         <div class="reveal-photo-wrap">
           <div class="reveal-photo-glow"></div>
