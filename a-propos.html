@@ -101,15 +101,23 @@
   }
   @media (max-width: 900px) { .backstage-vertical { display: none; } }
 
-  .ghost-numeral {
-    position: absolute; left: 4%; top: 8%; z-index: 0;
-    font-family: 'Playfair Display', serif; font-weight: 900; font-style: italic;
-    font-size: clamp(180px, 22vw, 340px); line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255,255,255,.06);
-    pointer-events: none; user-select: none;
+  .corner-still {
+    position: absolute; z-index: 0;
+    width: 380px; height: 380px;
+    overflow: hidden;
   }
-  @media (max-width: 900px) { .ghost-numeral { display: none; } }
+  .corner-still img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .corner-still.top-left {
+    top: 0; left: 0;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+  .corner-still.bottom-right {
+    bottom: 0; right: 0;
+    clip-path: polygon(100% 100%, 0 100%, 100% 0);
+  }
+  @media (max-width: 1100px) { .corner-still { width: 260px; height: 260px; } }
+  @media (max-width: 780px) { .corner-still { display: none; } }
+
   .reveal-block {
     position: relative; z-index: 2;
     max-width: 1080px; margin: 0 auto;
@@ -170,15 +178,6 @@
   }
   .reveal-lead strong { color: var(--white); }
   .reveal-lead p + p { margin-top: 16px; }
-
-  .pull-quote {
-    margin: 22px 0;
-    padding-left: 20px;
-    border-left: 3px solid var(--red);
-    font-family: 'Playfair Display', serif; font-style: italic; font-weight: 800;
-    font-size: clamp(20px, 2.2vw, 27px); line-height: 1.35;
-    color: var(--white);
-  }
 
 
   .reveal-contact {
@@ -338,9 +337,10 @@
 <div class="tear-wrapper" id="tearWrapper">
   <div class="tear-sticky">
     <div class="backstage-layer">
+      <div class="corner-still top-left"><img src="images/godzilla.jpg" alt=""></div>
+      <div class="corner-still bottom-right"><img src="images/twinpeaks.jpg" alt=""></div>
       <div class="backstage-edition"><strong>N°1</strong> — L'ENVERS DU DÉCOR</div>
       <div class="backstage-vertical">DERRIÈRE L'ÉCRAN</div>
-      <div class="ghost-numeral">01</div>
       <div class="reveal-block">
         <div class="reveal-photo-wrap">
           <div class="reveal-photo-glow"></div>
@@ -354,9 +354,7 @@
         </div>
         <div class="reveal-lead">
           <p><strong>Sur L'Entracte</strong>, vous trouverez des blockbusters comme des films d'auteur, de l'horreur qui saigne et qui dégouline, de l'animation qu'on prend trop rarement au sérieux, des rétrospectives thématiques et les coulisses de fabrication qu'on ne raconte jamais assez.</p>
-          <p>On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une étiquette indélébile.</p>
-          <p class="pull-quote">On garde toujours un œil sur l'envers du décor.</p>
-          <p>Les effets pratiques, les tournages presque impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Vous ne retrouverez ni cynisme gratuit, ni démolition gratuite, mais juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
+          <p>On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une étiquette indélébile. <strong>On garde toujours un œil sur l'envers du décor</strong> : les effets pratiques, les tournages presque impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Vous ne retrouverez ni cynisme gratuit, ni démolition gratuite, mais juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
           <div class="reveal-contact">
             Tu veux nous parler de ton film préféré ou nous contacter ?<br>
             <a href="mailto:jeremy.mahieu@outlook.be">
