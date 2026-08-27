@@ -49,22 +49,14 @@
 
   .poster-layer {
     position: absolute; inset: 0; z-index: 2;
-    background: linear-gradient(160deg, #E8253A 0%, #6b0f1a 45%, #0a0a0a 100%);
+    background:
+      linear-gradient(180deg, rgba(10,10,10,.35) 0%, rgba(10,10,10,.25) 45%, rgba(10,10,10,.9) 100%),
+      linear-gradient(160deg, rgba(232,37,58,.5) 0%, rgba(10,10,10,.35) 60%),
+      url('images/bg_propos.jpg') center 25%/cover no-repeat;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     will-change: clip-path;
     overflow: hidden;
-  }
-  .poster-sweep {
-    position: absolute; top: -50%; left: -20%;
-    width: 60%; height: 200%;
-    background: linear-gradient(75deg, transparent 40%, rgba(255,255,255,.06) 50%, transparent 60%);
-    animation: sweep 7s ease-in-out infinite;
-    pointer-events: none;
-  }
-  @keyframes sweep {
-    0%, 100% { transform: translateX(-100%); }
-    50% { transform: translateX(280%); }
   }
   .poster-layer::before {
     content: '';
@@ -79,6 +71,11 @@
   .poster-title {
     font-family: 'Playfair Display', serif; font-weight: 900; font-style: italic;
     color: var(--white); font-size: clamp(40px, 7vw, 88px); line-height: 1.05;
+  }
+  .poster-subtitle {
+    margin-top: 14px;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 6px; font-size: clamp(14px, 1.6vw, 18px);
+    color: rgba(255,255,255,.7); text-transform: uppercase;
   }
   .poster-credits {
     margin-top: 30px; font-family: 'Montserrat', sans-serif; font-size: 11px;
@@ -101,6 +98,13 @@
     display: flex; align-items: center; justify-content: center;
     padding: 0 40px;
   }
+  .backstage-edition {
+    position: absolute; top: 34px; left: 40px; z-index: 2;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 3px; font-size: 11px;
+    color: rgba(255,255,255,.35);
+  }
+  .backstage-edition strong { color: var(--red); }
+  @media (max-width: 640px) { .backstage-edition { display: none; } }
   .reveal-block {
     position: relative; z-index: 2;
     max-width: 980px; margin: 0 auto;
@@ -162,24 +166,6 @@
   .reveal-lead strong { color: var(--white); }
   .reveal-lead p + p { margin-top: 16px; }
 
-  .eye-medallion {
-    float: right;
-    width: 64px; height: 64px; border-radius: 50%;
-    margin: 2px 0 8px 16px;
-    background: url('images/bg_propos.jpg') center 30%/220% no-repeat;
-    border: 2px solid var(--red);
-    box-shadow: 0 0 0 4px rgba(10,10,10,1), 0 4px 16px rgba(232,37,58,.4);
-    position: relative;
-  }
-  .eye-medallion::after {
-    content: '';
-    position: absolute; inset: -8px;
-    border-radius: 50%;
-    border: 1px dashed rgba(232,37,58,.4);
-    animation: medallionSpin 20s linear infinite;
-  }
-  @keyframes medallionSpin { to { transform: rotate(360deg); } }
-  @media (max-width: 720px) { .eye-medallion { float: none; margin: 0 auto 10px; display: block; } }
 
   .reveal-contact {
     margin-top: 24px;
@@ -259,6 +245,10 @@
 <div class="tear-wrapper" id="tearWrapper">
   <div class="tear-sticky">
     <div class="backstage-layer">
+      <div class="backstage-edition"><strong>N°1</strong> — L'ENVERS DU DÉCOR</div>
+      <div class="film-perf top">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
       <div class="reveal-block">
         <div class="reveal-photo-wrap">
           <div class="reveal-photo-glow"></div>
@@ -272,7 +262,7 @@
         </div>
         <div class="reveal-lead">
           <p><strong>Sur L'Entracte</strong>, vous trouverez des blockbusters comme des films d'auteur, de l'horreur qui saigne et qui dégouline, de l'animation qu'on prend trop rarement au sérieux, des rétrospectives thématiques et les coulisses de fabrication qu'on ne raconte jamais assez.</p>
-          <p><span class="eye-medallion"></span>On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une étiquette indélébile. <strong>On garde toujours un œil sur l'envers du décor</strong> : les effets pratiques, les tournages presque impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Vous ne retrouverez ni cynisme gratuit, ni démolition gratuite, mais juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
+          <p>On préfère prendre le temps d'expliquer pourquoi un film fonctionne plutôt que de lui coller une étiquette indélébile. <strong>On garde toujours un œil sur l'envers du décor</strong> : les effets pratiques, les tournages presque impossibles, les obsessions de réalisateurs qui ne font jamais rien à moitié. Vous ne retrouverez ni cynisme gratuit, ni démolition gratuite, mais juste l'envie sincère de partager ce qu'on aime du cinéma, sous toutes ses formes.</p>
           <div class="reveal-contact">
             Tu veux nous parler de ton film préféré ou nous contacter ?<br>
             <a href="mailto:jeremy.mahieu@outlook.be">
@@ -288,7 +278,6 @@
       </div>
     </div>
     <div class="poster-layer" id="posterLayer">
-      <div class="poster-sweep"></div>
       <div class="film-perf top">
         <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
@@ -301,6 +290,7 @@
       <div class="viewfinder-corner br"></div>
       <div class="poster-billing">
         <h1 class="poster-title">À propos</h1>
+        <div class="poster-subtitle">de L'Entracte</div>
       </div>
       <div class="poster-scroll-hint" id="scrollHint">
         SCROLLEZ POUR NOUS DÉCOUVRIR
