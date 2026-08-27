@@ -220,7 +220,7 @@
   }
   .favoris-poster {
     position: relative;
-    width: 240px; aspect-ratio: 2/3;
+    width: 300px; aspect-ratio: 2/3;
     margin: 0 -24px;
     border-radius: 4px; overflow: hidden;
     box-shadow: 0 20px 40px rgba(0,0,0,.6);
@@ -294,9 +294,6 @@
       <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
     </svg>
   </div>
-  <button id="theme-toggle" class="search-btn" aria-label="Changer de theme" title="Theme clair/sombre" style="border:none;background:none;">
-    <svg id="theme-icon" viewBox="0 0 24 24" width="20" height="20" fill="#ffffff"></svg>
-  </button>
   <div class="burger" onclick="toggleMobileNav()" id="burger">
     <span></span><span></span><span></span>
   </div>
@@ -357,8 +354,8 @@
 
 <section class="favoris-section">
   <div class="favoris-header">
-    <div class="favoris-label">"Je ne connaîtrai pas la peur, car la peur tue l’esprit. La peur est la petite mort qui conduit à l’oblitération totale."</div>
-    <h2 class="favoris-title">Mes quatre favoris du moment</h2>
+    <div class="favoris-label">SCÈNE POST-GÉNÉRIQUE</div>
+    <h2 class="favoris-title">Mes quatre favoris</h2>
   </div>
   <div class="favoris-wall">
     <div class="favoris-poster">
@@ -400,7 +397,6 @@
   <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
 </footer>
 
-<script src="theme.js"></script>
 <script>
 function toggleMobileNav() {
   const nav = document.getElementById('mobileNav');
