@@ -188,6 +188,7 @@
     font-family: 'Montserrat', sans-serif; font-size: clamp(14.5px, 1.6vw, 16px);
     line-height: 1.8; color: rgba(255,255,255,.75);
   }
+  .reveal-lead p { text-align: justify; text-align-last: left; hyphens: auto; }
   .reveal-lead strong { color: var(--white); }
   .reveal-lead p + p { margin-top: 16px; }
 
@@ -200,10 +201,14 @@
     display: inline-flex; align-items: center; gap: 8px; margin-top: 6px;
     font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; font-size: 16px;
     color: var(--white); text-decoration: none;
+    flex-wrap: wrap; max-width: 100%; word-break: break-word;
   }
-  .reveal-contact a svg { width: 14px; height: 14px; stroke: var(--red); transition: transform .2s; }
+  .reveal-contact a svg { width: 14px; height: 14px; stroke: var(--red); transition: transform .2s; flex-shrink: 0; }
   .reveal-contact a:hover { color: var(--red); }
   .reveal-contact a:hover svg { transform: translateX(4px); }
+  @media (max-width: 480px) {
+    .reveal-contact a { font-size: 13px; letter-spacing: .5px; }
+  }
 
   .reveal-signature {
     margin-top: 28px; display: flex; align-items: center; gap: 12px;
@@ -283,10 +288,16 @@
     position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
     padding: 14px 12px 10px;
     background: linear-gradient(to top, rgba(0,0,0,.92), transparent);
-    opacity: 0; transform: translateY(8px);
+    opacity: 1; transform: translateY(0);
     transition: opacity .3s ease, transform .3s ease;
   }
   .favoris-poster:hover .favoris-caption { opacity: 1; transform: translateY(0); }
+  .favoris-caption .badge {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif; font-size: 9.5px; letter-spacing: 2px;
+    color: var(--red); border: 1px solid var(--red); border-radius: 3px;
+    padding: 1px 6px; margin-bottom: 5px;
+  }
   .favoris-caption .num {
     font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--red);
   }
@@ -401,6 +412,7 @@
     <div class="favoris-poster">
       <img src="images/lost-highway.jpg" alt="Lost Highway">
       <div class="favoris-caption">
+        <span class="badge">FAVORI</span><br>
         <div class="num">01</div>
         <div class="title">Lost Highway</div>
         <div class="dir">David Lynch, 1997</div>
@@ -409,6 +421,7 @@
     <div class="favoris-poster">
       <img src="images/donnie-darko.jpg" alt="Donnie Darko">
       <div class="favoris-caption">
+        <span class="badge">FAVORI</span><br>
         <div class="num">02</div>
         <div class="title">Donnie Darko</div>
         <div class="dir">Richard Kelly, 2001</div>
@@ -417,6 +430,7 @@
     <div class="favoris-poster">
       <img src="images/perfect-days.jpg" alt="Perfect Days">
       <div class="favoris-caption">
+        <span class="badge">FAVORI</span><br>
         <div class="num">03</div>
         <div class="title">Perfect Days</div>
         <div class="dir">Wim Wenders, 2023</div>
@@ -425,6 +439,7 @@
     <div class="favoris-poster">
       <img src="images/dune.jpg" alt="Dune">
       <div class="favoris-caption">
+        <span class="badge">FAVORI</span><br>
         <div class="num">04</div>
         <div class="title">Dune</div>
         <div class="dir">Denis Villeneuve, 2021</div>
