@@ -22,20 +22,6 @@
   .tear-wrapper { position: relative; height: 260vh; }
   .tear-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-  .film-perf {
-    position: absolute; left: 0; right: 0; z-index: 3;
-    height: 22px;
-    display: flex; align-items: center; gap: 14px;
-    padding: 0 24px;
-    pointer-events: none;
-  }
-  .film-perf.top { top: 0; }
-  .film-perf.bottom { bottom: 0; }
-  .film-perf span {
-    width: 10px; height: 10px; border-radius: 2px;
-    background: rgba(255,255,255,.18);
-    flex-shrink: 0;
-  }
 
   .viewfinder-corner {
     position: absolute; width: 20px; height: 20px; z-index: 3;
@@ -246,9 +232,6 @@
   <div class="tear-sticky">
     <div class="backstage-layer">
       <div class="backstage-edition"><strong>N°1</strong> — L'ENVERS DU DÉCOR</div>
-      <div class="film-perf top">
-        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
       <div class="reveal-block">
         <div class="reveal-photo-wrap">
           <div class="reveal-photo-glow"></div>
@@ -278,12 +261,6 @@
       </div>
     </div>
     <div class="poster-layer" id="posterLayer">
-      <div class="film-perf top">
-        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
-      <div class="film-perf bottom">
-        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
       <div class="viewfinder-corner tl"></div>
       <div class="viewfinder-corner tr"></div>
       <div class="viewfinder-corner bl"></div>
