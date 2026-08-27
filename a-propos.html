@@ -93,13 +93,23 @@
   @media (max-width: 640px) { .backstage-edition { display: none; } }
 
   .backstage-vertical {
-    position: absolute; left: 44px; top: 50%; z-index: 2;
-    transform: translateY(-50%) rotate(-90deg);
-    transform-origin: left center;
-    font-family: 'Bebas Neue', sans-serif; letter-spacing: 6px; font-size: 11px;
-    color: rgba(255,255,255,.22); white-space: nowrap;
+    position: absolute; left: 44px; top: 130px; bottom: 130px; z-index: 2;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 4px; font-size: 11px;
+    color: rgba(255,255,255,.22);
   }
   @media (max-width: 900px) { .backstage-vertical { display: none; } }
+
+  .ghost-numeral {
+    position: absolute; left: 4%; top: 8%; z-index: 0;
+    font-family: 'Playfair Display', serif; font-weight: 900; font-style: italic;
+    font-size: clamp(180px, 22vw, 340px); line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,.06);
+    pointer-events: none; user-select: none;
+  }
+  @media (max-width: 900px) { .ghost-numeral { display: none; } }
   .reveal-block {
     position: relative; z-index: 2;
     max-width: 1080px; margin: 0 auto;
@@ -320,7 +330,8 @@
   <div class="tear-sticky">
     <div class="backstage-layer">
       <div class="backstage-edition"><strong>N°1</strong> — L'ENVERS DU DÉCOR</div>
-      <div class="backstage-vertical">L'ENTRACTE • DU GRAND ÉCRAN À VOTRE ÉCRAN</div>
+      <div class="backstage-vertical">DERRIÈRE L'ÉCRAN</div>
+      <div class="ghost-numeral">01</div>
       <div class="reveal-block">
         <div class="reveal-photo-wrap">
           <div class="reveal-photo-glow"></div>
