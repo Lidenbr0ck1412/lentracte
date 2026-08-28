@@ -1089,8 +1089,15 @@ footer {
     position: relative;
     z-index: 1;
     width: 100%;
-    background: var(--black);
-    padding: 32px 24px 40px;
+    background:
+      linear-gradient(to bottom, rgba(10,10,10,.55) 0%, rgba(10,10,10,.15) 35%, rgba(10,10,10,.85) 75%, var(--black) 100%),
+      url('images/rpo.png') bottom center / 65% no-repeat,
+      var(--black);
+    padding: 32px 24px 260px;
+  }
+  .contact-right .form-group input,
+  .contact-right .form-group textarea {
+    background: rgba(42,42,42,.92);
   }
 
   .section-header h2 { font-size: 15px; }
