@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politique de confidentialité • L'Entracte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  .legal-wrap { max-width: 760px; margin: 0 auto; padding: 70px 24px 90px; }
+  .legal-wrap h1 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 1px;
+    color: var(--white); margin-bottom: 8px;
+  }
+  .legal-wrap .maj {
+    font-family: 'Montserrat', sans-serif; font-size: 12px; color: rgba(255,255,255,.4);
+    margin-bottom: 40px;
+  }
+  .legal-wrap h2 {
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px;
+    color: var(--red); margin: 34px 0 12px;
+  }
+  .legal-wrap p {
+    font-family: 'Montserrat', sans-serif; font-size: 14.5px; line-height: 1.85;
+    color: rgba(255,255,255,.7);
+  }
+  .legal-wrap a { color: var(--white); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte" style="height:100px;width:auto;display:block;">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+          Cinéma
+          <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+          <div class="dropdown">
+            <a href="full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+            <a href="ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+            <a href="tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
+          </div>
+      </li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    </svg>
+  </div>
+  <div class="burger" onclick="toggleMobileNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="full-reviews.html" onclick="toggleMobileNav()">Reviews</a>
+  <a href="ccf-archives.html" onclick="toggleMobileNav()">Comment c'est fait ?</a>
+  <a href="tops-archives.html" onclick="toggleMobileNav()">Les tops</a>
+  <a href="a-propos.html" onclick="toggleMobileNav()">À propos</a>
+  <a href="index.html#contact" onclick="toggleMobileNav()">Contact</a>
+</div>
+
+<div class="legal-wrap">
+  <h1>Politique de confidentialité</h1>
+  <p class="maj">Dernière mise à jour : 2026</p>
+
+  <h2>Quelles données sont collectées ?</h2>
+  <p>Via le formulaire de contact de L'Entracte, nous collectons : votre nom ou pseudo, le film que vous mentionnez, et le contenu de votre message. Ces informations sont utilisées uniquement pour vous répondre et ne sont jamais partagées avec des tiers ni utilisées à des fins commerciales.</p>
+
+  <h2>Combien de temps conservons-nous ces données ?</h2>
+  <p>Les messages reçus sont conservés le temps nécessaire pour y répondre, puis supprimés périodiquement.</p>
+
+  <h2>Mesure d'audience</h2>
+  <p>L'Entracte utilise Umami, un outil d'analyse de fréquentation respectueux de la vie privée : aucun cookie n'est déposé, aucune donnée personnelle identifiable n'est collectée (pas d'adresse IP stockée). Les statistiques recueillies (pages vues, provenance du trafic) restent totalement anonymes.</p>
+
+  <h2>Vos droits</h2>
+  <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression des données vous concernant. Pour exercer ce droit, contactez-nous à <a href="mailto:lentracte.media@gmail.com">lentracte.media@gmail.com</a>.</p>
+
+  <h2>Hébergement</h2>
+  <p>Le site est hébergé par GitHub Inc. La base de données (messages de contact) est hébergée par Supabase Inc.</p>
+</div>
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+  <p style="margin-top:8px;font-size:10.5px;">
+    <a href="confidentialite.html" style="color:rgba(255,255,255,.4);text-decoration:underline;">Politique de confidentialité</a>
+    <span style="color:rgba(255,255,255,.25);margin:0 8px;">·</span>
+    <a href="cgu.html" style="color:rgba(255,255,255,.4);text-decoration:underline;">Conditions générales d'utilisation</a>
+  </p>
+</footer>
+
+<script>
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const burger = document.getElementById('burger');
+  const spans = burger.querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+</script>
+</body>
+</html>
