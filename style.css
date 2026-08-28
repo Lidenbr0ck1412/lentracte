@@ -713,6 +713,8 @@ nav {
   overflow: hidden;
 }
 
+.contact-mobile-banner { display: none; }
+
 /* Image plein fond */
 .contact-left {
   position: absolute;
@@ -1049,15 +1051,40 @@ footer {
     justify-content: flex-start;
     min-height: auto;
   }
-  .contact-left {
+  .contact-left { display: none; }
+  .contact-mobile-banner {
+    display: flex;
     position: relative;
-    inset: auto;
-    min-height: 220px;
-    width: 100%;
+    min-height: 200px;
+    padding: 32px 24px;
+    align-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(232,37,58,.35), transparent 55%),
+      linear-gradient(160deg, #1a0505 0%, #0a0a0a 70%);
   }
-  .contact-left::after {
-    background: linear-gradient(to bottom, rgba(10,10,10,.15) 0%, rgba(10,10,10,1) 100%);
+  .contact-mobile-banner::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    pointer-events: none;
   }
+  .contact-mobile-banner::after {
+    content: '?';
+    position: absolute; right: 6px; bottom: -34px;
+    font-family: 'Playfair Display', serif; font-weight: 900; font-style: italic;
+    font-size: 200px; line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,.08);
+    pointer-events: none;
+  }
+  .contact-mobile-title {
+    position: relative; z-index: 1;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px; line-height: 1.15; letter-spacing: .5px;
+    color: var(--white); text-transform: uppercase;
+  }
+  .contact-mobile-title strong { color: var(--red); }
   .contact-right {
     position: relative;
     z-index: 1;
