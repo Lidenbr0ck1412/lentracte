@@ -1043,8 +1043,28 @@ footer {
   .top-track .top-card { flex: 0 0 50%; }
 
   /* contact stacked */
-  .contact-inner { grid-template-columns: 1fr; }
-  .contact-left { min-height: 220px; }
+  .contact-inner {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    min-height: auto;
+  }
+  .contact-left {
+    position: relative;
+    inset: auto;
+    min-height: 220px;
+    width: 100%;
+  }
+  .contact-left::after {
+    background: linear-gradient(to bottom, rgba(10,10,10,.15) 0%, rgba(10,10,10,1) 100%);
+  }
+  .contact-right {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    background: var(--black);
+    padding: 32px 24px 40px;
+  }
 
   .section-header h2 { font-size: 15px; }
 }
