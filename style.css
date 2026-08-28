@@ -714,6 +714,7 @@ nav {
 }
 
 .contact-mobile-banner { display: none; }
+.contact-rpo-bg { display: none; }
 
 /* Image plein fond */
 .contact-left {
@@ -1089,11 +1090,23 @@ footer {
     position: relative;
     z-index: 1;
     width: 100%;
-    background:
-      linear-gradient(to bottom, rgba(10,10,10,.55) 0%, rgba(10,10,10,.15) 35%, rgba(10,10,10,.85) 75%, var(--black) 100%),
-      url('images/rpo.png') bottom center / 65% no-repeat,
-      var(--black);
-    padding: 32px 24px 260px;
+    background: var(--black);
+    padding: 32px 24px 280px;
+    overflow: hidden;
+  }
+  .contact-rpo-bg {
+    display: block;
+    position: absolute;
+    left: 50%; bottom: 0;
+    transform: translateX(-50%);
+    width: 115%;
+    max-width: none;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .contact-right > *:not(.contact-rpo-bg) {
+    position: relative;
+    z-index: 1;
   }
   .contact-right .form-group input,
   .contact-right .form-group textarea {
