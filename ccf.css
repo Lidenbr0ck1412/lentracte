@@ -905,11 +905,6 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 }
 .dropdown a:hover span { background: var(--red-dark); transform: scale(1.08); }
 
-.nav-cinema {
-  padding: 38px 0;
-  margin: -38px 0;
-}
-
 .burger {
   display: none;
   flex-direction: column;
