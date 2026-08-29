@@ -143,10 +143,10 @@ nav {
   max-width: 800px; margin: 0 auto; padding: 56px 24px 0;
 }
 .top-intro-first {
-  font-family: 'Playfair Display', serif; font-style: italic;
-  font-weight: 400;
-  font-size: clamp(19px, 2.3vw, 24px); line-height: 1.5;
-  color: rgba(255,255,255,.92);
+  font-family: 'Playfair Display', serif !important; font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: clamp(19px, 2.3vw, 24px) !important; line-height: 1.5 !important;
+  color: rgba(255,255,255,.92) !important;
   margin-bottom: 20px;
 }
 .top-intro p {
