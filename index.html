@@ -553,8 +553,13 @@ function toggleSearch() {
     document.getElementById('searchResults').innerHTML = '';
   }
 }
+let __overlayMouseDownOnSelf = false;
+document.addEventListener('DOMContentLoaded', () => {
+  const ov = document.getElementById('searchOverlay');
+  if (ov) ov.addEventListener('mousedown', e => { __overlayMouseDownOnSelf = (e.target === ov); });
+});
 function handleOverlayClick(e) {
-  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
+  if (e.target === document.getElementById('searchOverlay') && __overlayMouseDownOnSelf) toggleSearch();
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
