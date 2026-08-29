@@ -464,14 +464,12 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .logo img { height: 60px; }
   .hero-sticker { width: 100px; bottom: -30px; right: 24px; }
-  nav { padding: 0 16px; height: 70px; }
+  nav { padding: 0 16px; }
   .nav-right { margin-right: 0; gap: 16px; }
   .search-btn { display: flex; }
   .nav-links { display: none; }
   .burger { display: flex; }
-  .mobile-nav { top: 70px; }
   .hero-content { padding: 0 20px 48px; }
   .hero { height: 75vh; }
   .hero-bg img { object-position: 70% center; }
