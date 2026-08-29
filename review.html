@@ -34,7 +34,7 @@
       <li><a href="index.html#contact" class="contact-link">Contact</a></li>
     </ul>
   </div>
-  <div class="search-btn" title="Rechercher">
+  <div class="search-btn" onclick="toggleSearch()" title="Rechercher">
     <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
   </div>
   <div class="burger" onclick="toggleNav()" id="burger">
@@ -663,5 +663,141 @@ init();
   <img id="lightbox-img" src="" alt="">
   <div id="lightbox-caption" class="lightbox-caption"></div>
 </div>
+
+<!-- ─── SEARCH OVERLAY (barre de nav, partagé avec l'accueil) ─── -->
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+  <button class="search-close" onclick="toggleSearch()">✕</button>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+    <button class="search-submit" onclick="doSearch()">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+  <p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<style>
+.search-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.82);
+  z-index: 200;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+  backdrop-filter: blur(4px);
+}
+.search-overlay.active { opacity: 1; pointer-events: all; }
+.search-box { width: min(600px, 90vw); position: relative; transform: translateY(20px); transition: transform .35s ease; }
+.search-overlay.active .search-box { transform: translateY(0); }
+.search-box input {
+  width: 100%; background: #1a1a1a; border: 2px solid var(--red); border-radius: 50px;
+  padding: 18px 60px 18px 28px;
+  font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 600;
+  color: var(--white); outline: none; letter-spacing: .5px;
+}
+.search-box input::placeholder { color: #555; }
+.search-box .search-submit {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.search-box .search-submit svg { width: 22px; height: 22px; fill: var(--red); }
+.search-close {
+  position: absolute; top: 24px; right: 24px;
+  background: none; border: none;
+  color: #666; font-size: 28px; cursor: pointer;
+  transition: color .2s; line-height: 1;
+}
+.search-close:hover { color: var(--white); }
+.search-hint {
+  text-align: center; margin-top: 16px;
+  font-size: 12px; color: #444; letter-spacing: 2px; text-transform: uppercase;
+}
+.search-results { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 640px; }
+.search-result-card { display: flex; align-items: center; gap: 16px; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 16px; text-decoration: none; color: #fff; transition: border-color .2s, background .2s; cursor: pointer; }
+.search-result-card:hover { border-color: #E8253A; background: rgba(232,37,58,.07); }
+.search-result-img { width: 44px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #2a2a2a; }
+.search-result-info { display: flex; flex-direction: column; gap: 4px; }
+.search-result-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: #fff; }
+.search-result-meta { font-size: 11px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+.search-no-result { font-size: 13px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+</style>
+
+<script>
+function toggleSearch() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.toggle('active');
+  if (overlay.classList.contains('active')) {
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  } else {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+}
+let __overlayMouseDownOnSelf = false;
+document.addEventListener('DOMContentLoaded', () => {
+  const ov = document.getElementById('searchOverlay');
+  if (ov) ov.addEventListener('mousedown', e => { __overlayMouseDownOnSelf = (e.target === ov); });
+});
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('searchOverlay') && __overlayMouseDownOnSelf) toggleSearch();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('searchOverlay').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+  if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+    doSearch();
+  }
+});
+let __searchDebounce = null;
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('searchInput');
+  if (input) {
+    input.addEventListener('input', () => {
+      clearTimeout(__searchDebounce);
+      const q = input.value.trim();
+      if (q.length < 2) {
+        document.getElementById('searchResults').innerHTML = '';
+        return;
+      }
+      __searchDebounce = setTimeout(doSearch, 300);
+    });
+  }
+});
+
+async function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  const resultsEl = document.getElementById('searchResults');
+  if (!query) return;
+
+  resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
+
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,
+    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+  );
+  const data = await res.json();
+
+  if (!data.length) {
+    resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';
+    return;
+  }
+
+  resultsEl.innerHTML = data.map(r => `
+    <a class="search-result-card" href="${r.link || '#'}">
+      ${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
+      <div class="search-result-info">
+        <div class="search-result-title">${r.title}</div>
+        <div class="search-result-meta">${r.year || ''}${r.genre ? ' · ' + r.genre : ''}</div>
+      </div>
+    </a>
+  `).join('');
+}
+</script>
+
 </body>
 </html>
