@@ -233,7 +233,7 @@ async function init() {
 
   let html = '';
   if (top.intro) {
-    const paras = top.intro.split('\n\n').map(p => `<p>${p}</p>`).join('');
+    const paras = top.intro.split('\n\n').map((p, i) => i === 0 ? `<p class="top-intro-first">${p}</p>` : `<p>${p}</p>`).join('');
     html += `<div class="top-intro">${paras}</div>`;
   }
   html += renderMentions(top);
