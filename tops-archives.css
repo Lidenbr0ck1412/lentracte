@@ -46,6 +46,8 @@
   max-width: 680px;
   margin: 0 auto;
 }
+.tops-page-intro p { margin-bottom: 16px; }
+.tops-page-intro p:last-child { margin-bottom: 0; }
 
 
 /* ──────────────── LISTE EN ALTERNANCE ──────────────── */
