@@ -301,8 +301,9 @@ nav {
 .still:hover img { transform: scale(1.04); }
 .still figcaption {
   position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 8px 12px;
-  background: linear-gradient(to top, rgba(0,0,0,.85), transparent);
+  padding: 20px 14px 14px;
+  line-height: 1.5;
+  background: linear-gradient(to top, rgba(0,0,0,.9) 40%, transparent);
   font-size: 11px; font-style: italic; color: rgba(255,255,255,.75);
 }
 
