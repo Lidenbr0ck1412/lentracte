@@ -233,7 +233,8 @@ async function init() {
 
   let html = '';
   if (top.intro) {
-    html += `<div class="top-intro"><p>${top.intro}</p></div>`;
+    const paras = top.intro.split('\n\n').map(p => `<p>${p}</p>`).join('');
+    html += `<div class="top-intro">${paras}</div>`;
   }
   html += renderMentions(top);
   html += renderFilms(films);
