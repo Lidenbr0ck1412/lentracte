@@ -767,7 +767,8 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 }
 .article-gallery.stack figcaption {
   position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
-  padding: 20px 14px 10px;
+  padding: 22px 16px 16px;
+  line-height: 1.5;
   background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
   text-align: left;
 }
