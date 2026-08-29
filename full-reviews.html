@@ -356,8 +356,13 @@ function toggleSearch() {
     document.getElementById('searchResults').innerHTML = '';
   }
 }
+let __overlayMouseDownOnSelf = false;
+document.addEventListener('DOMContentLoaded', () => {
+  const ov = document.getElementById('searchOverlay');
+  if (ov) ov.addEventListener('mousedown', e => { __overlayMouseDownOnSelf = (e.target === ov); });
+});
 function handleOverlayClick(e) {
-  if (e.target === document.getElementById('searchOverlay')) toggleSearch();
+  if (e.target === document.getElementById('searchOverlay') && __overlayMouseDownOnSelf) toggleSearch();
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
@@ -369,6 +374,21 @@ document.addEventListener('keydown', e => {
     doSearch();
   }
 });
+let __searchDebounce = null;
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('searchInput');
+  if (input) {
+    input.addEventListener('input', () => {
+      clearTimeout(__searchDebounce);
+      const q = input.value.trim();
+      if (q.length < 2) {
+        document.getElementById('searchResults').innerHTML = '';
+        return;
+      }
+      __searchDebounce = setTimeout(doSearch, 300);
+    });
+  }
+});
 
 async function doSearch() {
   const query = document.getElementById('searchInput').value.trim();
@@ -378,7 +398,7 @@ async function doSearch() {
   resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
 
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc`,
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,
     { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
   );
   const data = await res.json();
