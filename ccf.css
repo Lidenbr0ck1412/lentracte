@@ -925,7 +925,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .mobile-nav {
     display: flex;
     position: fixed;
-    top: 100px; left: 0; right: 0; bottom: 0;
+    left: 0; right: 0; bottom: 0;
     background: rgba(10,10,10,.97);
     z-index: 99;
     flex-direction: column;
