@@ -376,3 +376,152 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .film-number { font-size: 40px; top: 0; }
   .film-poster-wrap { max-width: 160px; }
 }
+
+/* ═══════════════════════════════════════════════════
+   OVERRIDE NAV — aligné sur style.css (design définitif)
+   ═══════════════════════════════════════════════════ */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  background: linear-gradient(180deg, #161616, #0d0d0d);
+  border: 1px solid rgba(255,255,255,.08);
+  border-top: 2px solid var(--red);
+  border-radius: 14px;
+  min-width: 270px;
+  padding: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease, transform .22s ease;
+  z-index: 200;
+  box-shadow: 0 20px 45px rgba(0,0,0,.55);
+}
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: transparent;
+  pointer-events: auto;
+}
+.nav-cinema:hover .dropdown {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+.dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--light-grey) !important;
+  transition: color .2s, background .2s, transform .2s;
+  white-space: nowrap;
+}
+.dropdown a + a { margin-top: 2px; }
+.dropdown a:hover {
+  color: var(--white) !important;
+  background: rgba(232,37,58,0.1);
+  transform: translateX(3px);
+}
+.dropdown a span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--white);
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-right: 0;
+  transition: background .2s, transform .2s;
+}
+.dropdown a:hover span { background: var(--red-dark); transform: scale(1.08); }
+
+.nav-cinema {
+  padding: 38px 0;
+  margin: -38px 0;
+}
+
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.burger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
+
+.mobile-nav { display: none; }
+
+@media (max-width: 768px) {
+  nav { padding: 0 16px; }
+  .nav-right { margin-right: 0; }
+  .nav-links { display: none; }
+  .burger { display: flex; }
+
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    top: 100px; left: 0; right: 0; bottom: 0;
+    background: rgba(10,10,10,.97);
+    z-index: 99;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease;
+  }
+  .mobile-nav.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .mobile-nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    width: 100%;
+    max-width: 320px;
+    padding: 20px 8px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    letter-spacing: 3px;
+    color: var(--white);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateX(-14px);
+    transition: opacity .4s ease, transform .4s ease, color .2s;
+  }
+  .mobile-nav a:last-child { border-bottom: none; }
+  .mobile-nav a::before {
+    content: '▸';
+    flex-shrink: 0;
+    font-size: 22px;
+    color: var(--red);
+    transition: color .2s;
+  }
+  .mobile-nav.open a {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .mobile-nav.open a:nth-child(1) { transition-delay: .05s; }
+  .mobile-nav.open a:nth-child(2) { transition-delay: .1s; }
+  .mobile-nav.open a:nth-child(3) { transition-delay: .15s; }
+  .mobile-nav.open a:nth-child(4) { transition-delay: .2s; }
+  .mobile-nav.open a:nth-child(5) { transition-delay: .25s; }
+  .mobile-nav a:hover, .mobile-nav a.active { color: var(--red); }
+  .mobile-nav a:hover::before { color: var(--white); }
+}
