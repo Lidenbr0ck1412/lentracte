@@ -124,7 +124,7 @@ nav {
   padding: 0 32px;
   height: 100px;
   position: sticky;
-  top: 0;
+  top: -1px;
   z-index: 100;
   border-bottom: 2px solid var(--red);
   transform: translateZ(0);
