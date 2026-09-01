@@ -24,7 +24,7 @@ nav {
   background: var(--dark);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 32px; height: 100px;
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: -1px; z-index: 100;
   border-bottom: 2px solid var(--red);
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
