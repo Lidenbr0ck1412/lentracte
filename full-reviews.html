@@ -121,7 +121,6 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const CURRENT_YEAR = new Date().getFullYear();
 const SEUIL_RECENT = CURRENT_YEAR - 5;
-const SEUIL_CLASSIQUE = CURRENT_YEAR - 25;
 
 // ─── ÉTAT GLOBAL ───
 let allReviews = [];
@@ -132,7 +131,7 @@ let searchQuery = '';
 // ─── CHARGEMENT ───
 async function loadArchives() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,sub,year,genre,img,img_mobile,banner,color,color2,contenu&order=id.desc`,
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,sub,year,genre,img,img_mobile,banner,color,color2,contenu,categorie_speciale&order=id.desc`,
     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
   );
   allReviews = await res.json();
@@ -205,9 +204,9 @@ function applyFilters(reviews) {
     if (activeFilter === 'affiche') {
       filtered = filtered.filter(r => r.year && r.year >= SEUIL_RECENT);
     } else if (activeFilter === 'classiques') {
-      filtered = filtered.filter(r => r.year && r.year <= SEUIL_CLASSIQUE);
+      filtered = filtered.filter(r => r.categorie_speciale === 'classique');
     } else if (activeFilter === 'oublies') {
-      filtered = filtered.filter(r => r.year && r.year > SEUIL_CLASSIQUE && r.year < SEUIL_RECENT);
+      filtered = filtered.filter(r => r.categorie_speciale === 'oublie');
     } else if (activeFilter.startsWith('decade-')) {
       const decade = parseInt(activeFilter.replace('decade-', ''), 10);
       filtered = filtered.filter(r => r.year && r.year >= decade && r.year < decade + 10);
