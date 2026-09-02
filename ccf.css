@@ -68,7 +68,6 @@ nav {
 .mobile-nav a { padding: 14px 24px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #1e1e1e; }
 
 .hero-sticker {
-  display: none; /* TEMPORAIRE — masqué pour capture d'écran, à réactiver ensuite */
   position: absolute;
   bottom: -150px; right: 80px;
   width: 300px; height: auto;
