@@ -833,9 +833,9 @@ nav {
 }
 .contact-pro a:hover { color: var(--white); }
 .social-block p { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1px; color: var(--white); margin-bottom: 10px; }
-.social-icons { display: flex; gap: 14px; }
+.social-icons { display: flex; gap: 20px; }
 .social-icon {
-  width: 36px; height: 36px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
@@ -843,9 +843,9 @@ nav {
 }
 .social-icon:hover { transform: scale(1.15); opacity: .85; }
 .social-icon.x { background: #000; border: 1.5px solid #555; }
-.social-icon.spotify { background: #1DB954; }
 .social-icon.facebook { background: #1877F2; }
-.social-icon svg { width: 18px; height: 18px; fill: white; }
+.social-icon.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.social-icon svg { width: 24px; height: 24px; fill: white; }
 
 /* ─── FOOTER ─── */
 footer {
