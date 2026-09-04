@@ -529,7 +529,7 @@ async function init() {
   const id = params.get('id');
 
   // Charger toutes les reviews (pour le related)
-  const allRes = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,img,color,color2&order=id.asc`, {
+  const allRes = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,img,color,color2&publie=eq.true&order=id.asc`, {
     headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
   });
   const allReviews = await allRes.json();
@@ -537,7 +537,7 @@ async function init() {
   // Charger la review courante
   let review = null;
   if (id) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}&select=*`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}&select=*&publie=eq.true`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
@@ -546,7 +546,7 @@ async function init() {
 
   // Fallback : si aucun id ou review introuvable, prendre la première
   if (!review && allReviews.length > 0) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${allReviews[0].id}&select=*`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${allReviews[0].id}&select=*&publie=eq.true`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
@@ -777,7 +777,7 @@ async function doSearch() {
   resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
 
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&publie=eq.true&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,
     { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
   );
   const data = await res.json();
