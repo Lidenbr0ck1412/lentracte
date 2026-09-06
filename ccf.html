@@ -1372,23 +1372,23 @@ init();
 <!-- ═══ MARQUE-PAGE VIRTUEL : reprendre la lecture ═══ -->
 <style>
 .bookmark-ribbon {
-  position: fixed; top: 0; right: 48px; z-index: 500;
-  width: 44px;
+  position: fixed; bottom: 28px; right: 28px; z-index: 400;
+  width: 52px; height: 52px;
   background: var(--red);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
-  box-shadow: 0 6px 16px rgba(0,0,0,.4);
+  border-radius: 50%;
+  box-shadow: 0 8px 20px rgba(0,0,0,.5);
   cursor: pointer;
-  transform: translateY(-100%);
-  transition: transform .5s cubic-bezier(.34,1.56,.64,1);
-  display: flex; align-items: flex-start; justify-content: center;
-  padding-top: 10px;
+  transform: scale(0);
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; justify-content: center;
 }
-.bookmark-ribbon.visible { transform: translateY(0); }
+.bookmark-ribbon.visible { transform: scale(1); }
+.bookmark-ribbon:hover { background: var(--red-dark, #c41e2f); }
 .bookmark-ribbon:hover { background: var(--red-dark, #c41e2f); }
 .bookmark-ribbon svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; }
 
 .bookmark-tooltip {
-  position: fixed; top: 14px; right: 100px; z-index: 500;
+  position: fixed; bottom: 40px; right: 90px; z-index: 400;
   background: #151515; border: 1px solid #2a2a2a; border-right: 3px solid var(--red);
   border-radius: 8px 0 0 8px;
   padding: 10px 16px;
@@ -1403,13 +1403,13 @@ init();
 .bookmark-tooltip.visible { opacity: 1; transform: translateX(0); }
 
 @media (max-width: 480px) {
-  .bookmark-ribbon { right: 20px; width: 38px; }
+  .bookmark-ribbon { right: 16px; bottom: 20px; width: 46px; height: 46px; }
   .bookmark-tooltip { display: none; } /* trop peu de place sur mobile, le ruban seul suffit */
 }
 </style>
 
 <div class="bookmark-ribbon" id="bookmarkRibbon" title="Reprendre la lecture">
-  <svg viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg>
+  <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
 </div>
 <div class="bookmark-tooltip" id="bookmarkTooltip">📖 Reprendre là où vous en étiez</div>
 
