@@ -1421,7 +1421,9 @@ init();
     const h = document.documentElement;
     const scrollTop = h.scrollTop || document.body.scrollTop;
     const scrollHeight = h.scrollHeight || document.body.scrollHeight;
-    return scrollTop / (scrollHeight - h.clientHeight);
+    const scrollable = scrollHeight - h.clientHeight;
+    if (scrollable <= 0) return 0; // page pas encore assez grande pour scroller
+    return scrollTop / scrollable;
   }
 
   // Sauvegarde périodique de la position (throttlée)
@@ -1444,25 +1446,27 @@ init();
     if (ribbon) ribbon.classList.remove('visible');
   }
 
-  // Au chargement : affiche le marque-page si une position existe
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const saved = parseFloat(localStorage.getItem(pageKey));
-      if (!isNaN(saved) && saved >= 0.05 && saved < 0.95) {
-        const ribbon = document.getElementById('bookmarkRibbon');
-        const tooltip = document.getElementById('bookmarkTooltip');
-        ribbon.classList.add('visible');
+  // Au chargement : affiche le marque-page si une position existe.
+  function initBookmark() {
+    const saved = parseFloat(localStorage.getItem(pageKey));
+    if (!isNaN(saved) && saved >= 0.05 && saved < 0.95) {
+      const ribbon = document.getElementById('bookmarkRibbon');
+      const tooltip = document.getElementById('bookmarkTooltip');
+      if (!ribbon) return;
+      ribbon.classList.add('visible');
 
-        ribbon.addEventListener('click', () => {
-          const h = document.documentElement;
-          const targetY = saved * (h.scrollHeight - h.clientHeight);
-          window.scrollTo({ top: targetY, behavior: 'smooth' });
-        });
-        ribbon.addEventListener('mouseenter', () => tooltip.classList.add('visible'));
-        ribbon.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
-      }
-    }, 800); // léger délai pour laisser le contenu dynamique (Supabase) finir de charger
-  });
+      ribbon.addEventListener('click', () => {
+        const h = document.documentElement;
+        const targetY = saved * (h.scrollHeight - h.clientHeight);
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      });
+      ribbon.addEventListener('mouseenter', () => tooltip.classList.add('visible'));
+      ribbon.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+    }
+  }
+  // Délai pour laisser le contenu dynamique (Supabase) finir de s'afficher,
+  // peu importe où en est le cycle de chargement de la page à cet instant.
+  setTimeout(initBookmark, 1200);
 })();
 </script>
 
