@@ -1447,6 +1447,8 @@ init();
   }
 
   // Au chargement : affiche le marque-page si une position existe.
+  // On ne dépend plus de l'événement 'load' (qui peut déjà s'être déclenché
+  // avant que ce script ne s'exécute) : on lance directement un délai fixe.
   function initBookmark() {
     const saved = parseFloat(localStorage.getItem(pageKey));
     if (!isNaN(saved) && saved >= 0.05 && saved < 0.95) {
@@ -1466,7 +1468,26 @@ init();
   }
   // Délai pour laisser le contenu dynamique (Supabase) finir de s'afficher,
   // peu importe où en est le cycle de chargement de la page à cet instant.
-  setTimeout(initBookmark, 1200);
+  // On attend que la hauteur de la page se stabilise (images/contenu
+  // Supabase chargés) avant d'activer le marque-page, plutôt que de
+  // deviner un délai fixe qui peut être trop court sur les pages
+  // avec beaucoup d'images (comme les articles CCF).
+  let lastHeight = -1;
+  let stableCount = 0;
+  const stabilityCheck = setInterval(() => {
+    const currentHeight = document.documentElement.scrollHeight;
+    if (currentHeight === lastHeight) {
+      stableCount++;
+    } else {
+      stableCount = 0;
+      lastHeight = currentHeight;
+    }
+    if (stableCount >= 2) { // hauteur inchangée 2 vérifications de suite (~600ms)
+      clearInterval(stabilityCheck);
+      initBookmark();
+    }
+  }, 300);
+  setTimeout(() => clearInterval(stabilityCheck), 6000); // garde-fou si jamais ça ne se stabilise pas
 })();
 </script>
 
