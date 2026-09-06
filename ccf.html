@@ -681,5 +681,89 @@ init();
   <img id="lightbox-img" src="" alt="">
   <div id="lightbox-caption" class="lightbox-caption"></div>
 </div>
+
+<!-- ═══ MARQUE-PAGE VIRTUEL : reprendre la lecture ═══ -->
+<style>
+.resume-banner {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(120%);
+  z-index: 500;
+  background: #151515; border: 1px solid #2a2a2a; border-left: 3px solid var(--red);
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.5);
+  font-family: 'Montserrat', sans-serif;
+  transition: transform .4s ease;
+  max-width: 90vw;
+}
+.resume-banner.visible { transform: translateX(-50%) translateY(0); }
+.resume-banner p { margin: 0; font-size: 13px; color: rgba(255,255,255,.8); white-space: nowrap; }
+.resume-banner button {
+  font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; font-size: 13px;
+  background: var(--red); color: #fff; border: none; border-radius: 6px;
+  padding: 8px 14px; cursor: pointer; white-space: nowrap;
+  transition: background .2s;
+}
+.resume-banner button:hover { background: var(--red-dark, #c41e2f); }
+.resume-banner .close-x {
+  background: none; color: rgba(255,255,255,.4); font-size: 16px; padding: 0 4px;
+}
+@media (max-width: 480px) {
+  .resume-banner { flex-wrap: wrap; justify-content: center; text-align: center; }
+}
+</style>
+<div class="resume-banner" id="resumeBanner">
+  <p>Vous aviez commencé cet article.</p>
+  <button id="resumeBtn">Reprendre la lecture</button>
+  <button class="close-x" id="resumeClose">✕</button>
+</div>
+<script>
+(function() {
+  const pageKey = 'lecture-' + location.pathname + location.search;
+
+  function getScrollPercent() {
+    const h = document.documentElement;
+    const scrollTop = h.scrollTop || document.body.scrollTop;
+    const scrollHeight = h.scrollHeight || document.body.scrollHeight;
+    return scrollTop / (scrollHeight - h.clientHeight);
+  }
+
+  // Sauvegarde périodique de la position (throttlée)
+  let saveTimeout;
+  window.addEventListener('scroll', () => {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      const pct = getScrollPercent();
+      if (pct >= 0.95) {
+        localStorage.removeItem(pageKey); // article terminé, on efface
+      } else if (pct >= 0.05) {
+        localStorage.setItem(pageKey, pct.toFixed(4));
+      }
+    }, 300);
+  }, { passive: true });
+
+  // Au chargement : propose de reprendre si une position existe
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const saved = parseFloat(localStorage.getItem(pageKey));
+      if (!isNaN(saved) && saved >= 0.05 && saved < 0.95) {
+        const banner = document.getElementById('resumeBanner');
+        banner.classList.add('visible');
+
+        document.getElementById('resumeBtn').addEventListener('click', () => {
+          const h = document.documentElement;
+          const targetY = saved * (h.scrollHeight - h.clientHeight);
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+          banner.classList.remove('visible');
+        });
+        document.getElementById('resumeClose').addEventListener('click', () => {
+          banner.classList.remove('visible');
+        });
+      }
+    }, 800); // léger délai pour laisser le contenu dynamique (Supabase) finir de charger
+  });
+})();
+</script>
+
 </body>
 </html>
