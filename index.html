@@ -233,24 +233,24 @@ const IMG = {
 };
 
 const ccfMovies = [
-  // { title: "TERMINATOR 2 : LE JUGEMENT DERNIER", tagline: "L'IMPOSSIBLE RÉVOLUTION DU T-1000", cat: "COMMENT C'EST FAIT?", color: "#0a0a0a", color2: "#3a3a3a", img: IMG.ccf_terminator2, link: "ccf.html?id=5" }, // en attente de la miniature
-  { title: "LE MARVEL CINEMATIC UNIVERSE", tagline: "LA FABRIQUE DERRIÈRE LES COSTUMES EN COLLANT", cat: "COMMENT C'EST FAIT?", color: "#1a0500", color2: "#350a00", img: IMG.MCU_CCF_minia, link: "ccf.html?id=4" },
-  { title: "2001 : L'ODYSSÉE DE L'ESPACE", tagline: "QUATRE ANS POUR FABRIQUER L'INFINI", cat: "COMMENT C'EST FAIT?", color: "#0a0a1a", color2: "#15152a", img: IMG.ccf_2001, link: "ccf.html?id=2" },
-  { title: "HELLRAISER", tagline: "LE PLAISIR DE LA DOULEUR FAÇON CLIVE BARKER", cat: "COMMENT C'EST FAIT?", color: "#0a051a", color2: "#1a0835", img: IMG.ccf_hellraiser, link: "ccf.html?id=1" },
-  { title: "GODZILLA", tagline: "LA NAISSANCE ARTISANALE D'UN DIEU", cat: "COMMENT C'EST FAIT?", color: "#1a0a05", color2: "#3d1810", img: IMG.ccf_godzilla, link: "ccf.html?id=3" },
+  // { title: "TERMINATOR 2 : LE JUGEMENT DERNIER", tagline: "L'IMPOSSIBLE RÉVOLUTION DU T-1000", cat: "COMMENT C'EST FAIT?", color: "#0a0a0a", color2: "#3a3a3a", img: IMG.ccf_terminator2, link: "ccf.html?film=terminator-2-le-jugement-dernier" }, // en attente de la miniature
+  { title: "LE MARVEL CINEMATIC UNIVERSE", tagline: "LA FABRIQUE DERRIÈRE LES COSTUMES EN COLLANT", cat: "COMMENT C'EST FAIT?", color: "#1a0500", color2: "#350a00", img: IMG.MCU_CCF_minia, link: "ccf.html?film=le-marvel-cinematic-univers" },
+  { title: "2001 : L'ODYSSÉE DE L'ESPACE", tagline: "QUATRE ANS POUR FABRIQUER L'INFINI", cat: "COMMENT C'EST FAIT?", color: "#0a0a1a", color2: "#15152a", img: IMG.ccf_2001, link: "ccf.html?film=2001-l-odysee-de-l-espace" },
+  { title: "HELLRAISER", tagline: "LE PLAISIR DE LA DOULEUR FAÇON CLIVE BARKER", cat: "COMMENT C'EST FAIT?", color: "#0a051a", color2: "#1a0835", img: IMG.ccf_hellraiser, link: "ccf.html?film=hellraiser-le-pacte" },
+  { title: "GODZILLA", tagline: "LA NAISSANCE ARTISANALE D'UN DIEU", cat: "COMMENT C'EST FAIT?", color: "#1a0a05", color2: "#3d1810", img: IMG.ccf_godzilla, link: "ccf.html?film=godzilla" },
   ];
 
 const tops = [
-  { title: "LES MEILLEURS FILMS DE 2025", sub: "De Parthenope… à Superman", color: "#0a0f1a", color2: "#1a2535", img: "images/top_2025.jpg", link: "top.html?id=1" },
+  { title: "LES MEILLEURS FILMS DE 2025", sub: "De Parthenope… à Superman", color: "#0a0f1a", color2: "#1a2535", img: "images/top_2025.jpg", link: "top.html?film=nos-10-films-preferes-de-2025" },
   { title: "CES FILMS D'HORREUR À DÉCOUVRIR", sub: "Parce qu'il n'y a pas que Saw dans la vie", color: "#1a0505", color2: "#2d0808", img: "images/top_horreur.jpg", link: "retro_horreur.html" },
   { title: "CES FILMS FRANÇAIS À DÉCOUVRIR", sub: "Non, il n'y a pas que la comédie en France", color: "#0a1005", color2: "#152010", img: "images/top_francais.jpg", link: "retro_francais.html" },
-  { title: "LES MEILLEURS FILMS D'ANIMATION", sub: "L'émerveillement n'a pas d'âge", color: "#0a0a1a", color2: "#15152d", img: "images/top_animation.jpg", link: "top.html?id=3" },
+  { title: "LES MEILLEURS FILMS D'ANIMATION", sub: "L'émerveillement n'a pas d'âge", color: "#0a0a1a", color2: "#15152d", img: "images/top_animation.jpg", link: "top.html?film=les-meilleurs-films-d-animation" },
 ];
 
 // ─── RENDER REVIEW CARDS ───
 function makeReviewCard(r, mobile = false) {
   const badge = '';
-  const href = r.contenu ? `review.html?id=${r.id}` : '#';
+  const href = r.contenu ? `review.html?film=${r.slug}` : '#';
   const link = `href="${href}"`;
   const tag = r.contenu ? 'a' : 'div';
 
@@ -285,7 +285,7 @@ const reviewsDots = document.getElementById('reviewsDots');
 const reviewsMobileTrack = document.getElementById('reviewsMobileTrack');
 
 async function loadReviews() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,title,sub,year,img,img_mobile,banner,color,color2,contenu&publie=eq.true&order=id.desc&limit=15`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,slug,title,sub,year,img,img_mobile,banner,color,color2,contenu&publie=eq.true&order=id.desc&limit=15`, {
     headers: {
       'apikey': SUPABASE_KEY,
       'Authorization': `Bearer ${SUPABASE_KEY}`
