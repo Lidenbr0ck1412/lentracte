@@ -1,15 +1,3 @@
-/* ════════════════════════════════════════════════════════════════════
-   archives.css
-   ────────────────────────────────────────────────────────────────────
-   Styles spécifiques à la page "Les Archives" (full-reviews.html)
-   Ce fichier dépend de style.css pour les variables (--red, --white...)
-   et les styles partagés (navbar, footer, search overlay).
-   ════════════════════════════════════════════════════════════════════ */
-
-/* Ce fichier utilise aussi --border, --input-bg, --input-border,
-   --toolbar-bg, --muted, --muted-2 définies dans le :root de style.css.
-   style.css doit être chargé AVANT archives.css sur la page. */
-
 
 /* ──────────────── EN-TÊTE ÉDITORIAL ──────────────── */
 .archives-hero {
@@ -149,12 +137,17 @@
   overflow-x: auto;
   overflow-y: hidden;
   gap: 8px;
+  background: transparent;
   scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
 .archives-tabs::-webkit-scrollbar {
   height: 4px;
+}
+.archives-tabs::-webkit-scrollbar-track {
+  background: transparent;
 }
 .archives-tabs::-webkit-scrollbar-thumb {
   background: var(--border);
