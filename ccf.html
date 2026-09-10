@@ -15,6 +15,8 @@
 </head>
 <body>
 
+<div id="readProgressBar"></div>
+
 <!-- NAVBAR -->
 <nav id="navbar">
   <a href="index.html" class="logo">
@@ -580,6 +582,8 @@ async function init() {
 
   document.getElementById('article-container').innerHTML = html;
   bindLightboxImages();
+  bindReadingProgress(article);
+  checkResumeReading(article);
 
   // Reveal observer
   const observer = new IntersectionObserver((entries) => {
@@ -683,6 +687,79 @@ function shareTwitter() {
 }
 function shareFacebook() {
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
+}
+
+/* ── REPRISE DE LECTURE ── */
+const READ_KEY_PREFIX = 'entracte_ccf_read_';
+
+function getReadKey(article) {
+  return READ_KEY_PREFIX + (article.slug || article.id);
+}
+
+function getArticleBody() {
+  return document.querySelector('.article-body') || document.querySelector('.article-wrapper');
+}
+
+function updateReadingProgress(article) {
+  const body = getArticleBody();
+  if (!body) return;
+  const rect = body.getBoundingClientRect();
+  const total = rect.height - window.innerHeight;
+  if (total <= 0) return;
+
+  const scrolled = Math.min(Math.max(-rect.top, 0), total);
+  const pct = scrolled / total;
+
+  const bar = document.getElementById('readProgressBar');
+  if (bar) bar.style.width = `${Math.min(pct * 100, 100)}%`;
+
+  if (pct > 0.03 && pct < 0.95) {
+    localStorage.setItem(getReadKey(article), JSON.stringify({ pct, scrollY: window.scrollY }));
+  } else if (pct >= 0.95) {
+    localStorage.removeItem(getReadKey(article));
+  }
+}
+
+function checkResumeReading(article) {
+  const saved = localStorage.getItem(getReadKey(article));
+  if (!saved) return;
+  let data;
+  try { data = JSON.parse(saved); } catch { return; }
+  if (!data || !data.scrollY || data.scrollY < 200) return;
+  showResumeBanner(data.pct, data.scrollY);
+}
+
+function showResumeBanner(pct, scrollY) {
+  const el = document.createElement('div');
+  el.className = 'resume-banner';
+  el.innerHTML = `
+    <span>📖 Reprendre la lecture (${Math.round(pct * 100)}%)</span>
+    <button aria-label="Fermer">✕</button>
+  `;
+  el.querySelector('span').addEventListener('click', () => {
+    window.scrollTo({ top: scrollY, behavior: 'smooth' });
+    el.classList.remove('visible');
+    setTimeout(() => el.remove(), 300);
+  });
+  el.querySelector('button').addEventListener('click', (e) => {
+    e.stopPropagation();
+    el.classList.remove('visible');
+    setTimeout(() => el.remove(), 300);
+  });
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('visible'));
+}
+
+let __progressTicking = false;
+function bindReadingProgress(article) {
+  window.addEventListener('scroll', () => {
+    if (__progressTicking) return;
+    __progressTicking = true;
+    requestAnimationFrame(() => {
+      updateReadingProgress(article);
+      __progressTicking = false;
+    });
+  }, { passive: true });
 }
 
 init();
