@@ -715,47 +715,62 @@ function updateReadingProgress(article) {
 
   if (pct > 0.03 && pct < 0.95) {
     localStorage.setItem(getReadKey(article), JSON.stringify({ pct, scrollY: window.scrollY }));
+    setBookmarkState(pct, window.scrollY);
   } else if (pct >= 0.95) {
     localStorage.removeItem(getReadKey(article));
-    document.querySelector('.resume-bookmark')?.remove();
-    document.querySelector('.resume-tooltip')?.remove();
+    setBookmarkState(null, null);
   }
 }
 
 function checkResumeReading(article) {
+  const bookmark = createResumeBookmark();
+  requestAnimationFrame(() => bookmark.classList.add('visible'));
+
   const saved = localStorage.getItem(getReadKey(article));
-  if (!saved) return;
+  if (!saved) { setBookmarkState(null, null); return; }
   let data;
-  try { data = JSON.parse(saved); } catch { return; }
-  if (!data || !data.scrollY || data.scrollY < 200) return;
-  showResumeBanner(data.pct, data.scrollY);
+  try { data = JSON.parse(saved); } catch { setBookmarkState(null, null); return; }
+  if (!data || !data.scrollY || data.scrollY < 200) { setBookmarkState(null, null); return; }
+  setBookmarkState(data.pct, data.scrollY);
 }
 
-function showResumeBanner(pct, scrollY) {
-  const bookmark = document.createElement('button');
+function createResumeBookmark() {
+  let bookmark = document.querySelector('.resume-bookmark');
+  if (bookmark) return bookmark;
+
+  bookmark = document.createElement('button');
   bookmark.className = 'resume-bookmark';
-  bookmark.setAttribute('aria-label', `Reprendre la lecture (${Math.round(pct * 100)}%)`);
+  bookmark.setAttribute('aria-label', 'Marque-page de lecture');
   bookmark.innerHTML = `
     <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
   `;
 
   const tooltip = document.createElement('div');
   tooltip.className = 'resume-tooltip';
-  tooltip.textContent = `Reprendre la lecture (${Math.round(pct * 100)}%)`;
 
   bookmark.addEventListener('mouseenter', () => tooltip.classList.add('visible'));
   bookmark.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
 
-  bookmark.addEventListener('click', () => {
-    window.scrollTo({ top: scrollY, behavior: 'smooth' });
-    bookmark.classList.remove('visible');
-    tooltip.classList.remove('visible');
-    setTimeout(() => { bookmark.remove(); tooltip.remove(); }, 350);
-  });
-
   document.body.appendChild(bookmark);
   document.body.appendChild(tooltip);
-  requestAnimationFrame(() => bookmark.classList.add('visible'));
+  return bookmark;
+}
+
+function setBookmarkState(pct, scrollY) {
+  const bookmark = document.querySelector('.resume-bookmark');
+  const tooltip = document.querySelector('.resume-tooltip');
+  if (!bookmark || !tooltip) return;
+
+  if (pct != null && scrollY != null) {
+    bookmark.classList.add('active');
+    tooltip.textContent = `Reprendre la lecture (${Math.round(pct * 100)}%)`;
+    bookmark.onclick = () => window.scrollTo({ top: scrollY, behavior: 'smooth' });
+  } else {
+    bookmark.classList.remove('active');
+    tooltip.textContent = 'Aucune lecture en cours';
+    tooltip.classList.remove('visible');
+    bookmark.onclick = null;
+  }
 }
 
 let __progressTicking = false;
