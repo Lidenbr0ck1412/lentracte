@@ -505,19 +505,30 @@ function toggleAudioClip(btn) {
 /* ── INIT ── */
 async function init() {
   const params = new URLSearchParams(window.location.search);
-  const id = params.get('id') || 1;
+  const filmSlug = params.get('film');
+  const legacyId = params.get('id');
 
-  const [articleRes, sectionsRes] = await Promise.all([
-    fetch(`${SUPABASE_URL}/rest/v1/ccf?id=eq.${id}&select=*`, {
+  // Charger l'article, en priorité par slug, sinon par id (compatibilité anciens liens), sinon le premier
+  let article = null;
+  if (filmSlug) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?slug=eq.${encodeURIComponent(filmSlug)}&select=*`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-    }),
-    fetch(`${SUPABASE_URL}/rest/v1/ccf_sections?ccf_id=eq.${id}&select=*&order=ordre.asc`, {
+    });
+    const data = await res.json();
+    article = data[0] || null;
+  } else {
+    const idToUse = legacyId || 1;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?id=eq.${idToUse}&select=*`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-    })
-  ]);
+    });
+    const data = await res.json();
+    article = data[0] || null;
+  }
 
-  const [articleData, sections] = await Promise.all([articleRes.json(), sectionsRes.json()]);
-  const article = articleData[0];
+  const id = article ? article.id : null;
+  const sections = id ? await (await fetch(`${SUPABASE_URL}/rest/v1/ccf_sections?ccf_id=eq.${id}&select=*&order=ordre.asc`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  })).json() : [];
   if (!article) {
     document.getElementById('hero-container').innerHTML = '<div style="height:60vh;display:flex;align-items:center;justify-content:center"><p style="color:#888;font-family:Bebas Neue,sans-serif;letter-spacing:4px">Article introuvable.</p></div>';
     return;
