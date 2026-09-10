@@ -136,7 +136,7 @@ function renderFilms(films) {
         </div>
         <div class="film-text">${parseContenu(f.contenu)}</div>
         ${f.review_id ? `
-        <a href="review.html?id=${f.review_id}" class="film-review-link">
+        <a href="review.html?film=${f.review_slug}" class="film-review-link">
           <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           Lire notre critique
         </a>` : ''}
@@ -171,7 +171,7 @@ function renderFilmOne(f, top) {
           </div>
           <div class="film-text">${parseContenu(f.contenu)}</div>
           ${f.review_id ? `
-          <a href="review.html?id=${f.review_id}" class="film-review-link" style="margin-top:24px;">
+          <a href="review.html?film=${f.review_slug}" class="film-review-link" style="margin-top:24px;">
             <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             Lire notre critique
           </a>` : ''}
@@ -204,24 +204,47 @@ function renderShare() {
 /* ─── INIT ─── */
 async function init() {
   const params = new URLSearchParams(window.location.search);
-  const id = params.get('id') || 1;
+  const filmSlug = params.get('film');
+  const legacyId = params.get('id');
 
-  // Charger le top
-  const topRes = await fetch(`${SUPABASE_URL}/rest/v1/tops?id=eq.${id}&select=*`, {
-    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-  });
-  const topData = await topRes.json();
-  const top = topData[0];
+  // Charger le top, en priorité par slug, sinon par id (compatibilité anciens liens), sinon le premier top
+  let top = null;
+  if (filmSlug) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/tops?slug=eq.${encodeURIComponent(filmSlug)}&select=*`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await res.json();
+    top = data[0] || null;
+  } else {
+    const idToUse = legacyId || 1;
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/tops?id=eq.${idToUse}&select=*`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await res.json();
+    top = data[0] || null;
+  }
   if (!top) {
     document.getElementById('hero-container').innerHTML = '<div class="loading-hero"><p>Top introuvable.</p></div>';
     return;
   }
+  const id = top.id;
 
   // Charger les films du top
   const filmsRes = await fetch(`${SUPABASE_URL}/rest/v1/tops_films?top_id=eq.${id}&select=*&order=position.asc`, {
     headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
   });
   const films = await filmsRes.json();
+
+  // Récupérer les slugs des critiques liées (pour des liens "Notre critique" propres)
+  const reviewIds = films.filter(f => f.review_id).map(f => f.review_id);
+  if (reviewIds.length > 0) {
+    const slugsRes = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=in.(${reviewIds.join(',')})&select=id,slug`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    const slugsData = await slugsRes.json();
+    const slugMap = Object.fromEntries(slugsData.map(r => [r.id, r.slug]));
+    films.forEach(f => { if (f.review_id) f.review_slug = slugMap[f.review_id]; });
+  }
 
   const filmOne = films.find(f => f.position === 1);
 
