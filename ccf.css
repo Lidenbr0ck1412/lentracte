@@ -25,7 +25,7 @@ nav {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 32px; height: 100px;
   position: sticky; top: -1px; z-index: 100;
-  border-bottom: 5px solid rgba(232,37,58,.22);
+  border-bottom: 2px solid var(--red);
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   will-change: transform;
@@ -979,22 +979,12 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .mobile-nav a:hover::before { color: var(--white); }
 }
 
-/* ── BARRE DE PROGRESSION DE LECTURE ── */
-#readProgressBar {
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  height: 5px;
-  width: 0%;
-  background: var(--accent, #E8253A);
-  z-index: 2;
-  transition: width 0.1s linear;
-}
-
-/* ── RUBAN MARQUE-PAGE "REPRENDRE LA LECTURE" ── */
+/* ── RUBAN MARQUE-PAGE "REPRENDRE LA LECTURE" ──
+   Positionné en absolute à l'intérieur de #navbar (qui est en position: sticky) :
+   le ruban reste donc toujours soudé au bas de la navbar, sans valeur en dur à recaler. */
 .resume-bookmark {
-  position: fixed;
-  top: 105px;
+  position: absolute;
+  top: 100%;
   right: 40px;
   width: 46px;
   height: 68px;
@@ -1032,8 +1022,8 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .resume-bookmark.active svg { opacity: 1; }
 
 .resume-tooltip {
-  position: fixed;
-  top: 105px;
+  position: absolute;
+  top: 100%;
   right: 96px;
   background: #181818;
   border: 1px solid #2a2a2a;
@@ -1054,7 +1044,7 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
 .resume-tooltip.visible { opacity: 1; transform: translateX(0); }
 
 @media (max-width: 600px) {
-  .resume-bookmark { top: 105px; right: 16px; width: 38px; height: 56px; }
+  .resume-bookmark { right: 16px; width: 38px; height: 56px; }
   .resume-bookmark svg { width: 16px; height: 16px; }
-  .resume-tooltip { top: 105px; right: 60px; font-size: 11px; }
+  .resume-tooltip { right: 60px; font-size: 11px; }
 }
