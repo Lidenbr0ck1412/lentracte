@@ -978,3 +978,65 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   .mobile-nav a:hover, .mobile-nav a.active { color: var(--red); }
   .mobile-nav a:hover::before { color: var(--white); }
 }
+
+/* ── BARRE DE PROGRESSION DE LECTURE ── */
+#readProgressBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: var(--accent, #E8253A);
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
+/* ── BANDEAU "REPRENDRE LA LECTURE" ── */
+.resume-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  border-radius: 999px;
+  padding: 10px 10px 10px 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.resume-banner.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.resume-banner span {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: .3px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.resume-banner button {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 6px;
+}
+.resume-banner button:hover { color: #fff; }
+
+@media (max-width: 600px) {
+  .resume-banner { left: 16px; right: 16px; transform: translateY(20px); width: auto; }
+  .resume-banner.visible { transform: translateY(0); }
+  .resume-banner span { white-space: normal; }
+}
