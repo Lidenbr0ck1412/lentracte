@@ -998,32 +998,38 @@ footer { background: #050505; text-align: center; padding: 20px; font-size: 11px
   right: 40px;
   width: 46px;
   height: 68px;
-  background: var(--accent, #E8253A);
+  background: #333;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
   display: flex;
   align-items: flex-start;
   justify-content: center;
   padding-top: 14px;
-  cursor: pointer;
+  cursor: default;
   z-index: 998;
   border: none;
   box-shadow: 0 6px 16px rgba(0,0,0,.4);
   opacity: 0;
   transform: translateY(-16px);
   pointer-events: none;
-  transition: opacity .35s ease, transform .35s ease;
+  transition: opacity .35s ease, transform .35s ease, background .25s ease;
 }
 .resume-bookmark.visible {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
-.resume-bookmark:hover { filter: brightness(1.12); }
+.resume-bookmark.active {
+  background: var(--accent, #E8253A);
+  cursor: pointer;
+}
+.resume-bookmark.active:hover { filter: brightness(1.12); }
 .resume-bookmark svg {
   width: 20px;
   height: 20px;
   fill: #fff;
+  opacity: .5;
 }
+.resume-bookmark.active svg { opacity: 1; }
 
 .resume-tooltip {
   position: fixed;
