@@ -131,7 +131,7 @@ let searchQuery = '';
 // ─── CHARGEMENT ───
 async function loadArchives() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,sub,year,genre,img,img_mobile,banner,color,color2,contenu,categorie_speciale&publie=eq.true&order=id.desc`,
+    `${SUPABASE_URL}/rest/v1/reviews?select=id,slug,title,sub,year,genre,img,img_mobile,banner,color,color2,contenu,categorie_speciale&publie=eq.true&order=id.desc`,
     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
   );
   allReviews = await res.json();
@@ -262,7 +262,7 @@ function renderGrid() {
 
 // ─── CARTE D'ARCHIVE ───
 function makeArchiveCard(r) {
-  const href = r.contenu ? `review.html?id=${r.id}` : '#';
+  const href = r.contenu ? `review.html?film=${r.slug}` : '#';
   const tag = r.contenu ? 'a' : 'div';
   const link = r.contenu ? `href="${href}"` : '';
   const imgSrc = r.img || '';
