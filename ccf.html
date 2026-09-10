@@ -43,7 +43,6 @@
   <div class="burger" onclick="toggleNav()" id="burger">
     <span></span><span></span><span></span>
   </div>
-  <div id="readProgressBar"></div>
 </nav>
 <div class="mobile-nav" id="mobileNav">
   <a href="full-reviews.html" onclick="toggleNav()">Nos critiques</a>
@@ -709,9 +708,6 @@ function updateReadingProgress(article) {
   const scrolled = Math.min(Math.max(-rect.top, 0), total);
   const pct = scrolled / total;
 
-  const bar = document.getElementById('readProgressBar');
-  if (bar) bar.style.width = `${Math.min(pct * 100, 100)}%`;
-
   if (pct > 0.03 && pct < 0.95) {
     localStorage.setItem(getReadKey(article), JSON.stringify({ pct, scrollY: window.scrollY }));
     setBookmarkState(pct, window.scrollY);
@@ -750,8 +746,9 @@ function createResumeBookmark() {
   bookmark.addEventListener('mouseenter', () => tooltip.classList.add('visible'));
   bookmark.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
 
-  document.body.appendChild(bookmark);
-  document.body.appendChild(tooltip);
+  const nav = document.getElementById('navbar');
+  nav.appendChild(bookmark);
+  nav.appendChild(tooltip);
   return bookmark;
 }
 
