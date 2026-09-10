@@ -717,6 +717,8 @@ function updateReadingProgress(article) {
     localStorage.setItem(getReadKey(article), JSON.stringify({ pct, scrollY: window.scrollY }));
   } else if (pct >= 0.95) {
     localStorage.removeItem(getReadKey(article));
+    document.querySelector('.resume-bookmark')?.remove();
+    document.querySelector('.resume-tooltip')?.remove();
   }
 }
 
@@ -730,24 +732,30 @@ function checkResumeReading(article) {
 }
 
 function showResumeBanner(pct, scrollY) {
-  const el = document.createElement('div');
-  el.className = 'resume-banner';
-  el.innerHTML = `
-    <span>📖 Reprendre la lecture (${Math.round(pct * 100)}%)</span>
-    <button aria-label="Fermer">✕</button>
+  const bookmark = document.createElement('button');
+  bookmark.className = 'resume-bookmark';
+  bookmark.setAttribute('aria-label', `Reprendre la lecture (${Math.round(pct * 100)}%)`);
+  bookmark.innerHTML = `
+    <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
   `;
-  el.querySelector('span').addEventListener('click', () => {
+
+  const tooltip = document.createElement('div');
+  tooltip.className = 'resume-tooltip';
+  tooltip.textContent = `Reprendre la lecture (${Math.round(pct * 100)}%)`;
+
+  bookmark.addEventListener('mouseenter', () => tooltip.classList.add('visible'));
+  bookmark.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+
+  bookmark.addEventListener('click', () => {
     window.scrollTo({ top: scrollY, behavior: 'smooth' });
-    el.classList.remove('visible');
-    setTimeout(() => el.remove(), 300);
+    bookmark.classList.remove('visible');
+    tooltip.classList.remove('visible');
+    setTimeout(() => { bookmark.remove(); tooltip.remove(); }, 350);
   });
-  el.querySelector('button').addEventListener('click', (e) => {
-    e.stopPropagation();
-    el.classList.remove('visible');
-    setTimeout(() => el.remove(), 300);
-  });
-  document.body.appendChild(el);
-  requestAnimationFrame(() => el.classList.add('visible'));
+
+  document.body.appendChild(bookmark);
+  document.body.appendChild(tooltip);
+  requestAnimationFrame(() => bookmark.classList.add('visible'));
 }
 
 let __progressTicking = false;
