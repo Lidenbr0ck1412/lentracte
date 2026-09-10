@@ -100,7 +100,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 // ─── CHARGEMENT DES CCF ───
 async function loadCcf() {
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/ccf?select=id,created_at,title,realisateur,banner,intro_1,tagline,genre,duree,annee&order=created_at.desc`,
+    `${SUPABASE_URL}/rest/v1/ccf?select=id,slug,created_at,title,realisateur,banner,intro_1,tagline,genre,duree,annee&order=created_at.desc`,
     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
   );
   const items = await res.json();
@@ -204,7 +204,7 @@ function formatNumero(id) {
 function renderFeatured(item) {
   const featuredEl = document.getElementById('ccfFeatured');
   const { tagline, accroche } = buildAccroche(item);
-  const href = `ccf.html?id=${item.id}`;
+  const href = `ccf.html?film=${item.slug}`;
   const annee = item.annee ? ` · ${item.annee}` : '';
   const duree = item.duree ? ` · ${item.duree} min` : '';
   const meta = `CCF ${formatNumero(item.id)}${annee}${duree}`;
@@ -241,7 +241,7 @@ function makeRow(item, idx) {
   // L'alternance : index pair = image à gauche, impair = image à droite
   const reverse = (idx % 2 === 1);
   const { tagline, accroche } = buildAccroche(item);
-  const href = `ccf.html?id=${item.id}`;
+  const href = `ccf.html?film=${item.slug}`;
   const annee = item.annee ? ` · ${item.annee}` : '';
   const duree = item.duree ? ` · ${item.duree} min` : '';
   const meta = `CCF ${formatNumero(item.id)}${annee}${duree}`;
