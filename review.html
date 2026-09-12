@@ -777,17 +777,19 @@ init();
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  height: 420px;
 }
 .article-carousel-track::-webkit-scrollbar { display: none; }
 .article-carousel-slide {
   flex: 0 0 100%;
   scroll-snap-align: start;
   position: relative;
+  height: 100%;
+  background: #1a1a1a;
 }
 .article-carousel-slide img {
   width: 100%;
-  height: auto;
-  max-height: 560px;
+  height: 100%;
   object-fit: cover;
   display: block;
   cursor: zoom-in;
@@ -845,7 +847,7 @@ init();
   transform: scale(1.3);
 }
 @media (max-width: 600px) {
-  .article-carousel-slide img { max-height: 360px; }
+  .article-carousel-track { height: 260px; }
   .article-carousel-arrow { width: 34px; height: 34px; }
   .article-carousel-arrow svg { width: 18px; height: 18px; }
   .article-carousel-arrow.prev { left: 8px; }
