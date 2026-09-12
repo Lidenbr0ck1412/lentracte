@@ -41,6 +41,7 @@
     <span></span><span></span><span></span>
   </div>
 </nav>
+
 <div class="mobile-nav" id="mobileNav">
   <a href="index.html#reviews" onclick="toggleNav()">Reviews</a>
   <a href="ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
@@ -74,17 +75,16 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 /* ─────────────────────────────────────────────
    MARKDOWN PARSER
    Supporte :
-   ## Titre section      → <div class="section-title">
-   > Citation            → <div class="pull-quote">
-   💡 Le saviez-vous ?   → <div class="anecdote-card"> (ligne qui commence par un emoji)
-   **gras**              → <strong>
-   *italique*            → <em>
-   Paragraphes normaux   → <p>
+   ## Titre section → <div class="section-title">
+   > Citation → <div class="pull-quote">
+   💡 Le saviez-vous ? → <div class="anecdote-card"> (ligne qui commence par un emoji)
+   **gras** → <strong>
+   *italique* → <em>
+   Paragraphes normaux → <p>
    Première section = article-intro (Playfair italique)
 ───────────────────────────────────────────── */
 function parseMarkdown(md) {
   if (!md) return '';
-
   const lines = md.split('\n');
   const blocks = [];
   let currentParagraph = [];
@@ -173,6 +173,7 @@ function parseMarkdown(md) {
         i++;
         imgs.push(lines[i].trim().match(/^!\[(.*?)\]\((.*?)\)$/));
       }
+
       function parseImg(m) {
         const rawLabel = m[1].trim();
         const src = m[2].trim();
@@ -181,34 +182,47 @@ function parseMarkdown(md) {
         let position = '';
         let wide = false;
         let stack = false;
+        let carousel = false;
         parts.slice(1).forEach(p => {
           const mod = p.trim();
           if (mod === 'large' || mod === 'full') wide = true;
           else if (mod === 'stack') stack = true;
+          else if (mod === 'carousel') carousel = true;
           else if (/^\d+%?$/.test(mod)) position = `center ${mod.replace('%','')}%`;
         });
-        return { caption, src, position, wide, stack };
+        return { caption, src, position, wide, stack, carousel };
       }
+
       if (imgs.length === 1) {
-        const { caption, src, position, wide } = parseImg(imgs[0]);
-        blocks.push(`
-          <figure class="article-image reveal${wide ? ' wide' : ''}">
-            <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
-            ${caption ? `<figcaption>${caption}</figcaption>` : ''}
-          </figure>`);
+        const { caption, src, position, wide, carousel } = parseImg(imgs[0]);
+        if (carousel) {
+          blocks.push(renderCarousel([{ caption, src }]));
+        } else {
+          blocks.push(`
+            <figure class="article-image reveal${wide ? ' wide' : ''}">
+              <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
+              ${caption ? `<figcaption>${caption}</figcaption>` : ''}
+            </figure>`);
+        }
       } else {
         const parsed = imgs.map(parseImg);
-        const useStack = parsed.some(p => p.stack);
-        const figs = parsed.map(({ caption, src, position }) => `
+        const useCarousel = parsed.some(p => p.carousel);
+
+        if (useCarousel) {
+          blocks.push(renderCarousel(parsed));
+        } else {
+          const useStack = parsed.some(p => p.stack);
+          const figs = parsed.map(({ caption, src, position }) => `
             <figure>
               <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
               ${caption ? `<figcaption>${caption}</figcaption>` : ''}
             </figure>`).join('');
-        const colCount = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
-        const galleryClass = useStack
-          ? (imgs.length >= 4 ? 'stack stack-cols-2' : 'stack')
-          : `cols-${colCount}`;
-        blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
+          const colCount = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
+          const galleryClass = useStack
+            ? (imgs.length >= 4 ? 'stack stack-cols-2' : 'stack')
+            : `cols-${colCount}`;
+          blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
+        }
       }
       continue;
     }
@@ -252,6 +266,80 @@ function parseMarkdown(md) {
   }
   if (inBody) result += '</div>';
   return result;
+}
+
+/* ─────────────────────────────────────────────
+   CARROUSEL D'IMAGES (dans le corps d'un article)
+   Chaque carrousel a un id unique pour ne pas
+   entrer en conflit si plusieurs coexistent.
+───────────────────────────────────────────── */
+let __articleCarouselCount = 0;
+
+function renderCarousel(images) {
+  const carouselId = `articleCarousel${__articleCarouselCount++}`;
+  const slides = images.map((img, i) => `
+    <div class="article-carousel-slide">
+      <img src="${img.src}" alt="${img.caption || 'Image'}" loading="lazy">
+      ${img.caption ? `<figcaption>${img.caption}</figcaption>` : ''}
+    </div>`).join('');
+  const dots = images.map((_, i) => `<span class="article-carousel-dot${i === 0 ? ' active' : ''}"></span>`).join('');
+
+  return `
+    <div class="article-carousel reveal" id="${carouselId}">
+      <button class="article-carousel-arrow prev" onclick="articleCarouselScroll('${carouselId}', -1)" aria-label="Précédent">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <div class="article-carousel-track" id="${carouselId}-track">${slides}</div>
+      <button class="article-carousel-arrow next" onclick="articleCarouselScroll('${carouselId}', 1)" aria-label="Suivant">
+        <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </button>
+      ${images.length > 1 ? `<div class="article-carousel-dots">${dots}</div>` : ''}
+    </div>`;
+}
+
+const __carouselIndexes = {};
+
+function articleCarouselScroll(carouselId, dir) {
+  const track = document.getElementById(`${carouselId}-track`);
+  if (!track) return;
+  const slides = track.querySelectorAll('.article-carousel-slide');
+  if (!slides.length) return;
+
+  const current = __carouselIndexes[carouselId] || 0;
+  const next = (current + dir + slides.length) % slides.length;
+  __carouselIndexes[carouselId] = next;
+
+  const step = slides[0].getBoundingClientRect().width;
+  track.style.scrollSnapType = 'none';
+  track.scrollTo({ left: next * step, behavior: 'smooth' });
+  clearTimeout(track._snapRestoreTimeout);
+  track._snapRestoreTimeout = setTimeout(() => { track.style.scrollSnapType = ''; }, 500);
+
+  const wrapper = document.getElementById(carouselId);
+  const dots = wrapper ? wrapper.querySelectorAll('.article-carousel-dot') : [];
+  dots.forEach((d, i) => d.classList.toggle('active', i === next));
+}
+
+function bindCarouselSwipeSync() {
+  document.querySelectorAll('.article-carousel-track').forEach(track => {
+    if (track.dataset.syncBound) return;
+    track.dataset.syncBound = '1';
+    const carouselId = track.id.replace('-track', '');
+    let t;
+    track.addEventListener('scroll', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        const slides = track.querySelectorAll('.article-carousel-slide');
+        if (!slides.length) return;
+        const step = slides[0].getBoundingClientRect().width;
+        const idx = Math.round(track.scrollLeft / step);
+        __carouselIndexes[carouselId] = idx;
+        const wrapper = document.getElementById(carouselId);
+        const dots = wrapper ? wrapper.querySelectorAll('.article-carousel-dot') : [];
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }, 120);
+    });
+  });
 }
 
 /* ─────────────────────────────────────────────
@@ -300,39 +388,34 @@ function renderHero(r) {
   const noteLabel = r.note ? `${r.note} / 5 ★` : '—';
   const banner = r.banner || (r.img ? r.img : '');
   const poster = r.img || '';
-
   return `
-  <section class="hero">
-    <div class="hero-bg">
-      ${banner ? `<img src="${banner}" alt="${r.title}">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${r.color||'#1a0505'},${r.color2||'#3a1010'})"></div>`}
-    </div>
-
-    ${poster ? `
-    <div class="hero-poster-zone">
-      <img src="${poster}" alt="${r.title} poster">
-    </div>` : ''}
-
-    <div class="hero-content">
-      <div class="hero-category"><span class="dot"></span>CRITIQUE</div>
-      <h1 class="hero-title">
-        ${r.title}
-        <span class="year">${r.year || ''}</span>
-      </h1>
-      ${r.sub ? `<p class="hero-tagline">${r.sub}</p>` : ''}
-      <div class="hero-meta">
-        ${r.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${r.realisateur}</span></div>` : ''}
-        ${r.genre ? `<div class="meta-item"><span class="meta-label">Genre</span><span class="meta-value">${r.genre}</span></div>` : ''}
-        ${r.duree ? `<div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">${r.duree}</span></div>` : ''}
-
-        ${r.badge ? `<div class="meta-item"><span class="meta-label">Plateforme</span><span class="meta-value">${r.badge}</span></div>` : ''}
+    <section class="hero">
+      <div class="hero-bg">
+        ${banner ? `<img src="${banner}" alt="${r.title}">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${r.color||'#1a0505'},${r.color2||'#3a1010'})"></div>`}
       </div>
-    </div>
-
-    <div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})">
-      <span>LIRE</span>
-      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-    </div>
-  </section>`;
+      ${poster ? `
+      <div class="hero-poster-zone">
+        <img src="${poster}" alt="${r.title} poster">
+      </div>` : ''}
+      <div class="hero-content">
+        <div class="hero-category"><span class="dot"></span>CRITIQUE</div>
+        <h1 class="hero-title">
+          ${r.title}
+          <span class="year">${r.year || ''}</span>
+        </h1>
+        ${r.sub ? `<p class="hero-tagline">${r.sub}</p>` : ''}
+        <div class="hero-meta">
+          ${r.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${r.realisateur}</span></div>` : ''}
+          ${r.genre ? `<div class="meta-item"><span class="meta-label">Genre</span><span class="meta-value">${r.genre}</span></div>` : ''}
+          ${r.duree ? `<div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">${r.duree}</span></div>` : ''}
+          ${r.badge ? `<div class="meta-item"><span class="meta-label">Plateforme</span><span class="meta-value">${r.badge}</span></div>` : ''}
+        </div>
+      </div>
+      <div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})">
+        <span>LIRE</span>
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </div>
+    </section>`;
 }
 
 /* ─────────────────────────────────────────────
@@ -343,23 +426,23 @@ function renderStills(stills) {
   const imgs = stills.split(',').map(s => s.trim()).filter(Boolean);
   if (!imgs.length) return '';
   return `
-  <div class="stills-grid reveal">
-    ${imgs.map((src, i) => `
-    <div class="still">
-      <img src="${src}" alt="Still ${i+1}">
-    </div>`).join('')}
-  </div>`;
+    <div class="stills-grid reveal">
+      ${imgs.map((src, i) => `
+        <div class="still">
+          <img src="${src}" alt="Still ${i+1}">
+        </div>`).join('')}
+    </div>`;
 }
 
 function renderTrailer(url) {
   if (!url) return '';
   return `
-  <div class="trailer-section reveal">
-    <div class="section-title">BANDE ANNONCE</div>
-    <div class="trailer-wrap">
-      <iframe src="${url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-  </div>`;
+    <div class="trailer-section reveal">
+      <div class="section-title">BANDE ANNONCE</div>
+      <div class="trailer-wrap">
+        <iframe src="${url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>`;
 }
 
 function renderArticle(r) {
@@ -381,41 +464,41 @@ function renderArticle(r) {
 
   // Insérer la bande annonce juste avant la note (après le dernier paragraphe du corps)
   const trailerHtml = renderTrailer(r.trailer);
+
   const verdict = r.verdict || 'À voir absolument';
 
   return `
-  <div class="article-wrapper" id="article-top">
-    ${bodyHtml}
+    <div class="article-wrapper" id="article-top">
+      ${bodyHtml}
+      ${trailerHtml}
 
-    ${trailerHtml}
-
-    <!-- NOTE -->
-    <div class="rating-section reveal">
-      <div class="rating-label">Notre verdict</div>
-      <div class="rating-title">${verdict}</div>
-      <div class="stars-container">
-        ${buildStars(r.note || 0)}
+      <!-- NOTE -->
+      <div class="rating-section reveal">
+        <div class="rating-label">Notre verdict</div>
+        <div class="rating-title">${verdict}</div>
+        <div class="stars-container">
+          ${buildStars(r.note || 0)}
+        </div>
+        <div class="rating-score">${r.note || '—'}<span> / 5</span></div>
       </div>
-      <div class="rating-score">${r.note || '—'}<span> / 5</span></div>
-    </div>
 
-    <!-- PARTAGE -->
-    <div class="share-bar reveal">
-      <span class="share-label">Partager</span>
-      <button class="share-btn" onclick="shareTwitter()">
-        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        X / Twitter
-      </button>
-      <button class="share-btn" onclick="shareFacebook()">
-        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        Facebook
-      </button>
-      <button class="share-btn" id="copyBtn">
-        <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
-        Copier le lien
-      </button>
-    </div>
-  </div>`;
+      <!-- PARTAGE -->
+      <div class="share-bar reveal">
+        <span class="share-label">Partager</span>
+        <button class="share-btn" onclick="shareTwitter()">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          X / Twitter
+        </button>
+        <button class="share-btn" onclick="shareFacebook()">
+          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </button>
+        <button class="share-btn" id="copyBtn">
+          <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+          Copier le lien
+        </button>
+      </div>
+    </div>`;
 }
 
 /* ─────────────────────────────────────────────
@@ -429,9 +512,7 @@ function relatedScroll(dir) {
   const cards = grid.querySelectorAll('.related-card');
   if (!cards.length) return;
   const step = cards[0].getBoundingClientRect().width;
-
   relatedIndex = (relatedIndex + dir + cards.length) % cards.length;
-
   // le scroll-snap peut couper court une animation smooth sur un grand saut
   // (ex: dernière carte -> première), donc on le désactive le temps du scroll
   grid.style.scrollSnapType = 'none';
@@ -471,27 +552,27 @@ function renderRelated(reviews, currentId) {
   }).join('');
 
   return `
-  <section class="related-section">
-    <div class="related-inner">
-      <div class="related-header">
-        <span class="related-eyebrow">CONTINUER LA SÉANCE</span>
-        <h3>À lire <em>aussi</em></h3>
-      </div>
-      <div class="related-carousel">
-        <button class="related-arrow prev" onclick="relatedScroll(-1)" aria-label="Précédent">
-          <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-        </button>
-        <div class="related-grid" id="relatedGrid">${cards}</div>
-        <button class="related-arrow next" onclick="relatedScroll(1)" aria-label="Suivant">
+    <section class="related-section">
+      <div class="related-inner">
+        <div class="related-header">
+          <span class="related-eyebrow">CONTINUER LA SÉANCE</span>
+          <h3>À lire <em>aussi</em></h3>
+        </div>
+        <div class="related-carousel">
+          <button class="related-arrow prev" onclick="relatedScroll(-1)" aria-label="Précédent">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          </button>
+          <div class="related-grid" id="relatedGrid">${cards}</div>
+          <button class="related-arrow next" onclick="relatedScroll(1)" aria-label="Suivant">
+            <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+          </button>
+        </div>
+        <a href="full-reviews.html" class="related-cta">
+          Voir toutes les critiques
           <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-        </button>
+        </a>
       </div>
-      <a href="full-reviews.html" class="related-cta">
-        Voir toutes les critiques
-        <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-      </a>
-    </div>
-  </section>`;
+    </section>`;
 }
 
 /* ─────────────────────────────────────────────
@@ -510,6 +591,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor i
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. **La mise en scène est d'une précision chirurgicale**, chaque plan construit comme une gravure ancienne.
 
 💡 LE SAVIEZ-VOUS ?
+
 Le réalisateur porte ce projet depuis plus de *vingt ans*. Il avait écrit une première version du scénario en 2000, mais le studio avait refusé de financer un film qu'il jugeait trop sombre. C'est finalement grâce à une plateforme de streaming qu'il a pu réaliser sa vision sans compromis.
 
 ## CE QUI PÈCHE
@@ -528,6 +610,7 @@ async function init() {
   const params = new URLSearchParams(window.location.search);
   const filmSlug = params.get('film');
   const id = params.get('id');
+
   // ?preview=1 permet de voir un article même non publié (pour toi seulement, lien à ne pas partager)
   const isPreview = params.get('preview') === '1';
   const publieFilter = isPreview ? '' : '&publie=eq.true';
@@ -575,7 +658,10 @@ async function init() {
   document.getElementById('hero-container').innerHTML = renderHero(review);
   document.getElementById('article-container').innerHTML = renderArticle(review);
   document.getElementById('related-container').innerHTML = renderRelated(allReviews, review.id);
+
   bindLightboxImages();
+  bindCarouselSwipeSync();
+
   const relatedGridEl = document.getElementById('relatedGrid');
   if (relatedGridEl) {
     let swipeSyncTimeout;
@@ -654,13 +740,14 @@ function closeLightbox(e) {
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
 function bindLightboxImages() {
-  document.querySelectorAll('.article-image img, .article-gallery img').forEach(img => {
+  document.querySelectorAll('.article-image img, .article-gallery img, .article-carousel-slide img').forEach(img => {
     if (img.dataset.lbBound) return;
     img.dataset.lbBound = '1';
     img.style.cursor = 'zoom-in';
     img.addEventListener('click', () => {
-      const caption = img.closest('figure')?.querySelector('figcaption')?.textContent || img.alt || '';
+      const caption = img.closest('figure, .article-carousel-slide')?.querySelector('figcaption')?.textContent || img.alt || '';
       openLightbox(img.src, caption);
     });
   });
@@ -668,11 +755,103 @@ function bindLightboxImages() {
 
 init();
 </script>
+
 <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
   <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
   <img id="lightbox-img" src="" alt="">
   <div id="lightbox-caption" class="lightbox-caption"></div>
 </div>
+
+<!-- ─── CARROUSEL D'IMAGES DANS L'ARTICLE ─── -->
+<style>
+.article-carousel {
+  position: relative;
+  margin: 40px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+}
+.article-carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.article-carousel-track::-webkit-scrollbar { display: none; }
+.article-carousel-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  position: relative;
+}
+.article-carousel-slide img {
+  width: 100%;
+  height: auto;
+  max-height: 560px;
+  object-fit: cover;
+  display: block;
+  cursor: zoom-in;
+}
+.article-carousel-slide figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 14px 20px;
+  background: linear-gradient(to top, rgba(0,0,0,.75), transparent);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .3px;
+}
+.article-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--red, #E8253A);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 6px 16px rgba(0,0,0,.4);
+  transition: filter .2s ease, transform .2s ease;
+}
+.article-carousel-arrow:hover { filter: brightness(1.12); transform: translateY(-50%) scale(1.06); }
+.article-carousel-arrow svg { width: 22px; height: 22px; fill: #fff; }
+.article-carousel-arrow.prev { left: 16px; }
+.article-carousel-arrow.next { right: 16px; }
+.article-carousel-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+.article-carousel-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.4);
+  transition: background .2s ease, transform .2s ease;
+}
+.article-carousel-dot.active {
+  background: var(--red, #E8253A);
+  transform: scale(1.3);
+}
+@media (max-width: 600px) {
+  .article-carousel-slide img { max-height: 360px; }
+  .article-carousel-arrow { width: 34px; height: 34px; }
+  .article-carousel-arrow svg { width: 18px; height: 18px; }
+  .article-carousel-arrow.prev { left: 8px; }
+  .article-carousel-arrow.next { right: 8px; }
+}
+</style>
 
 <!-- ─── SEARCH OVERLAY (barre de nav, partagé avec l'accueil) ─── -->
 <div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
@@ -778,25 +957,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
 async function doSearch() {
   const query = document.getElementById('searchInput').value.trim();
   const resultsEl = document.getElementById('searchResults');
   if (!query) return;
-
   resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
-
   const res = await fetch(
     `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&publie=eq.true&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,
     { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
   );
   const data = await res.json();
-
   if (!data.length) {
     resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';
     return;
   }
-
   resultsEl.innerHTML = data.map(r => `
     <a class="search-result-card" href="${r.link || '#'}">
       ${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
