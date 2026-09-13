@@ -13,46 +13,44 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
-
 <!-- NAVBAR -->
 <nav>
-  <a href="index.html" class="logo">
-    <img src="images/TAGLINE.png" alt="L'Entracte">
-  </a>
-  <div class="nav-right">
-    <ul class="nav-links">
-      <li class="nav-cinema">
-        Cinéma
-        <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
-        <div class="dropdown">
-          <a href="full-reviews.html"><span>▸</span>Nos dernières reviews</a>
-          <a href="ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
-          <a href="tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
-        </div>
-      </li>
-      <li><a href="a-propos.html">À propos</a></li>
-      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
-    </ul>
-  </div>
-  <div class="search-btn" onclick="toggleSearch()" title="Rechercher">
-    <svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-  </div>
-  <div class="burger" onclick="toggleNav()" id="burger">
-    <span></span><span></span><span></span>
-  </div>
+<a href="index.html" class="logo">
+<img src="images/TAGLINE.png" alt="L'Entracte">
+</a>
+<div class="nav-right">
+<ul class="nav-links">
+<li class="nav-cinema">
+Cinéma
+<svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+<div class="dropdown">
+<a href="full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+<a href="ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+<a href="tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
+</div>
+</li>
+<li><a href="a-propos.html">À propos</a></li>
+<li><a href="index.html#contact" class="contact-link">Contact</a></li>
+</ul>
+</div>
+<div class="search-btn" onclick="toggleSearch()" title="Rechercher">
+<svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+</div>
+<div class="burger" onclick="toggleNav()" id="burger">
+<span></span><span></span><span></span>
+</div>
 </nav>
-
 <div class="mobile-nav" id="mobileNav">
-  <a href="index.html#reviews" onclick="toggleNav()">Reviews</a>
-  <a href="ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
-  <a href="tops-archives.html" onclick="toggleNav()">Les tops</a>
-  <a href="a-propos.html" onclick="toggleNav()">À propos</a>
-  <a href="index.html#contact" onclick="toggleNav()">Contact</a>
+<a href="index.html#reviews" onclick="toggleNav()">Reviews</a>
+<a href="ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
+<a href="tops-archives.html" onclick="toggleNav()">Les tops</a>
+<a href="a-propos.html" onclick="toggleNav()">À propos</a>
+<a href="index.html#contact" onclick="toggleNav()">Contact</a>
 </div>
 
 <!-- HERO (populated by JS) -->
 <div id="hero-container">
-  <div class="loading-hero"><p>Chargement…</p></div>
+<div class="loading-hero"><p>Chargement…</p></div>
 </div>
 
 <!-- ARTICLE (populated by JS) -->
@@ -62,7 +60,7 @@
 <div id="related-container"></div>
 
 <footer>
-  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+<p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
 </footer>
 
 <script>
@@ -71,6 +69,49 @@
 ───────────────────────────────────────────── */
 const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+
+/* ─────────────────────────────────────────────
+   REDIRECTION DES ANCIENNES URLS
+   review.html?id=35  ou  review.html?film=together
+   ─────────>  /together-critique/
+
+   Objectif : les vieux liens (favoris, réseaux sociaux,
+   résultats Google déjà indexés) continuent de mener
+   au bon endroit une fois qu'on est passé aux pages
+   statiques générées par generate-static-pages.js.
+───────────────────────────────────────────── */
+async function redirectIfLegacyUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const filmSlug = params.get('film');
+  const isPreview = params.get('preview') === '1';
+
+  // Pas de ?id= ni de ?film= dans l'URL -> rien à rediriger,
+  // c'est un accès direct à review.html (fallback/preview)
+  if (!id && !filmSlug) return false;
+
+  let slug = filmSlug;
+
+  // Si on n'a que l'ancien ?id=, il faut aller chercher le slug correspondant
+  if (!slug && id) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}&select=slug`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      });
+      const data = await res.json();
+      slug = data[0]?.slug || null;
+    } catch (e) {
+      return false; // en cas d'échec réseau, on laisse la page actuelle gérer l'affichage
+    }
+  }
+
+  if (!slug) return false; // review introuvable, on laisse la page actuelle gérer l'erreur
+
+  const finalSlug = slug.endsWith('-critique') ? slug : `${slug}-critique`;
+  const target = `/${finalSlug}/${isPreview ? '?preview=1' : ''}`;
+  window.location.replace(target);
+  return true; // redirection en cours, inutile de continuer à charger le reste
+}
 
 /* ─────────────────────────────────────────────
    MARKDOWN PARSER
@@ -84,421 +125,332 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
    Première section = article-intro (Playfair italique)
 ───────────────────────────────────────────── */
 function parseMarkdown(md) {
-  if (!md) return '';
-  const lines = md.split('\n');
-  const blocks = [];
-  let currentParagraph = [];
-  let isFirst = true;
+if (!md) return '';
+const lines = md.split('\n');
+const blocks = [];
+let currentParagraph = [];
+let isFirst = true;
 
-  function flushParagraph() {
-    if (currentParagraph.length === 0) return;
-    const text = currentParagraph.join(' ').trim();
-    if (!text) { currentParagraph = []; return; }
-    const html = inlineMarkdown(text);
-    if (isFirst) {
-      // Le premier paragraphe = intro en Playfair italique
-      // On retire les * d'enrobage si Notion les a ajoutés (*texte*)
-      const cleaned = html.replace(/^\*(.+)\*$/, '$1');
-      blocks.push(`<p class="article-intro reveal">${cleaned}</p>`);
-      isFirst = false;
-    } else {
-      // Paragraphe en italique seul (entouré de *...*) → pull-quote
-      if (/^\*[^*].+[^*]\*$/.test(text)) {
-        const quoteText = inlineMarkdown(text.replace(/^\*(.+)\*$/, '$1'));
-        blocks.push(`
-          <div class="pull-quote reveal">
-            <p>${quoteText}</p>
-            <cite>L'Entracte</cite>
-          </div>`);
-      } else {
-        blocks.push(`<p class="reveal">${html}</p>`);
-      }
-    }
-    currentParagraph = [];
-  }
-
-  function inlineMarkdown(text) {
-    return text
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>');
-  }
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-
-    // Ligne vide → flush paragraphe
-    if (line.trim() === '') {
-      flushParagraph();
-      continue;
-    }
-
-    // # TITRE (format Notion : "# **TITRE**" ou "# TITRE")
-    if (/^#{1,3} /.test(line)) {
-      flushParagraph();
-      isFirst = false;
-      // Retire les # et le gras éventuel autour du titre
-      let title = line.replace(/^#{1,3} /, '').trim();
-      title = title.replace(/^\*\*(.+)\*\*$/, '$1');
-      blocks.push(`<div class="section-title reveal">${title}</div>`);
-      continue;
-    }
-
-    // > Citation (pull-quote explicite)
-    if (line.startsWith('> ')) {
-      flushParagraph();
-      isFirst = false;
-      let quoteLines = [line.replace('> ', '')];
-      while (i + 1 < lines.length && lines[i + 1].startsWith('> ')) {
-        i++;
-        quoteLines.push(lines[i].replace('> ', ''));
-      }
-      const quoteText = inlineMarkdown(quoteLines.join(' '));
-      blocks.push(`
-        <div class="pull-quote reveal">
-          <p>${quoteText}</p>
-          <cite>L'Entracte</cite>
-        </div>`);
-      continue;
-    }
-
-    // ![légende](url) ou ![légende|position](url) → image insérée dans l'article
-    // "position" est optionnelle, ex: 20% (vertical), top, bottom, center — règle l'object-position
-    // Plusieurs lignes d'images collées (sans ligne vide entre elles) → galerie côte à côte
-    const imgMatch = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
-    if (imgMatch) {
-      flushParagraph();
-      isFirst = false;
-      const imgs = [imgMatch];
-      while (i + 1 < lines.length && /^!\[(.*?)\]\((.*?)\)$/.test(lines[i + 1].trim())) {
-        i++;
-        imgs.push(lines[i].trim().match(/^!\[(.*?)\]\((.*?)\)$/));
-      }
-
-      function parseImg(m) {
-        const rawLabel = m[1].trim();
-        const src = m[2].trim();
-        const parts = rawLabel.split('|');
-        const caption = parts[0].trim();
-        let position = '';
-        let wide = false;
-        let stack = false;
-        let carousel = false;
-        parts.slice(1).forEach(p => {
-          const mod = p.trim();
-          if (mod === 'large' || mod === 'full') wide = true;
-          else if (mod === 'stack') stack = true;
-          else if (mod === 'carousel') carousel = true;
-          else if (/^\d+%?$/.test(mod)) position = `center ${mod.replace('%','')}%`;
-        });
-        return { caption, src, position, wide, stack, carousel };
-      }
-
-      if (imgs.length === 1) {
-        const { caption, src, position, wide, carousel } = parseImg(imgs[0]);
-        if (carousel) {
-          blocks.push(renderCarousel([{ caption, src }]));
-        } else {
-          blocks.push(`
-            <figure class="article-image reveal${wide ? ' wide' : ''}">
-              <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
-              ${caption ? `<figcaption>${caption}</figcaption>` : ''}
-            </figure>`);
-        }
-      } else {
-        const parsed = imgs.map(parseImg);
-        const useCarousel = parsed.some(p => p.carousel);
-
-        if (useCarousel) {
-          blocks.push(renderCarousel(parsed));
-        } else {
-          const useStack = parsed.some(p => p.stack);
-          const figs = parsed.map(({ caption, src, position }) => `
-            <figure>
-              <img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
-              ${caption ? `<figcaption>${caption}</figcaption>` : ''}
-            </figure>`).join('');
-          const colCount = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
-          const galleryClass = useStack
-            ? (imgs.length >= 4 ? 'stack stack-cols-2' : 'stack')
-            : `cols-${colCount}`;
-          blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
-        }
-      }
-      continue;
-    }
-
-    // Ligne qui commence par un emoji → anecdote card
-    if (/^[\u{1F300}-\u{1FAFF}✨💡🎬🎥📽🎞🔍⚡🏆💬🎭🎦]/u.test(line.trim())) {
-      flushParagraph();
-      isFirst = false;
-      const emoji = [...line.trim()][0];
-      let label = line.trim().slice([...line.trim()][0].length).trim();
-      let contentLines = [];
-      while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !/^#{1,3} /.test(lines[i + 1]) && !lines[i + 1].startsWith('> ')) {
-        i++;
-        contentLines.push(lines[i]);
-      }
-      const contentText = inlineMarkdown(contentLines.join(' '));
-      blocks.push(`
-        <div class="anecdote-card reveal">
-          <div class="anecdote-icon">${emoji}</div>
-          ${label ? `<div class="anecdote-label">${label}</div>` : ''}
-          <p class="anecdote-text">${contentText}</p>
-        </div>`);
-      continue;
-    }
-
-    // Ligne normale → accumulée dans paragraphe
-    currentParagraph.push(line);
-  }
-  flushParagraph();
-
-  // Wrap dans article-body (sauf l'intro)
-  let inBody = false;
-  let result = '';
-  for (const block of blocks) {
-    const isIntro = block.includes('article-intro');
-    if (!inBody && !isIntro) {
-      result += '<div class="article-body">';
-      inBody = true;
-    }
-    result += block;
-  }
-  if (inBody) result += '</div>';
-  return result;
+function flushParagraph() {
+if (currentParagraph.length === 0) return;
+const text = currentParagraph.join(' ').trim();
+if (!text) { currentParagraph = []; return; }
+const html = inlineMarkdown(text);
+if (isFirst) {
+// Le premier paragraphe = intro en Playfair italique
+// On retire les * d'enrobage si Notion les a ajoutés (*texte*)
+const cleaned = html.replace(/^\*(.+)\*$/, '$1');
+blocks.push(`<p class="article-intro reveal">${cleaned}</p>`);
+isFirst = false;
+} else {
+// Paragraphe en italique seul (entouré de *...*) → pull-quote
+if (/^\*[^*].+[^*]\*$/.test(text)) {
+const quoteText = inlineMarkdown(text.replace(/^\*(.+)\*$/, '$1'));
+blocks.push(`
+<div class="pull-quote reveal">
+<p>${quoteText}</p>
+<cite>L'Entracte</cite>
+</div>`);
+} else {
+blocks.push(`<p class="reveal">${html}</p>`);
+}
+}
+currentParagraph = [];
 }
 
-/* ─────────────────────────────────────────────
-   CARROUSEL D'IMAGES (dans le corps d'un article)
-   Chaque carrousel a un id unique pour ne pas
-   entrer en conflit si plusieurs coexistent.
-───────────────────────────────────────────── */
-let __articleCarouselCount = 0;
-
-function renderCarousel(images) {
-  const carouselId = `articleCarousel${__articleCarouselCount++}`;
-  const slides = images.map((img, i) => `
-    <div class="article-carousel-slide">
-      <img src="${img.src}" alt="${img.caption || 'Image'}" loading="lazy">
-      ${img.caption ? `<figcaption>${img.caption}</figcaption>` : ''}
-    </div>`).join('');
-  const dots = images.map((_, i) => `<span class="article-carousel-dot${i === 0 ? ' active' : ''}"></span>`).join('');
-
-  return `
-    <div class="article-carousel reveal" id="${carouselId}">
-      <button class="article-carousel-arrow prev" onclick="articleCarouselScroll('${carouselId}', -1)" aria-label="Précédent">
-        <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-      </button>
-      <div class="article-carousel-track" id="${carouselId}-track">${slides}</div>
-      <button class="article-carousel-arrow next" onclick="articleCarouselScroll('${carouselId}', 1)" aria-label="Suivant">
-        <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-      </button>
-      ${images.length > 1 ? `<div class="article-carousel-dots">${dots}</div>` : ''}
-    </div>`;
+function inlineMarkdown(text) {
+return text
+.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+.replace(/\*(.+?)\*/g, '<em>$1</em>');
 }
 
-const __carouselIndexes = {};
+for (let i = 0; i < lines.length; i++) {
+const line = lines[i];
 
-function articleCarouselScroll(carouselId, dir) {
-  const track = document.getElementById(`${carouselId}-track`);
-  if (!track) return;
-  const slides = track.querySelectorAll('.article-carousel-slide');
-  if (!slides.length) return;
-
-  const current = __carouselIndexes[carouselId] || 0;
-  const next = (current + dir + slides.length) % slides.length;
-  __carouselIndexes[carouselId] = next;
-
-  const step = slides[0].getBoundingClientRect().width;
-  track.style.scrollSnapType = 'none';
-  track.scrollTo({ left: next * step, behavior: 'smooth' });
-  clearTimeout(track._snapRestoreTimeout);
-  track._snapRestoreTimeout = setTimeout(() => { track.style.scrollSnapType = ''; }, 500);
-
-  const wrapper = document.getElementById(carouselId);
-  const dots = wrapper ? wrapper.querySelectorAll('.article-carousel-dot') : [];
-  dots.forEach((d, i) => d.classList.toggle('active', i === next));
+// Ligne vide → flush paragraphe
+if (line.trim() === '') {
+flushParagraph();
+continue;
 }
 
-function bindCarouselSwipeSync() {
-  document.querySelectorAll('.article-carousel-track').forEach(track => {
-    if (track.dataset.syncBound) return;
-    track.dataset.syncBound = '1';
-    const carouselId = track.id.replace('-track', '');
-    let t;
-    track.addEventListener('scroll', () => {
-      clearTimeout(t);
-      t = setTimeout(() => {
-        const slides = track.querySelectorAll('.article-carousel-slide');
-        if (!slides.length) return;
-        const step = slides[0].getBoundingClientRect().width;
-        const idx = Math.round(track.scrollLeft / step);
-        __carouselIndexes[carouselId] = idx;
-        const wrapper = document.getElementById(carouselId);
-        const dots = wrapper ? wrapper.querySelectorAll('.article-carousel-dot') : [];
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      }, 120);
-    });
-  });
+// # TITRE (format Notion : "# **TITRE**" ou "# TITRE")
+if (/^#{1,3} /.test(line)) {
+flushParagraph();
+isFirst = false;
+// Retire les # et le gras éventuel autour du titre
+let title = line.replace(/^#{1,3} /, '').trim();
+title = title.replace(/^\*\*(.+)\*\*$/, '$1');
+blocks.push(`<div class="section-title reveal">${title}</div>`);
+continue;
+}
+
+// > Citation (pull-quote explicite)
+if (line.startsWith('> ')) {
+flushParagraph();
+isFirst = false;
+let quoteLines = [line.replace('> ', '')];
+while (i + 1 < lines.length && lines[i + 1].startsWith('> ')) {
+i++;
+quoteLines.push(lines[i].replace('> ', ''));
+}
+const quoteText = inlineMarkdown(quoteLines.join(' '));
+blocks.push(`
+<div class="pull-quote reveal">
+<p>${quoteText}</p>
+<cite>L'Entracte</cite>
+</div>`);
+continue;
+}
+
+// ![légende](url) ou ![légende|position](url) → image insérée dans l'article
+// "position" est optionnelle, ex: 20% (vertical), top, bottom, center — règle l'object-position
+// Plusieurs lignes d'images collées (sans ligne vide entre elles) → galerie côte à côte
+const imgMatch = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
+if (imgMatch) {
+flushParagraph();
+isFirst = false;
+const imgs = [imgMatch];
+while (i + 1 < lines.length && /^!\[(.*?)\]\((.*?)\)$/.test(lines[i + 1].trim())) {
+i++;
+imgs.push(lines[i].trim().match(/^!\[(.*?)\]\((.*?)\)$/));
+}
+function parseImg(m) {
+const rawLabel = m[1].trim();
+const src = m[2].trim();
+const parts = rawLabel.split('|');
+const caption = parts[0].trim();
+let position = '';
+let wide = false;
+let stack = false;
+parts.slice(1).forEach(p => {
+const mod = p.trim();
+if (mod === 'large' || mod === 'full') wide = true;
+else if (mod === 'stack') stack = true;
+else if (/^\d+%?$/.test(mod)) position = `center ${mod.replace('%','')}%`;
+});
+return { caption, src, position, wide, stack };
+}
+if (imgs.length === 1) {
+const { caption, src, position, wide } = parseImg(imgs[0]);
+blocks.push(`
+<figure class="article-image reveal${wide ? ' wide' : ''}">
+<img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
+${caption ? `<figcaption>${caption}</figcaption>` : ''}
+</figure>`);
+} else {
+const parsed = imgs.map(parseImg);
+const useStack = parsed.some(p => p.stack);
+const figs = parsed.map(({ caption, src, position }) => `
+<figure>
+<img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>
+${caption ? `<figcaption>${caption}</figcaption>` : ''}
+</figure>`).join('');
+const colCount = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
+const galleryClass = useStack
+? (imgs.length >= 4 ? 'stack stack-cols-2' : 'stack')
+: `cols-${colCount}`;
+blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
+}
+continue;
+}
+
+// Ligne qui commence par un emoji → anecdote card
+if (/^[\u{1F300}-\u{1FAFF}✨💡🎬🎥📽🎞🔍⚡🏆💬🎭🎦]/u.test(line.trim())) {
+flushParagraph();
+isFirst = false;
+const emoji = [...line.trim()][0];
+let label = line.trim().slice([...line.trim()][0].length).trim();
+let contentLines = [];
+while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !/^#{1,3} /.test(lines[i + 1]) && !lines[i + 1].startsWith('> ')) {
+i++;
+contentLines.push(lines[i]);
+}
+const contentText = inlineMarkdown(contentLines.join(' '));
+blocks.push(`
+<div class="anecdote-card reveal">
+<div class="anecdote-icon">${emoji}</div>
+${label ? `<div class="anecdote-label">${label}</div>` : ''}
+<p class="anecdote-text">${contentText}</p>
+</div>`);
+continue;
+}
+
+// Ligne normale → accumulée dans paragraphe
+currentParagraph.push(line);
+}
+flushParagraph();
+
+// Wrap dans article-body (sauf l'intro)
+let inBody = false;
+let result = '';
+for (const block of blocks) {
+const isIntro = block.includes('article-intro');
+if (!inBody && !isIntro) {
+result += '<div class="article-body">';
+inBody = true;
+}
+result += block;
+}
+if (inBody) result += '</div>';
+return result;
 }
 
 /* ─────────────────────────────────────────────
    ÉTOILES
 ───────────────────────────────────────────── */
 function buildStars(note) {
-  let html = '';
-  const starIcon = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>';
-  for (let i = 1; i <= 5; i++) {
-    let state = 'empty';
-    if (i <= Math.floor(note)) state = 'filled';
-    else if (i === Math.ceil(note) && note % 1 !== 0) state = 'half';
-    if (state === 'half') {
-      html += `
-        <div class="star-wrap">
-          <div class="star half">
-            <svg viewBox="0 0 24 24">
-              <defs>
-                <linearGradient id="halfStarGrad-${i}" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="50%" style="stop-color:var(--red)"/>
-                  <stop offset="50%" style="stop-color:#2a2a2a"/>
-                </linearGradient>
-              </defs>
-              <path fill="url(#halfStarGrad-${i})" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-          </div>
-          <span class="star-number">${i}</span>
-        </div>`;
-    } else {
-      html += `
-        <div class="star-wrap">
-          <div class="star ${state}">
-            <svg viewBox="0 0 24 24">${starIcon}</svg>
-          </div>
-          <span class="star-number">${i}</span>
-        </div>`;
-    }
-  }
-  return html;
+let html = '';
+const starIcon = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>';
+for (let i = 1; i <= 5; i++) {
+let state = 'empty';
+if (i <= Math.floor(note)) state = 'filled';
+else if (i === Math.ceil(note) && note % 1 !== 0) state = 'half';
+if (state === 'half') {
+html += `
+<div class="star-wrap">
+<div class="star half">
+<svg viewBox="0 0 24 24">
+<defs>
+<linearGradient id="halfStarGrad-${i}" x1="0" y1="0" x2="1" y2="0">
+<stop offset="50%" style="stop-color:var(--red)"/>
+<stop offset="50%" style="stop-color:#2a2a2a"/>
+</linearGradient>
+</defs>
+<path fill="url(#halfStarGrad-${i})" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+</svg>
+</div>
+<span class="star-number">${i}</span>
+</div>`;
+} else {
+html += `
+<div class="star-wrap">
+<div class="star ${state}">
+<svg viewBox="0 0 24 24">${starIcon}</svg>
+</div>
+<span class="star-number">${i}</span>
+</div>`;
+}
+}
+return html;
 }
 
 /* ─────────────────────────────────────────────
    RENDER HERO
 ───────────────────────────────────────────── */
 function renderHero(r) {
-  const noteLabel = r.note ? `${r.note} / 5 ★` : '—';
-  const banner = r.banner || (r.img ? r.img : '');
-  const poster = r.img || '';
-  return `
-    <section class="hero">
-      <div class="hero-bg">
-        ${banner ? `<img src="${banner}" alt="${r.title}">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${r.color||'#1a0505'},${r.color2||'#3a1010'})"></div>`}
-      </div>
-      ${poster ? `
-      <div class="hero-poster-zone">
-        <img src="${poster}" alt="${r.title} poster">
-      </div>` : ''}
-      <div class="hero-content">
-        <div class="hero-category"><span class="dot"></span>CRITIQUE</div>
-        <h1 class="hero-title">
-          ${r.title}
-          <span class="year">${r.year || ''}</span>
-        </h1>
-        ${r.sub ? `<p class="hero-tagline">${r.sub}</p>` : ''}
-        <div class="hero-meta">
-          ${r.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${r.realisateur}</span></div>` : ''}
-          ${r.genre ? `<div class="meta-item"><span class="meta-label">Genre</span><span class="meta-value">${r.genre}</span></div>` : ''}
-          ${r.duree ? `<div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">${r.duree}</span></div>` : ''}
-          ${r.badge ? `<div class="meta-item"><span class="meta-label">Plateforme</span><span class="meta-value">${r.badge}</span></div>` : ''}
-        </div>
-      </div>
-      <div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})">
-        <span>LIRE</span>
-        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-      </div>
-    </section>`;
+const noteLabel = r.note ? `${r.note} / 5 ★` : '—';
+const banner = r.banner || (r.img ? r.img : '');
+const poster = r.img || '';
+return `
+<section class="hero">
+<div class="hero-bg">
+${banner ? `<img src="${banner}" alt="${r.title}">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${r.color||'#1a0505'},${r.color2||'#3a1010'})"></div>`}
+</div>
+${poster ? `
+<div class="hero-poster-zone">
+<img src="${poster}" alt="${r.title} poster">
+</div>` : ''}
+<div class="hero-content">
+<div class="hero-category"><span class="dot"></span>CRITIQUE</div>
+<h1 class="hero-title">
+${r.title}
+<span class="year">${r.year || ''}</span>
+</h1>
+${r.sub ? `<p class="hero-tagline">${r.sub}</p>` : ''}
+<div class="hero-meta">
+${r.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${r.realisateur}</span></div>` : ''}
+${r.genre ? `<div class="meta-item"><span class="meta-label">Genre</span><span class="meta-value">${r.genre}</span></div>` : ''}
+${r.duree ? `<div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">${r.duree}</span></div>` : ''}
+${r.badge ? `<div class="meta-item"><span class="meta-label">Plateforme</span><span class="meta-value">${r.badge}</span></div>` : ''}
+</div>
+</div>
+<div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})">
+<span>LIRE</span>
+<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+</div>
+</section>`;
 }
 
 /* ─────────────────────────────────────────────
    RENDER ARTICLE
 ───────────────────────────────────────────── */
 function renderStills(stills) {
-  if (!stills) return '';
-  const imgs = stills.split(',').map(s => s.trim()).filter(Boolean);
-  if (!imgs.length) return '';
-  return `
-    <div class="stills-grid reveal">
-      ${imgs.map((src, i) => `
-        <div class="still">
-          <img src="${src}" alt="Still ${i+1}">
-        </div>`).join('')}
-    </div>`;
+if (!stills) return '';
+const imgs = stills.split(',').map(s => s.trim()).filter(Boolean);
+if (!imgs.length) return '';
+return `
+<div class="stills-grid reveal">
+${imgs.map((src, i) => `
+<div class="still">
+<img src="${src}" alt="Still ${i+1}">
+</div>`).join('')}
+</div>`;
 }
 
 function renderTrailer(url) {
-  if (!url) return '';
-  return `
-    <div class="trailer-section reveal">
-      <div class="section-title">BANDE ANNONCE</div>
-      <div class="trailer-wrap">
-        <iframe src="${url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    </div>`;
+if (!url) return '';
+return `
+<div class="trailer-section reveal">
+<div class="section-title">BANDE ANNONCE</div>
+<div class="trailer-wrap">
+<iframe src="${url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</div>`;
 }
 
 function renderArticle(r) {
-  // Injecter les stills après le premier paragraphe (article-intro)
-  let bodyHtml = parseMarkdown(r.contenu || LOREM_IPSUM);
+// Injecter les stills après le premier paragraphe (article-intro)
+let bodyHtml = parseMarkdown(r.contenu || LOREM_IPSUM);
 
-  // Insérer les stills juste après l'article-intro
-  if (r.stills) {
-    const stillsHtml = renderStills(r.stills);
-    bodyHtml = bodyHtml.replace('</p>\n<div class="article-body">', `</p>\n${stillsHtml}\n<div class="article-body">`);
-    // fallback si pas d'article-body séparé
-    if (!bodyHtml.includes(stillsHtml)) {
-      const firstP = bodyHtml.indexOf('</p>');
-      if (firstP !== -1) {
-        bodyHtml = bodyHtml.slice(0, firstP + 4) + stillsHtml + bodyHtml.slice(firstP + 4);
-      }
-    }
-  }
+// Insérer les stills juste après l'article-intro
+if (r.stills) {
+const stillsHtml = renderStills(r.stills);
+bodyHtml = bodyHtml.replace('</p>\n<div class="article-body">', `</p>\n${stillsHtml}\n<div class="article-body">`);
+// fallback si pas d'article-body séparé
+if (!bodyHtml.includes(stillsHtml)) {
+const firstP = bodyHtml.indexOf('</p>');
+if (firstP !== -1) {
+bodyHtml = bodyHtml.slice(0, firstP + 4) + stillsHtml + bodyHtml.slice(firstP + 4);
+}
+}
+}
 
-  // Insérer la bande annonce juste avant la note (après le dernier paragraphe du corps)
-  const trailerHtml = renderTrailer(r.trailer);
+// Insérer la bande annonce juste avant la note (après le dernier paragraphe du corps)
+const trailerHtml = renderTrailer(r.trailer);
 
-  const verdict = r.verdict || 'À voir absolument';
+const verdict = r.verdict || 'À voir absolument';
 
-  return `
-    <div class="article-wrapper" id="article-top">
-      ${bodyHtml}
-      ${trailerHtml}
+return `
+<div class="article-wrapper" id="article-top">
+${bodyHtml}
+${trailerHtml}
+<!-- NOTE -->
+<div class="rating-section reveal">
+<div class="rating-label">Notre verdict</div>
+<div class="rating-title">${verdict}</div>
+<div class="stars-container">
+${buildStars(r.note || 0)}
+</div>
+<div class="rating-score">${r.note || '—'}<span> / 5</span></div>
+</div>
 
-      <!-- NOTE -->
-      <div class="rating-section reveal">
-        <div class="rating-label">Notre verdict</div>
-        <div class="rating-title">${verdict}</div>
-        <div class="stars-container">
-          ${buildStars(r.note || 0)}
-        </div>
-        <div class="rating-score">${r.note || '—'}<span> / 5</span></div>
-      </div>
-
-      <!-- PARTAGE -->
-      <div class="share-bar reveal">
-        <span class="share-label">Partager</span>
-        <button class="share-btn" onclick="shareTwitter()">
-          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          X / Twitter
-        </button>
-        <button class="share-btn" onclick="shareFacebook()">
-          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          Facebook
-        </button>
-        <button class="share-btn" id="copyBtn">
-          <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
-          Copier le lien
-        </button>
-      </div>
-    </div>`;
+<!-- PARTAGE -->
+<div class="share-bar reveal">
+<span class="share-label">Partager</span>
+<button class="share-btn" onclick="shareTwitter()">
+<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+X / Twitter
+</button>
+<button class="share-btn" onclick="shareFacebook()">
+<svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+Facebook
+</button>
+<button class="share-btn" id="copyBtn">
+<svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+Copier le lien
+</button>
+</div>
+</div>`;
 }
 
 /* ─────────────────────────────────────────────
@@ -507,72 +459,71 @@ function renderArticle(r) {
 let relatedIndex = 0;
 
 function relatedScroll(dir) {
-  const grid = document.getElementById('relatedGrid');
-  if (!grid) return;
-  const cards = grid.querySelectorAll('.related-card');
-  if (!cards.length) return;
-  const step = cards[0].getBoundingClientRect().width;
-  relatedIndex = (relatedIndex + dir + cards.length) % cards.length;
-  // le scroll-snap peut couper court une animation smooth sur un grand saut
-  // (ex: dernière carte -> première), donc on le désactive le temps du scroll
-  grid.style.scrollSnapType = 'none';
-  grid.scrollTo({ left: relatedIndex * step, behavior: 'smooth' });
-  clearTimeout(grid._snapRestoreTimeout);
-  grid._snapRestoreTimeout = setTimeout(() => {
-    grid.style.scrollSnapType = '';
-  }, 500);
+const grid = document.getElementById('relatedGrid');
+if (!grid) return;
+const cards = grid.querySelectorAll('.related-card');
+if (!cards.length) return;
+const step = cards[0].getBoundingClientRect().width;
+relatedIndex = (relatedIndex + dir + cards.length) % cards.length;
+// le scroll-snap peut couper court une animation smooth sur un grand saut
+// (ex: dernière carte -> première), donc on le désactive le temps du scroll
+grid.style.scrollSnapType = 'none';
+grid.scrollTo({ left: relatedIndex * step, behavior: 'smooth' });
+clearTimeout(grid._snapRestoreTimeout);
+grid._snapRestoreTimeout = setTimeout(() => {
+grid.style.scrollSnapType = '';
+}, 500);
 }
 
 function shuffleArray(arr) {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+const a = arr.slice();
+for (let i = a.length - 1; i > 0; i--) {
+const j = Math.floor(Math.random() * (i + 1));
+[a[i], a[j]] = [a[j], a[i]];
+}
+return a;
 }
 
 function renderRelated(reviews, currentId) {
-  const pool = reviews.filter(r => r.id !== currentId);
-  const others = shuffleArray(pool).slice(0, 3);
-  if (others.length === 0) return '';
-
-  const cards = others.map(r => {
-    const bg = r.img
-      ? `<img src="${r.img}" alt="${r.title}" class="related-card-bg" style="width:100%;height:100%;object-fit:cover;display:block;">`
-      : `<div class="related-card-bg" style="height:100%;background:linear-gradient(135deg,${r.color||'#1a0505'},${r.color2||'#3a1010'})"></div>`;
-    return `
-      <a href="review.html?film=${r.slug}" class="related-card">
-        ${bg}
-        <div class="related-card-overlay">
-          <div class="related-card-title">${r.title}</div>
-          <div class="related-card-sub">${r.year || ''} · Critique</div>
-        </div>
-      </a>`;
-  }).join('');
-
-  return `
-    <section class="related-section">
-      <div class="related-inner">
-        <div class="related-header">
-          <span class="related-eyebrow">CONTINUER LA SÉANCE</span>
-          <h3>À lire <em>aussi</em></h3>
-        </div>
-        <div class="related-carousel">
-          <button class="related-arrow prev" onclick="relatedScroll(-1)" aria-label="Précédent">
-            <svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-          </button>
-          <div class="related-grid" id="relatedGrid">${cards}</div>
-          <button class="related-arrow next" onclick="relatedScroll(1)" aria-label="Suivant">
-            <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-          </button>
-        </div>
-        <a href="full-reviews.html" class="related-cta">
-          Voir toutes les critiques
-          <svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-        </a>
-      </div>
-    </section>`;
+const pool = reviews.filter(r => r.id !== currentId);
+const others = shuffleArray(pool).slice(0, 3);
+if (others.length === 0) return '';
+const cards = others.map(r => {
+const bg = r.img
+? `<img src="${r.img}" alt="${r.title}" class="related-card-bg" style="width:100%;height:100%;object-fit:cover;display:block;">`
+: `<div class="related-card-bg" style="height:100%;background:linear-gradient(135deg,${r.color||'#1a0505'},${r.color2||'#3a1010'})"></div>`;
+const finalSlug = r.slug && r.slug.endsWith('-critique') ? r.slug : `${r.slug}-critique`;
+return `
+<a href="/${finalSlug}/" class="related-card">
+${bg}
+<div class="related-card-overlay">
+<div class="related-card-title">${r.title}</div>
+<div class="related-card-sub">${r.year || ''} · Critique</div>
+</div>
+</a>`;
+}).join('');
+return `
+<section class="related-section">
+<div class="related-inner">
+<div class="related-header">
+<span class="related-eyebrow">CONTINUER LA SÉANCE</span>
+<h3>À lire <em>aussi</em></h3>
+</div>
+<div class="related-carousel">
+<button class="related-arrow prev" onclick="relatedScroll(-1)" aria-label="Précédent">
+<svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+</button>
+<div class="related-grid" id="relatedGrid">${cards}</div>
+<button class="related-arrow next" onclick="relatedScroll(1)" aria-label="Suivant">
+<svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+</button>
+</div>
+<a href="full-reviews.html" class="related-cta">
+Voir toutes les critiques
+<svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+</a>
+</div>
+</section>`;
 }
 
 /* ─────────────────────────────────────────────
@@ -606,304 +557,217 @@ Et pourtant. Quand le film prononce ses derniers mots dans le silence, **quelque
    INIT
 ───────────────────────────────────────────── */
 async function init() {
-  // Lire le slug depuis l'URL (?film=le-slug), avec ?id=X gardé en compatibilité pour les anciens liens
-  const params = new URLSearchParams(window.location.search);
-  const filmSlug = params.get('film');
-  const id = params.get('id');
+// Si l'URL est un ancien format (?id= ou ?film=), on redirige
+// immédiatement vers la nouvelle page statique et on arrête tout ici.
+const redirected = await redirectIfLegacyUrl();
+if (redirected) return;
 
-  // ?preview=1 permet de voir un article même non publié (pour toi seulement, lien à ne pas partager)
-  const isPreview = params.get('preview') === '1';
-  const publieFilter = isPreview ? '' : '&publie=eq.true';
+// Lire le slug depuis l'URL (?film=le-slug), avec ?id=X gardé en compatibilité pour les anciens liens
+const params = new URLSearchParams(window.location.search);
+const filmSlug = params.get('film');
+const id = params.get('id');
 
-  // Charger toutes les reviews (pour le related)
-  const allRes = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,slug,title,year,img,color,color2&publie=eq.true&order=id.asc`, {
-    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-  });
-  const allReviews = await allRes.json();
+// ?preview=1 permet de voir un article même non publié (pour toi seulement, lien à ne pas partager)
+const isPreview = params.get('preview') === '1';
+const publieFilter = isPreview ? '' : '&publie=eq.true';
 
-  // Charger la review courante, en priorité par slug, sinon par id (compatibilité anciens liens)
-  let review = null;
-  if (filmSlug) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?slug=eq.${encodeURIComponent(filmSlug)}&select=*${publieFilter}`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-    });
-    const data = await res.json();
-    review = data[0] || null;
-  } else if (id) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}&select=*${publieFilter}`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-    });
-    const data = await res.json();
-    review = data[0] || null;
-  }
+// Charger toutes les reviews (pour le related)
+const allRes = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,slug,title,year,img,color,color2&publie=eq.true&order=id.asc`, {
+headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+});
+const allReviews = await allRes.json();
 
-  // Fallback : si aucun paramètre ou review introuvable, prendre la première
-  if (!review && allReviews.length > 0) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${allReviews[0].id}&select=*&publie=eq.true`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-    });
-    const data = await res.json();
-    review = data[0];
-  }
+// Charger la review courante, en priorité par slug, sinon par id (compatibilité anciens liens)
+let review = null;
+if (filmSlug) {
+const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?slug=eq.${encodeURIComponent(filmSlug)}&select=*${publieFilter}`, {
+headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+});
+const data = await res.json();
+review = data[0] || null;
+} else if (id) {
+const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${id}&select=*${publieFilter}`, {
+headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+});
+const data = await res.json();
+review = data[0] || null;
+}
 
-  if (!review) {
-    document.getElementById('hero-container').innerHTML = '<div class="loading-hero"><p>Review introuvable.</p></div>';
-    return;
-  }
+// Fallback : si aucun paramètre ou review introuvable, prendre la première
+if (!review && allReviews.length > 0) {
+const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?id=eq.${allReviews[0].id}&select=*&publie=eq.true`, {
+headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+});
+const data = await res.json();
+review = data[0];
+}
 
-  // Mettre à jour le titre de la page
-  document.title = `${review.title} (${review.year}) – Critique • L'Entracte`;
+if (!review) {
+document.getElementById('hero-container').innerHTML = '<div class="loading-hero"><p>Review introuvable.</p></div>';
+return;
+}
 
-  // Injecter
-  document.getElementById('hero-container').innerHTML = renderHero(review);
-  document.getElementById('article-container').innerHTML = renderArticle(review);
-  document.getElementById('related-container').innerHTML = renderRelated(allReviews, review.id);
+// Mettre à jour le titre de la page
+document.title = `${review.title} (${review.year}) – Critique • L'Entracte`;
 
-  bindLightboxImages();
-  bindCarouselSwipeSync();
+// Injecter
+document.getElementById('hero-container').innerHTML = renderHero(review);
+document.getElementById('article-container').innerHTML = renderArticle(review);
+document.getElementById('related-container').innerHTML = renderRelated(allReviews, review.id);
 
-  const relatedGridEl = document.getElementById('relatedGrid');
-  if (relatedGridEl) {
-    let swipeSyncTimeout;
-    relatedGridEl.addEventListener('scroll', () => {
-      clearTimeout(swipeSyncTimeout);
-      swipeSyncTimeout = setTimeout(() => {
-        const cards = relatedGridEl.querySelectorAll('.related-card');
-        if (!cards.length) return;
-        const step = cards[0].getBoundingClientRect().width;
-        relatedIndex = Math.round(relatedGridEl.scrollLeft / step);
-      }, 120);
-    });
-  }
+bindLightboxImages();
 
-  // Reveal observer
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+const relatedGridEl = document.getElementById('relatedGrid');
+if (relatedGridEl) {
+let swipeSyncTimeout;
+relatedGridEl.addEventListener('scroll', () => {
+clearTimeout(swipeSyncTimeout);
+swipeSyncTimeout = setTimeout(() => {
+const cards = relatedGridEl.querySelectorAll('.related-card');
+if (!cards.length) return;
+const step = cards[0].getBoundingClientRect().width;
+relatedIndex = Math.round(relatedGridEl.scrollLeft / step);
+}, 120);
+});
+}
 
-  // Copy button
-  const copyBtn = document.getElementById('copyBtn');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', function() {
-      navigator.clipboard?.writeText(location.href);
-      this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
-      setTimeout(() => {
-        this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
-      }, 2000);
-    });
-  }
+// Reveal observer
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Copy button
+const copyBtn = document.getElementById('copyBtn');
+if (copyBtn) {
+copyBtn.addEventListener('click', function() {
+navigator.clipboard?.writeText(location.href);
+this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+setTimeout(() => {
+this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+}, 2000);
+});
+}
 }
 
 /* ─────────────────────────────────────────────
    PARTAGE
 ───────────────────────────────────────────── */
 function shareTwitter() {
-  const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`;
-  window.open(url, '_blank');
+const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`;
+window.open(url, '_blank');
 }
+
 function shareFacebook() {
-  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`;
-  window.open(url, '_blank');
+const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`;
+window.open(url, '_blank');
 }
 
 /* ─────────────────────────────────────────────
    MOBILE NAV
 ───────────────────────────────────────────── */
 function toggleNav() {
-  const nav = document.getElementById('mobileNav');
-  nav.classList.toggle('open');
-  const spans = document.getElementById('burger').querySelectorAll('span');
-  if (nav.classList.contains('open')) {
-    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
-    spans[1].style.opacity = '0';
-    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
-  } else {
-    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
-  }
+const nav = document.getElementById('mobileNav');
+nav.classList.toggle('open');
+const spans = document.getElementById('burger').querySelectorAll('span');
+if (nav.classList.contains('open')) {
+spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+spans[1].style.opacity = '0';
+spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+} else {
+spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+}
 }
 
 /* ─────────────────────────────────────────────
    LIGHTBOX (clic sur une image d'article -> plein écran)
 ───────────────────────────────────────────── */
 function openLightbox(src, caption) {
-  const lb = document.getElementById('lightbox');
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-caption').textContent = caption || '';
-  lb.classList.add('open');
-  document.body.style.overflow = 'hidden';
+const lb = document.getElementById('lightbox');
+document.getElementById('lightbox-img').src = src;
+document.getElementById('lightbox-caption').textContent = caption || '';
+lb.classList.add('open');
+document.body.style.overflow = 'hidden';
 }
+
 function closeLightbox(e) {
-  if (e && e.target.id === 'lightbox-img') return;
-  const lb = document.getElementById('lightbox');
-  lb.classList.remove('open');
-  document.body.style.overflow = '';
+if (e && e.target.id === 'lightbox-img') return;
+const lb = document.getElementById('lightbox');
+lb.classList.remove('open');
+document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
 function bindLightboxImages() {
-  document.querySelectorAll('.article-image img, .article-gallery img, .article-carousel-slide img').forEach(img => {
-    if (img.dataset.lbBound) return;
-    img.dataset.lbBound = '1';
-    img.style.cursor = 'zoom-in';
-    img.addEventListener('click', () => {
-      const caption = img.closest('figure, .article-carousel-slide')?.querySelector('figcaption')?.textContent || img.alt || '';
-      openLightbox(img.src, caption);
-    });
-  });
+document.querySelectorAll('.article-image img, .article-gallery img').forEach(img => {
+if (img.dataset.lbBound) return;
+img.dataset.lbBound = '1';
+img.style.cursor = 'zoom-in';
+img.addEventListener('click', () => {
+const caption = img.closest('figure')?.querySelector('figcaption')?.textContent || img.alt || '';
+openLightbox(img.src, caption);
+});
+});
 }
 
 init();
 </script>
 
 <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
-  <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
-  <img id="lightbox-img" src="" alt="">
-  <div id="lightbox-caption" class="lightbox-caption"></div>
+<span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+<img id="lightbox-img" src="" alt="">
+<div id="lightbox-caption" class="lightbox-caption"></div>
 </div>
-
-<!-- ─── CARROUSEL D'IMAGES DANS L'ARTICLE ─── -->
-<style>
-.article-carousel {
-  position: relative;
-  margin: 40px 0;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #111;
-}
-.article-carousel-track {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  height: 420px;
-}
-.article-carousel-track::-webkit-scrollbar { display: none; }
-.article-carousel-slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
-  position: relative;
-  height: 100%;
-  background: #1a1a1a;
-}
-.article-carousel-slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  cursor: zoom-in;
-}
-.article-carousel-slide figcaption {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  padding: 14px 20px;
-  background: linear-gradient(to top, rgba(0,0,0,.75), transparent);
-  color: #fff;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: .3px;
-}
-.article-carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: var(--red, #E8253A);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 5;
-  box-shadow: 0 6px 16px rgba(0,0,0,.4);
-  transition: filter .2s ease, transform .2s ease;
-}
-.article-carousel-arrow:hover { filter: brightness(1.12); transform: translateY(-50%) scale(1.06); }
-.article-carousel-arrow svg { width: 22px; height: 22px; fill: #fff; }
-.article-carousel-arrow.prev { left: 16px; }
-.article-carousel-arrow.next { right: 16px; }
-.article-carousel-dots {
-  position: absolute;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  z-index: 5;
-}
-.article-carousel-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.4);
-  transition: background .2s ease, transform .2s ease;
-}
-.article-carousel-dot.active {
-  background: var(--red, #E8253A);
-  transform: scale(1.3);
-}
-@media (max-width: 600px) {
-  .article-carousel-track { height: 260px; }
-  .article-carousel-arrow { width: 34px; height: 34px; }
-  .article-carousel-arrow svg { width: 18px; height: 18px; }
-  .article-carousel-arrow.prev { left: 8px; }
-  .article-carousel-arrow.next { right: 8px; }
-}
-</style>
 
 <!-- ─── SEARCH OVERLAY (barre de nav, partagé avec l'accueil) ─── -->
 <div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
-  <button class="search-close" onclick="toggleSearch()">✕</button>
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
-    <button class="search-submit" onclick="doSearch()">
-      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
-    </button>
-  </div>
-  <p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
-  <div id="searchResults" class="search-results"></div>
+<button class="search-close" onclick="toggleSearch()">✕</button>
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+<button class="search-submit" onclick="doSearch()">
+<svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+</button>
+</div>
+<p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+<div id="searchResults" class="search-results"></div>
 </div>
 
 <style>
 .search-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.82);
-  z-index: 200;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 14px;
-  opacity: 0; pointer-events: none;
-  transition: opacity .3s ease;
-  backdrop-filter: blur(4px);
+position: fixed; inset: 0;
+background: rgba(0,0,0,.82);
+z-index: 200;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+gap: 14px;
+opacity: 0; pointer-events: none;
+transition: opacity .3s ease;
+backdrop-filter: blur(4px);
 }
 .search-overlay.active { opacity: 1; pointer-events: all; }
 .search-box { width: min(600px, 90vw); position: relative; transform: translateY(20px); transition: transform .35s ease; }
 .search-overlay.active .search-box { transform: translateY(0); }
 .search-box input {
-  width: 100%; background: #1a1a1a; border: 2px solid var(--red); border-radius: 50px;
-  padding: 18px 60px 18px 28px;
-  font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 600;
-  color: var(--white); outline: none; letter-spacing: .5px;
+width: 100%; background: #1a1a1a; border: 2px solid var(--red); border-radius: 50px;
+padding: 18px 60px 18px 28px;
+font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 600;
+color: var(--white); outline: none; letter-spacing: .5px;
 }
 .search-box input::placeholder { color: #555; }
 .search-box .search-submit {
-  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-  background: none; border: none; cursor: pointer; padding: 4px;
+position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+background: none; border: none; cursor: pointer; padding: 4px;
 }
 .search-box .search-submit svg { width: 22px; height: 22px; fill: var(--red); }
 .search-close {
-  position: absolute; top: 24px; right: 24px;
-  background: none; border: none;
-  color: #666; font-size: 28px; cursor: pointer;
-  transition: color .2s; line-height: 1;
+position: absolute; top: 24px; right: 24px;
+background: none; border: none;
+color: #666; font-size: 28px; cursor: pointer;
+transition: color .2s; line-height: 1;
 }
 .search-close:hover { color: var(--white); }
 .search-hint {
-  text-align: center; margin-top: 16px;
-  font-size: 12px; color: #444; letter-spacing: 2px; text-transform: uppercase;
+text-align: center; margin-top: 16px;
+font-size: 12px; color: #444; letter-spacing: 2px; text-transform: uppercase;
 }
 .search-results { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 640px; }
 .search-result-card { display: flex; align-items: center; gap: 16px; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 16px; text-decoration: none; color: #fff; transition: border-color .2s, background .2s; cursor: pointer; }
@@ -917,73 +781,75 @@ init();
 
 <script>
 function toggleSearch() {
-  const overlay = document.getElementById('searchOverlay');
-  overlay.classList.toggle('active');
-  if (overlay.classList.contains('active')) {
-    setTimeout(() => document.getElementById('searchInput').focus(), 50);
-  } else {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('searchResults').innerHTML = '';
-  }
+const overlay = document.getElementById('searchOverlay');
+overlay.classList.toggle('active');
+if (overlay.classList.contains('active')) {
+setTimeout(() => document.getElementById('searchInput').focus(), 50);
+} else {
+document.getElementById('searchInput').value = '';
+document.getElementById('searchResults').innerHTML = '';
+}
 }
 let __overlayMouseDownOnSelf = false;
 document.addEventListener('DOMContentLoaded', () => {
-  const ov = document.getElementById('searchOverlay');
-  if (ov) ov.addEventListener('mousedown', e => { __overlayMouseDownOnSelf = (e.target === ov); });
+const ov = document.getElementById('searchOverlay');
+if (ov) ov.addEventListener('mousedown', e => { __overlayMouseDownOnSelf = (e.target === ov); });
 });
 function handleOverlayClick(e) {
-  if (e.target === document.getElementById('searchOverlay') && __overlayMouseDownOnSelf) toggleSearch();
+if (e.target === document.getElementById('searchOverlay') && __overlayMouseDownOnSelf) toggleSearch();
 }
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    document.getElementById('searchOverlay').classList.remove('active');
-    document.getElementById('searchInput').value = '';
-    document.getElementById('searchResults').innerHTML = '';
-  }
-  if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
-    doSearch();
-  }
+if (e.key === 'Escape') {
+document.getElementById('searchOverlay').classList.remove('active');
+document.getElementById('searchInput').value = '';
+document.getElementById('searchResults').innerHTML = '';
+}
+if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+doSearch();
+}
 });
 let __searchDebounce = null;
 document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('searchInput');
-  if (input) {
-    input.addEventListener('input', () => {
-      clearTimeout(__searchDebounce);
-      const q = input.value.trim();
-      if (q.length < 2) {
-        document.getElementById('searchResults').innerHTML = '';
-        return;
-      }
-      __searchDebounce = setTimeout(doSearch, 300);
-    });
-  }
+const input = document.getElementById('searchInput');
+if (input) {
+input.addEventListener('input', () => {
+clearTimeout(__searchDebounce);
+const q = input.value.trim();
+if (q.length < 2) {
+document.getElementById('searchResults').innerHTML = '';
+return;
+}
+__searchDebounce = setTimeout(doSearch, 300);
+});
+}
 });
 async function doSearch() {
-  const query = document.getElementById('searchInput').value.trim();
-  const resultsEl = document.getElementById('searchResults');
-  if (!query) return;
-  resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,link&publie=eq.true&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,
-    { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
-  );
-  const data = await res.json();
-  if (!data.length) {
-    resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';
-    return;
-  }
-  resultsEl.innerHTML = data.map(r => `
-    <a class="search-result-card" href="${r.link || '#'}">
-      ${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
-      <div class="search-result-info">
-        <div class="search-result-title">${r.title}</div>
-        <div class="search-result-meta">${r.year || ''}${r.genre ? ' · ' + r.genre : ''}</div>
-      </div>
-    </a>
-  `).join('');
+const query = document.getElementById('searchInput').value.trim();
+const resultsEl = document.getElementById('searchResults');
+if (!query) return;
+resultsEl.innerHTML = '<p class="search-no-result">Recherche en cours…</p>';
+const res = await fetch(
+`${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,slug&publie=eq.true&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,
+{ headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+);
+const data = await res.json();
+if (!data.length) {
+resultsEl.innerHTML = '<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« ' + query + ' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';
+return;
+}
+resultsEl.innerHTML = data.map(r => {
+const finalSlug = r.slug && r.slug.endsWith('-critique') ? r.slug : `${r.slug}-critique`;
+return `
+<a class="search-result-card" href="/${finalSlug}/">
+${r.img ? `<img class="search-result-img" src="${r.img}" alt="${r.title}">` : '<div class="search-result-img"></div>'}
+<div class="search-result-info">
+<div class="search-result-title">${r.title}</div>
+<div class="search-result-meta">${r.year || ''}${r.genre ? ' · ' + r.genre : ''}</div>
+</div>
+</a>
+`;
+}).join('');
 }
 </script>
-
 </body>
 </html>
