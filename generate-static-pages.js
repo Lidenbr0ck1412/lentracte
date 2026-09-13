@@ -1,0 +1,469 @@
+/**
+ * generate-static-pages.js
+ *
+ * Génère un fichier HTML statique par review (et met à jour sitemap.xml)
+ * à partir des données publiées dans Supabase.
+ *
+ * Résultat : reviews/<slug>/index.html pour chaque film publié.
+ *
+ * Usage :
+ *   node generate-static-pages.js
+ *
+ * Prérequis : Node.js 18+ (pour fetch natif). Aucune dépendance npm nécessaire.
+ */
+
+import fs from 'fs';
+import path from 'path';
+
+/* ─────────────────────────────────────────────
+   CONFIG — à adapter si besoin
+───────────────────────────────────────────── */
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+const SITE_URL = 'https://l-entracte.be'; // <-- vérifie que c'est bien ton domaine final
+const URL_SUFFIX = '-critique'; // ajouté après le slug : "together" -> "together-critique"
+
+// Construit le nom de dossier final pour un film donné
+function pageDirName(slug) {
+  return slug.endsWith(URL_SUFFIX) ? slug : `${slug}${URL_SUFFIX}`;
+}
+
+/* ─────────────────────────────────────────────
+   FONCTIONS DE RENDU
+   (portées telles quelles depuis review.html —
+   ce sont des fonctions pures qui construisent
+   du texte, donc elles tournent aussi bien
+   côté serveur/Node que côté navigateur)
+───────────────────────────────────────────── */
+
+function parseMarkdown(md) {
+  if (!md) return '';
+  const lines = md.split('\n');
+  const blocks = [];
+  let currentParagraph = [];
+  let isFirst = true;
+
+  function inlineMarkdown(text) {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>');
+  }
+
+  function flushParagraph() {
+    if (currentParagraph.length === 0) return;
+    const text = currentParagraph.join(' ').trim();
+    if (!text) { currentParagraph = []; return; }
+    const html = inlineMarkdown(text);
+    if (isFirst) {
+      const cleaned = html.replace(/^\*(.+)\*$/, '$1');
+      blocks.push(`<p class="article-intro reveal">${cleaned}</p>`);
+      isFirst = false;
+    } else {
+      if (/^\*[^*].+[^*]\*$/.test(text)) {
+        const quoteText = inlineMarkdown(text.replace(/^\*(.+)\*$/, '$1'));
+        blocks.push(`<div class="pull-quote reveal"><p>${quoteText}</p><cite>L'Entracte</cite></div>`);
+      } else {
+        blocks.push(`<p class="reveal">${html}</p>`);
+      }
+    }
+    currentParagraph = [];
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.trim() === '') { flushParagraph(); continue; }
+
+    if (/^#{1,3} /.test(line)) {
+      flushParagraph();
+      isFirst = false;
+      let title = line.replace(/^#{1,3} /, '').trim();
+      title = title.replace(/^\*\*(.+)\*\*$/, '$1');
+      blocks.push(`<div class="section-title reveal">${title}</div>`);
+      continue;
+    }
+
+    if (line.startsWith('> ')) {
+      flushParagraph();
+      isFirst = false;
+      let quoteLines = [line.replace('> ', '')];
+      while (i + 1 < lines.length && lines[i + 1].startsWith('> ')) {
+        i++;
+        quoteLines.push(lines[i].replace('> ', ''));
+      }
+      const quoteText = inlineMarkdown(quoteLines.join(' '));
+      blocks.push(`<div class="pull-quote reveal"><p>${quoteText}</p><cite>L'Entracte</cite></div>`);
+      continue;
+    }
+
+    const imgMatch = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
+    if (imgMatch) {
+      flushParagraph();
+      isFirst = false;
+      const imgs = [imgMatch];
+      while (i + 1 < lines.length && /^!\[(.*?)\]\((.*?)\)$/.test(lines[i + 1].trim())) {
+        i++;
+        imgs.push(lines[i].trim().match(/^!\[(.*?)\]\((.*?)\)$/));
+      }
+      function parseImg(m) {
+        const rawLabel = m[1].trim();
+        const src = m[2].trim();
+        const parts = rawLabel.split('|');
+        const caption = parts[0].trim();
+        let position = '', wide = false, stack = false;
+        parts.slice(1).forEach(p => {
+          const mod = p.trim();
+          if (mod === 'large' || mod === 'full') wide = true;
+          else if (mod === 'stack') stack = true;
+          else if (/^\d+%?$/.test(mod)) position = `center ${mod.replace('%', '')}%`;
+        });
+        return { caption, src, position, wide, stack };
+      }
+      if (imgs.length === 1) {
+        const { caption, src, position, wide } = parseImg(imgs[0]);
+        blocks.push(`<figure class="article-image reveal${wide ? ' wide' : ''}"><img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`);
+      } else {
+        const parsed = imgs.map(parseImg);
+        const useStack = parsed.some(p => p.stack);
+        const figs = parsed.map(({ caption, src, position }) => `<figure><img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`).join('');
+        const colCount = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
+        const galleryClass = useStack ? (imgs.length >= 4 ? 'stack stack-cols-2' : 'stack') : `cols-${colCount}`;
+        blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
+      }
+      continue;
+    }
+
+    if (/^[\u{1F300}-\u{1FAFF}✨💡🎬🎥📽🎞🔍⚡🏆💬🎭🎦]/u.test(line.trim())) {
+      flushParagraph();
+      isFirst = false;
+      const emoji = [...line.trim()][0];
+      let label = line.trim().slice([...line.trim()][0].length).trim();
+      let contentLines = [];
+      while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !/^#{1,3} /.test(lines[i + 1]) && !lines[i + 1].startsWith('> ')) {
+        i++;
+        contentLines.push(lines[i]);
+      }
+      const contentText = inlineMarkdown(contentLines.join(' '));
+      blocks.push(`<div class="anecdote-card reveal"><div class="anecdote-icon">${emoji}</div>${label ? `<div class="anecdote-label">${label}</div>` : ''}<p class="anecdote-text">${contentText}</p></div>`);
+      continue;
+    }
+
+    currentParagraph.push(line);
+  }
+  flushParagraph();
+
+  let inBody = false, result = '';
+  for (const block of blocks) {
+    const isIntro = block.includes('article-intro');
+    if (!inBody && !isIntro) { result += '<div class="article-body">'; inBody = true; }
+    result += block;
+  }
+  if (inBody) result += '</div>';
+  return result;
+}
+
+function buildStars(note) {
+  let html = '';
+  const starIcon = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>';
+  for (let i = 1; i <= 5; i++) {
+    let state = 'empty';
+    if (i <= Math.floor(note)) state = 'filled';
+    else if (i === Math.ceil(note) && note % 1 !== 0) state = 'half';
+    if (state === 'half') {
+      html += `<div class="star-wrap"><div class="star half"><svg viewBox="0 0 24 24"><defs><linearGradient id="halfStarGrad-${i}" x1="0" y1="0" x2="1" y2="0"><stop offset="50%" style="stop-color:var(--red)"/><stop offset="50%" style="stop-color:#2a2a2a"/></linearGradient></defs><path fill="url(#halfStarGrad-${i})" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><span class="star-number">${i}</span></div>`;
+    } else {
+      html += `<div class="star-wrap"><div class="star ${state}"><svg viewBox="0 0 24 24">${starIcon}</svg></div><span class="star-number">${i}</span></div>`;
+    }
+  }
+  return html;
+}
+
+function renderHero(r) {
+  const banner = r.banner || (r.img ? r.img : '');
+  const poster = r.img || '';
+  return `<section class="hero"><div class="hero-bg">${banner ? `<img src="${banner}" alt="${r.title}">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${r.color || '#1a0505'},${r.color2 || '#3a1010'})"></div>`}</div>${poster ? `<div class="hero-poster-zone"><img src="${poster}" alt="${r.title} poster"></div>` : ''}<div class="hero-content"><div class="hero-category"><span class="dot"></span>CRITIQUE</div><h1 class="hero-title">${r.title}<span class="year">${r.year || ''}</span></h1>${r.sub ? `<p class="hero-tagline">${r.sub}</p>` : ''}<div class="hero-meta">${r.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${r.realisateur}</span></div>` : ''}${r.genre ? `<div class="meta-item"><span class="meta-label">Genre</span><span class="meta-value">${r.genre}</span></div>` : ''}${r.duree ? `<div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">${r.duree}</span></div>` : ''}${r.badge ? `<div class="meta-item"><span class="meta-label">Plateforme</span><span class="meta-value">${r.badge}</span></div>` : ''}</div></div><div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})"><span>LIRE</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div></section>`;
+}
+
+function renderStills(stills) {
+  if (!stills) return '';
+  const imgs = stills.split(',').map(s => s.trim()).filter(Boolean);
+  if (!imgs.length) return '';
+  return `<div class="stills-grid reveal">${imgs.map((src, i) => `<div class="still"><img src="${src}" alt="Still ${i + 1}"></div>`).join('')}</div>`;
+}
+
+function renderTrailer(url) {
+  if (!url) return '';
+  return `<div class="trailer-section reveal"><div class="section-title">BANDE ANNONCE</div><div class="trailer-wrap"><iframe src="${url}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div></div>`;
+}
+
+function renderArticle(r) {
+  let bodyHtml = parseMarkdown(r.contenu || '');
+  if (r.stills) {
+    const stillsHtml = renderStills(r.stills);
+    bodyHtml = bodyHtml.replace('</p>\n<div class="article-body">', `</p>\n${stillsHtml}\n<div class="article-body">`);
+    if (!bodyHtml.includes(stillsHtml)) {
+      const firstP = bodyHtml.indexOf('</p>');
+      if (firstP !== -1) bodyHtml = bodyHtml.slice(0, firstP + 4) + stillsHtml + bodyHtml.slice(firstP + 4);
+    }
+  }
+  const trailerHtml = renderTrailer(r.trailer);
+  const verdict = r.verdict || 'À voir absolument';
+  return `<div class="article-wrapper" id="article-top">${bodyHtml}${trailerHtml}<div class="rating-section reveal"><div class="rating-label">Notre verdict</div><div class="rating-title">${verdict}</div><div class="stars-container">${buildStars(r.note || 0)}</div><div class="rating-score">${r.note || '—'}<span> / 5</span></div></div><div class="share-bar reveal"><span class="share-label">Partager</span><button class="share-btn" onclick="shareTwitter()"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X / Twitter</button><button class="share-btn" onclick="shareFacebook()"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook</button><button class="share-btn" id="copyBtn"><svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>Copier le lien</button></div></div>`;
+}
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderRelated(reviews, currentId) {
+  const pool = reviews.filter(r => r.id !== currentId);
+  const others = shuffleArray(pool).slice(0, 3);
+  if (others.length === 0) return '';
+  const cards = others.map(r => {
+    const bg = r.img
+      ? `<img src="${r.img}" alt="${r.title}" class="related-card-bg" style="width:100%;height:100%;object-fit:cover;display:block;">`
+      : `<div class="related-card-bg" style="height:100%;background:linear-gradient(135deg,${r.color || '#1a0505'},${r.color2 || '#3a1010'})"></div>`;
+    return `<a href="/${pageDirName(r.slug)}/" class="related-card">${bg}<div class="related-card-overlay"><div class="related-card-title">${r.title}</div><div class="related-card-sub">${r.year || ''} · Critique</div></div></a>`;
+  }).join('');
+  return `<section class="related-section"><div class="related-inner"><div class="related-header"><span class="related-eyebrow">CONTINUER LA SÉANCE</span><h3>À lire <em>aussi</em></h3></div><div class="related-carousel"><button class="related-arrow prev" onclick="relatedScroll(-1)" aria-label="Précédent"><svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><div class="related-grid" id="relatedGrid">${cards}</div><button class="related-arrow next" onclick="relatedScroll(1)" aria-label="Suivant"><svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></button></div><a href="/full-reviews.html" class="related-cta">Voir toutes les critiques<svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a></div></section>`;
+}
+
+/* ─────────────────────────────────────────────
+   OUTILS SEO
+───────────────────────────────────────────── */
+function escapeAttr(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function stripMarkdownToText(md) {
+  return (md || '')
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/[#>*_`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function buildMetaDescription(r) {
+  const base = r.sub && r.sub.trim() ? r.sub.trim() : stripMarkdownToText(r.contenu).slice(0, 300);
+  return base.length > 157 ? base.slice(0, 154).trim() + '…' : base;
+}
+
+/* ─────────────────────────────────────────────
+   GABARIT DE PAGE STATIQUE
+───────────────────────────────────────────── */
+function buildPage(r, allReviews) {
+  const description = buildMetaDescription(r);
+  const title = `${r.title} (${r.year || ''}) – Critique • L'Entracte`;
+  const canonical = `${SITE_URL}/${pageDirName(r.slug)}/`;
+  const ogImage = r.banner || r.img || `${SITE_URL}/favicon-512.png`;
+  const heroHtml = renderHero(r);
+  const articleHtml = renderArticle(r);
+  const relatedHtml = renderRelated(allReviews, r.id);
+
+  return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeAttr(title)}</title>
+<meta name="description" content="${escapeAttr(description)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${escapeAttr(r.title)} – Critique">
+<meta property="og:description" content="${escapeAttr(description)}">
+<meta property="og:image" content="${escapeAttr(ogImage)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:locale" content="fr_BE">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeAttr(r.title)} – Critique">
+<meta name="twitter:description" content="${escapeAttr(description)}">
+<meta name="twitter:image" content="${escapeAttr(ogImage)}">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/review.css">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+<nav>
+<a href="/index.html" class="logo"><img src="/images/TAGLINE.png" alt="L'Entracte"></a>
+<div class="nav-right">
+<ul class="nav-links">
+<li class="nav-cinema">Cinéma<svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+<div class="dropdown">
+<a href="/full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+<a href="/ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+<a href="/tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
+</div>
+</li>
+<li><a href="/a-propos.html">À propos</a></li>
+<li><a href="/index.html#contact" class="contact-link">Contact</a></li>
+</ul>
+</div>
+<div class="search-btn" onclick="toggleSearch()" title="Rechercher"><svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+<div class="burger" onclick="toggleNav()" id="burger"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+<a href="/index.html#reviews" onclick="toggleNav()">Reviews</a>
+<a href="/ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
+<a href="/tops-archives.html" onclick="toggleNav()">Les tops</a>
+<a href="/a-propos.html" onclick="toggleNav()">À propos</a>
+<a href="/index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<div id="hero-container">${heroHtml}</div>
+<div id="article-container">${articleHtml}</div>
+<div id="related-container">${relatedHtml}</div>
+
+<footer><p>© ${new Date().getFullYear()} L'Entracte • Du grand écran à votre écran • Tous droits réservés</p></footer>
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+<span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+<img id="lightbox-img" src="" alt="">
+<div id="lightbox-caption" class="lightbox-caption"></div>
+</div>
+
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+<button class="search-close" onclick="toggleSearch()">✕</button>
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+<button class="search-submit" onclick="doSearch()"><svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button>
+</div>
+<p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+<div id="searchResults" class="search-results"></div>
+</div>
+
+<style>
+.search-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(4px)}
+.search-overlay.active{opacity:1;pointer-events:all}
+.search-box{width:min(600px,90vw);position:relative;transform:translateY(20px);transition:transform .35s ease}
+.search-overlay.active .search-box{transform:translateY(0)}
+.search-box input{width:100%;background:#1a1a1a;border:2px solid var(--red);border-radius:50px;padding:18px 60px 18px 28px;font-family:'Montserrat',sans-serif;font-size:18px;font-weight:600;color:var(--white);outline:none;letter-spacing:.5px}
+.search-box input::placeholder{color:#555}
+.search-box .search-submit{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:4px}
+.search-box .search-submit svg{width:22px;height:22px;fill:var(--red)}
+.search-close{position:absolute;top:24px;right:24px;background:none;border:none;color:#666;font-size:28px;cursor:pointer;transition:color .2s;line-height:1}
+.search-close:hover{color:var(--white)}
+.search-hint{text-align:center;margin-top:16px;font-size:12px;color:#444;letter-spacing:2px;text-transform:uppercase}
+.search-results{margin-top:32px;display:flex;flex-direction:column;gap:12px;width:100%;max-width:640px}
+.search-result-card{display:flex;align-items:center;gap:16px;background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:12px 16px;text-decoration:none;color:#fff;transition:border-color .2s,background .2s;cursor:pointer}
+.search-result-card:hover{border-color:#E8253A;background:rgba(232,37,58,.07)}
+.search-result-img{width:44px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;background:#2a2a2a}
+.search-result-info{display:flex;flex-direction:column;gap:4px}
+.search-result-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#fff}
+.search-result-meta{font-size:11px;color:#888;letter-spacing:1px;text-transform:uppercase}
+.search-no-result{font-size:13px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+</style>
+
+<script>
+const SUPABASE_URL = '${SUPABASE_URL}';
+const SUPABASE_KEY = '${SUPABASE_KEY}';
+let relatedIndex = 0;
+function relatedScroll(dir){const grid=document.getElementById('relatedGrid');if(!grid)return;const cards=grid.querySelectorAll('.related-card');if(!cards.length)return;const step=cards[0].getBoundingClientRect().width;relatedIndex=(relatedIndex+dir+cards.length)%cards.length;grid.style.scrollSnapType='none';grid.scrollTo({left:relatedIndex*step,behavior:'smooth'});clearTimeout(grid._snapRestoreTimeout);grid._snapRestoreTimeout=setTimeout(()=>{grid.style.scrollSnapType='';},500);}
+function shareTwitter(){const url=\`https://twitter.com/intent/tweet?url=\${encodeURIComponent(location.href)}&text=\${encodeURIComponent(document.title)}\`;window.open(url,'_blank');}
+function shareFacebook(){const url=\`https://www.facebook.com/sharer/sharer.php?u=\${encodeURIComponent(location.href)}\`;window.open(url,'_blank');}
+function toggleNav(){const nav=document.getElementById('mobileNav');nav.classList.toggle('open');const spans=document.getElementById('burger').querySelectorAll('span');if(nav.classList.contains('open')){spans[0].style.transform='rotate(45deg) translate(5px,5px)';spans[1].style.opacity='0';spans[2].style.transform='rotate(-45deg) translate(5px,-5px)';}else{spans.forEach(s=>{s.style.transform='';s.style.opacity='';});}}
+function openLightbox(src,caption){const lb=document.getElementById('lightbox');document.getElementById('lightbox-img').src=src;document.getElementById('lightbox-caption').textContent=caption||'';lb.classList.add('open');document.body.style.overflow='hidden';}
+function closeLightbox(e){if(e&&e.target.id==='lightbox-img')return;const lb=document.getElementById('lightbox');lb.classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+function bindLightboxImages(){document.querySelectorAll('.article-image img, .article-gallery img').forEach(img=>{if(img.dataset.lbBound)return;img.dataset.lbBound='1';img.style.cursor='zoom-in';img.addEventListener('click',()=>{const caption=img.closest('figure')?.querySelector('figcaption')?.textContent||img.alt||'';openLightbox(img.src,caption);});});}
+function toggleSearch(){const overlay=document.getElementById('searchOverlay');overlay.classList.toggle('active');if(overlay.classList.contains('active')){setTimeout(()=>document.getElementById('searchInput').focus(),50);}else{document.getElementById('searchInput').value='';document.getElementById('searchResults').innerHTML='';}}
+let __overlayMouseDownOnSelf=false;
+document.addEventListener('DOMContentLoaded',()=>{const ov=document.getElementById('searchOverlay');if(ov)ov.addEventListener('mousedown',e=>{__overlayMouseDownOnSelf=(e.target===ov);});});
+function handleOverlayClick(e){if(e.target===document.getElementById('searchOverlay')&&__overlayMouseDownOnSelf)toggleSearch();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('searchOverlay').classList.remove('active');document.getElementById('searchInput').value='';document.getElementById('searchResults').innerHTML='';}if(e.key==='Enter'&&document.getElementById('searchOverlay').classList.contains('active')){doSearch();}});
+let __searchDebounce=null;
+document.addEventListener('DOMContentLoaded',()=>{const input=document.getElementById('searchInput');if(input){input.addEventListener('input',()=>{clearTimeout(__searchDebounce);const q=input.value.trim();if(q.length<2){document.getElementById('searchResults').innerHTML='';return;}__searchDebounce=setTimeout(doSearch,300);});}});
+async function doSearch(){const query=document.getElementById('searchInput').value.trim();const resultsEl=document.getElementById('searchResults');if(!query)return;resultsEl.innerHTML='<p class="search-no-result">Recherche en cours…</p>';const res=await fetch(\`\${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,slug&publie=eq.true&title=ilike.*\${encodeURIComponent(query)}*&order=id.asc&limit=8\`,{headers:{apikey:SUPABASE_KEY,Authorization:\`Bearer \${SUPABASE_KEY}\`}});const data=await res.json();if(!data.length){resultsEl.innerHTML='<p class="search-no-result">Nous n\\'avons pas encore écrit sur <em style="color:#fff">« '+query+' »</em>, mais n\\'hésitez pas à nous le conseiller !</p>';return;}resultsEl.innerHTML=data.map(r=>\`<a class="search-result-card" href="/\${r.slug.endsWith('-critique')?r.slug:r.slug+'-critique'}/">\${r.img?\`<img class="search-result-img" src="\${r.img}" alt="\${r.title}">\`:'<div class="search-result-img"></div>'}<div class="search-result-info"><div class="search-result-title">\${r.title}</div><div class="search-result-meta">\${r.year||''}\${r.genre?' · '+r.genre:''}</div></div></a>\`).join('');}
+
+document.addEventListener('DOMContentLoaded', () => {
+  bindLightboxImages();
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  const relatedGridEl = document.getElementById('relatedGrid');
+  if (relatedGridEl) {
+    let swipeSyncTimeout;
+    relatedGridEl.addEventListener('scroll', () => {
+      clearTimeout(swipeSyncTimeout);
+      swipeSyncTimeout = setTimeout(() => {
+        const cards = relatedGridEl.querySelectorAll('.related-card');
+        if (!cards.length) return;
+        const step = cards[0].getBoundingClientRect().width;
+        relatedIndex = Math.round(relatedGridEl.scrollLeft / step);
+      }, 120);
+    });
+  }
+  const copyBtn = document.getElementById('copyBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function () {
+      navigator.clipboard?.writeText(location.href);
+      this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+      setTimeout(() => {
+        this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+      }, 2000);
+    });
+  }
+});
+</script>
+</body>
+</html>`;
+}
+
+/* ─────────────────────────────────────────────
+   SITEMAP
+───────────────────────────────────────────── */
+function generateSitemap(reviews) {
+  const staticPages = ['', 'full-reviews.html', 'ccf-archives.html', 'tops-archives.html', 'a-propos.html'];
+  const today = new Date().toISOString().split('T')[0];
+  const urls = [
+    ...staticPages.map(p => `<url><loc>${SITE_URL}/${p}</loc><lastmod>${today}</lastmod></url>`),
+    ...reviews.map(r => `<url><loc>${SITE_URL}/${pageDirName(r.slug)}/</loc><lastmod>${today}</lastmod></url>`)
+  ];
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
+  fs.writeFileSync('sitemap.xml', xml);
+}
+
+/* ─────────────────────────────────────────────
+   MAIN
+───────────────────────────────────────────── */
+async function fetchReviews() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=*&publie=eq.true&order=id.asc`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  if (!res.ok) throw new Error(`Erreur Supabase: ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
+async function main() {
+  console.log('Récupération des reviews publiées depuis Supabase…');
+  const allReviews = await fetchReviews();
+  console.log(`${allReviews.length} review(s) trouvée(s).`);
+
+  for (const r of allReviews) {
+    if (!r.slug) {
+      console.warn(`⚠️  Review "${r.title}" (id ${r.id}) n'a pas de slug, ignorée.`);
+      continue;
+    }
+    const dirName = pageDirName(r.slug);
+    fs.mkdirSync(dirName, { recursive: true });
+    fs.writeFileSync(path.join(dirName, 'index.html'), buildPage(r, allReviews));
+    console.log(`✔ ${dirName}/index.html`);
+  }
+
+  generateSitemap(allReviews);
+  console.log('✔ sitemap.xml mis à jour');
+  console.log('\nTerminé.');
+}
+
+main().catch(err => {
+  console.error('Erreur :', err);
+  process.exit(1);
+});
