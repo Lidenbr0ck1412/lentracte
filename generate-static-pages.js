@@ -120,11 +120,11 @@ function parseMarkdown(md) {
       }
       if (imgs.length === 1) {
         const { caption, src, position, wide } = parseImg(imgs[0]);
-        blocks.push(`<figure class="article-image reveal${wide ? ' wide' : ''}"><img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`);
+        blocks.push(`<figure class="article-image reveal${wide ? ' wide' : ''}"><img src="${resolveImgPath(src)}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`);
       } else {
         const parsed = imgs.map(parseImg);
         const useStack = parsed.some(p => p.stack);
-        const figs = parsed.map(({ caption, src, position }) => `<figure><img src="${src}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`).join('');
+        const figs = parsed.map(({ caption, src, position }) => `<figure><img src="${resolveImgPath(src)}" alt="${caption || 'Image'}" loading="lazy"${position ? ` style="object-position:${position}"` : ''}>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`).join('');
         const colCount = imgs.length === 4 ? 2 : Math.min(imgs.length, 3);
         const galleryClass = useStack ? (imgs.length >= 4 ? 'stack stack-cols-2' : 'stack') : `cols-${colCount}`;
         blocks.push(`<div class="article-gallery reveal ${galleryClass}">${figs}</div>`);
@@ -178,8 +178,8 @@ function buildStars(note) {
 }
 
 function renderHero(r) {
-  const banner = r.banner || (r.img ? r.img : '');
-  const poster = r.img || '';
+  const banner = resolveImgPath(r.banner || (r.img ? r.img : ''));
+  const poster = resolveImgPath(r.img || '');
   return `<section class="hero"><div class="hero-bg">${banner ? `<img src="${banner}" alt="${r.title}">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${r.color || '#1a0505'},${r.color2 || '#3a1010'})"></div>`}</div>${poster ? `<div class="hero-poster-zone"><img src="${poster}" alt="${r.title} poster"></div>` : ''}<div class="hero-content"><div class="hero-category"><span class="dot"></span>CRITIQUE</div><h1 class="hero-title">${r.title}<span class="year">${r.year || ''}</span></h1>${r.sub ? `<p class="hero-tagline">${r.sub}</p>` : ''}<div class="hero-meta">${r.realisateur ? `<div class="meta-item"><span class="meta-label">Réalisateur</span><span class="meta-value">${r.realisateur}</span></div>` : ''}${r.genre ? `<div class="meta-item"><span class="meta-label">Genre</span><span class="meta-value">${r.genre}</span></div>` : ''}${r.duree ? `<div class="meta-item"><span class="meta-label">Durée</span><span class="meta-value">${r.duree}</span></div>` : ''}${r.badge ? `<div class="meta-item"><span class="meta-label">Plateforme</span><span class="meta-value">${r.badge}</span></div>` : ''}</div></div><div class="hero-scroll" onclick="document.getElementById('article-container').scrollIntoView({behavior:'smooth'})"><span>LIRE</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div></section>`;
 }
 
@@ -187,7 +187,7 @@ function renderStills(stills) {
   if (!stills) return '';
   const imgs = stills.split(',').map(s => s.trim()).filter(Boolean);
   if (!imgs.length) return '';
-  return `<div class="stills-grid reveal">${imgs.map((src, i) => `<div class="still"><img src="${src}" alt="Still ${i + 1}"></div>`).join('')}</div>`;
+  return `<div class="stills-grid reveal">${imgs.map((src, i) => `<div class="still"><img src="${resolveImgPath(src)}" alt="Still ${i + 1}"></div>`).join('')}</div>`;
 }
 
 function renderTrailer(url) {
@@ -225,7 +225,7 @@ function renderRelated(reviews, currentId) {
   if (others.length === 0) return '';
   const cards = others.map(r => {
     const bg = r.img
-      ? `<img src="${r.img}" alt="${r.title}" class="related-card-bg" style="width:100%;height:100%;object-fit:cover;display:block;">`
+      ? `<img src="${resolveImgPath(r.img)}" alt="${r.title}" class="related-card-bg" style="width:100%;height:100%;object-fit:cover;display:block;">`
       : `<div class="related-card-bg" style="height:100%;background:linear-gradient(135deg,${r.color || '#1a0505'},${r.color2 || '#3a1010'})"></div>`;
     return `<a href="/${pageDirName(r.slug)}/" class="related-card">${bg}<div class="related-card-overlay"><div class="related-card-title">${r.title}</div><div class="related-card-sub">${r.year || ''} · Critique</div></div></a>`;
   }).join('');
@@ -237,6 +237,20 @@ function renderRelated(reviews, currentId) {
 ───────────────────────────────────────────── */
 function escapeAttr(str) {
   return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Les chemins d'images enregistrés dans Supabase sont souvent relatifs
+// (ex: "images/dune.jpg"), ce qui fonctionnait tant que review.html
+// vivait à la racine. Les pages générées vivent maintenant un niveau
+// plus bas (ex: /the-drama-critique/index.html), donc on force ces
+// chemins en absolu pour qu'ils continuent de pointer au bon endroit.
+function resolveImgPath(src) {
+  if (!src) return src;
+  const trimmed = src.trim();
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith('/') || trimmed.startsWith('data:')) {
+    return trimmed;
+  }
+  return `/${trimmed}`;
 }
 
 function stripMarkdownToText(md) {
@@ -259,7 +273,10 @@ function buildPage(r, allReviews) {
   const description = buildMetaDescription(r);
   const title = `${r.title} (${r.year || ''}) – Critique • L'Entracte`;
   const canonical = `${SITE_URL}/${pageDirName(r.slug)}/`;
-  const ogImage = r.banner || r.img || `${SITE_URL}/favicon-512.png`;
+  const resolvedOg = resolveImgPath(r.banner || r.img);
+  const ogImage = resolvedOg
+    ? (resolvedOg.startsWith('http') ? resolvedOg : `${SITE_URL}${resolvedOg}`)
+    : `${SITE_URL}/favicon-512.png`;
   const heroHtml = renderHero(r);
   const articleHtml = renderArticle(r);
   const relatedHtml = renderRelated(allReviews, r.id);
