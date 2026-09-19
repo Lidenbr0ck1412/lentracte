@@ -90,6 +90,11 @@ async function redirectIfLegacyUrl() {
   // c'est un accès direct à review.html (fallback/preview)
   if (!id && !filmSlug) return false;
 
+  // Mode aperçu (article pas encore publié) -> on reste sur review.html,
+  // la page statique de destination n'existe pas encore tant que le
+  // film n'est pas publié.
+  if (isPreview) return false;
+
   let slug = filmSlug;
 
   // Si on n'a que l'ancien ?id=, il faut aller chercher le slug correspondant
