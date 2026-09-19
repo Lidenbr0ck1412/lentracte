@@ -151,9 +151,13 @@ async function redirectIfLegacyUrl() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
   const filmSlug = params.get('film');
+  const isPreview = params.get('preview') === '1';
 
   // Pas de ?id= ni de ?film= -> accès direct à ccf.html, rien à rediriger
   if (!id && !filmSlug) return false;
+
+  // Mode aperçu (article pas encore publié) -> on reste sur ccf.html
+  if (isPreview) return false;
 
   let slug = filmSlug;
 
