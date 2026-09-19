@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page introuvable • L'Entracte</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/review.css">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<style>
+  /* ─── Contenu propre à la page 404, le reste (nav, burger, search)
+     vient directement de review.css, identique au reste du site ─── */
+  .error-main {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .error-main .noise-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(232,37,58,0.1) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .error-code {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 22vw, 260px);
+    line-height: 0.9;
+    letter-spacing: 4px;
+    color: var(--red);
+    position: relative;
+    z-index: 1;
+  }
+  .error-code .glitch {
+    display: inline-block;
+    position: relative;
+    animation: flicker404 2s infinite;
+  }
+  .error-code .glitch::before,
+  .error-code .glitch::after {
+    content: '404';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    background: var(--black);
+  }
+  .error-code .glitch::before {
+    left: 3px;
+    color: #00e5ff;
+    animation: glitch-slice-1 2s infinite;
+  }
+  .error-code .glitch::after {
+    left: -3px;
+    color: var(--red);
+    animation: glitch-slice-2 2s infinite;
+  }
+  @keyframes flicker404 {
+    0%, 80%, 100% { opacity: 1; transform: translateX(0) skewX(0); }
+    81% { opacity: 0.4; transform: translateX(-8px) skewX(4deg); }
+    83% { opacity: 1; transform: translateX(6px) skewX(-3deg); }
+    85% { opacity: 0.5; transform: translateX(-5px) skewX(2deg); }
+    87% { opacity: 1; transform: translateX(3px) skewX(0); }
+    89% { opacity: 0.6; transform: translateX(-2px); }
+    91%, 100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes glitch-slice-1 {
+    0%, 80%, 100% { clip-path: inset(0 0 100% 0); opacity: 0; }
+    81% { clip-path: inset(10% 0 60% 0); opacity: 0.8; }
+    83% { clip-path: inset(50% 0 10% 0); opacity: 0.8; }
+    85% { clip-path: inset(20% 0 40% 0); opacity: 0.8; }
+    87% { clip-path: inset(60% 0 5% 0); opacity: 0.8; }
+    89%, 91% { clip-path: inset(0 0 100% 0); opacity: 0; }
+  }
+  @keyframes glitch-slice-2 {
+    0%, 80%, 100% { clip-path: inset(100% 0 0 0); opacity: 0; }
+    81% { clip-path: inset(70% 0 5% 0); opacity: 0.8; }
+    83% { clip-path: inset(15% 0 55% 0); opacity: 0.8; }
+    85% { clip-path: inset(45% 0 20% 0); opacity: 0.8; }
+    87% { clip-path: inset(5% 0 65% 0); opacity: 0.8; }
+    89%, 91% { clip-path: inset(100% 0 0 0); opacity: 0; }
+  }
+  .error-tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(18px, 3vw, 26px);
+    color: var(--light-grey);
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .error-explain {
+    max-width: 480px;
+    margin: 24px auto 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--grey);
+    position: relative;
+    z-index: 1;
+  }
+  .error-actions {
+    margin-top: 36px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+  .error-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 30px;
+    border-radius: 30px;
+    transition: transform .2s, background .2s, border-color .2s, color .2s;
+  }
+  .error-btn-primary { background: var(--red); color: var(--white); }
+  .error-btn-primary:hover { transform: translateY(-2px); background: var(--red-dark); }
+  .error-btn-secondary { border: 1px solid rgba(255,255,255,0.25); color: var(--white); }
+  .error-btn-secondary:hover { border-color: var(--red); color: var(--red); transform: translateY(-2px); }
+</style>
+</head>
+<body>
+<nav>
+<a href="/index.html" class="logo"><img src="/images/TAGLINE.png" alt="L'Entracte"></a>
+<div class="nav-right">
+<ul class="nav-links">
+<li class="nav-cinema">Cinéma
+<svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+<div class="dropdown">
+<a href="/full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+<a href="/ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+<a href="/tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
+</div>
+</li>
+<li><a href="/a-propos.html">À propos</a></li>
+<li><a href="/index.html#contact" class="contact-link">Contact</a></li>
+</ul>
+</div>
+<div class="search-btn" onclick="toggleSearch()" title="Rechercher"><svg viewBox="0 0 24 24" fill="#ffffff"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+<div class="burger" onclick="toggleNav()" id="burger"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+<a href="/full-reviews.html" onclick="toggleNav()">Nos critiques</a>
+<a href="/ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
+<a href="/tops-archives.html" onclick="toggleNav()">Les tops</a>
+<a href="/a-propos.html" onclick="toggleNav()">À propos</a>
+<a href="/index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<main class="error-main">
+  <div class="noise-bg"></div>
+  <div class="error-code"><span class="glitch">404</span></div>
+  <p class="error-tagline">Cette séance n'existe pas.</p>
+  <p class="error-explain">La page que vous cherchez a peut-être changé d'adresse, été déplacée, ou n'a jamais existé. Direction l'accueil, ou lancez une recherche pour retrouver ce que vous cherchiez.</p>
+  <div class="error-actions">
+    <a href="/index.html" class="error-btn error-btn-primary">Retour à l'accueil</a>
+    <a href="/full-reviews.html" class="error-btn error-btn-secondary">Voir toutes les critiques</a>
+  </div>
+</main>
+
+<footer><p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p></footer>
+
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+<button class="search-close" onclick="toggleSearch()">✕</button>
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+<button class="search-submit" onclick="doSearch()"><svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button>
+</div>
+<p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+<div id="searchResults" class="search-results"></div>
+</div>
+
+<style>
+.search-results{margin-top:32px;display:flex;flex-direction:column;gap:12px;width:100%;max-width:640px}
+.search-result-card{display:flex;align-items:center;gap:16px;background:#181818;border:1px solid #2a2a2a;border-radius:10px;padding:12px 16px;text-decoration:none;color:#fff;transition:border-color .2s,background .2s;cursor:pointer}
+.search-result-card:hover{border-color:#E8253A;background:rgba(232,37,58,.07)}
+.search-result-img{width:44px;height:60px;object-fit:cover;border-radius:6px;flex-shrink:0;background:#2a2a2a}
+.search-result-info{display:flex;flex-direction:column;gap:4px}
+.search-result-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#fff}
+.search-result-meta{font-size:11px;color:#888;letter-spacing:1px;text-transform:uppercase}
+.search-no-result{font-size:13px;color:#888;letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+</style>
+
+<script>
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+function toggleNav(){const nav=document.getElementById('mobileNav');nav.classList.toggle('open');const spans=document.getElementById('burger').querySelectorAll('span');if(nav.classList.contains('open')){spans[0].style.transform='rotate(45deg) translate(5px,5px)';spans[1].style.opacity='0';spans[2].style.transform='rotate(-45deg) translate(5px,-5px)';}else{spans.forEach(s=>{s.style.transform='';s.style.opacity='';});}}
+function toggleSearch(){const overlay=document.getElementById('searchOverlay');overlay.classList.toggle('active');if(overlay.classList.contains('active')){setTimeout(()=>document.getElementById('searchInput').focus(),50);}else{document.getElementById('searchInput').value='';document.getElementById('searchResults').innerHTML='';}}
+let __overlayMouseDownOnSelf=false;
+document.addEventListener('DOMContentLoaded',()=>{const ov=document.getElementById('searchOverlay');if(ov)ov.addEventListener('mousedown',e=>{__overlayMouseDownOnSelf=(e.target===ov);});});
+function handleOverlayClick(e){if(e.target===document.getElementById('searchOverlay')&&__overlayMouseDownOnSelf)toggleSearch();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('searchOverlay').classList.remove('active');document.getElementById('searchInput').value='';document.getElementById('searchResults').innerHTML='';}if(e.key==='Enter'&&document.getElementById('searchOverlay').classList.contains('active')){doSearch();}});
+let __searchDebounce=null;
+document.addEventListener('DOMContentLoaded',()=>{const input=document.getElementById('searchInput');if(input){input.addEventListener('input',()=>{clearTimeout(__searchDebounce);const q=input.value.trim();if(q.length<2){document.getElementById('searchResults').innerHTML='';return;}__searchDebounce=setTimeout(doSearch,300);});}});
+async function doSearch(){const query=document.getElementById('searchInput').value.trim();const resultsEl=document.getElementById('searchResults');if(!query)return;resultsEl.innerHTML='<p class="search-no-result">Recherche en cours…</p>';const res=await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,slug&publie=eq.true&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}});const data=await res.json();if(!data.length){resultsEl.innerHTML='<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« '+query+' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';return;}resultsEl.innerHTML=data.map(r=>{const finalSlug=r.slug&&r.slug.endsWith('-critique')?r.slug:`${r.slug}-critique`;return `<a class="search-result-card" href="/${finalSlug}/">${r.img?`<img class="search-result-img" src="${r.img}" alt="${r.title}">`:'<div class="search-result-img"></div>'}<div class="search-result-info"><div class="search-result-title">${r.title}</div><div class="search-result-meta">${r.year||''}${r.genre?' · '+r.genre:''}</div></div></a>`;}).join('');}
+</script>
+</body>
+</html>
