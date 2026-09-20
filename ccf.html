@@ -344,7 +344,6 @@ function updateReadingProgress(article) {
 
   if (pct > 0.03 && pct < 0.95) {
     localStorage.setItem(getReadKey(article), JSON.stringify({ pct, scrollY: window.scrollY }));
-    setBookmarkState(pct, window.scrollY);
   } else if (pct >= 0.95) {
     localStorage.removeItem(getReadKey(article));
     setBookmarkState(null, null);
