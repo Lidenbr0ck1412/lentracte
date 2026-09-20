@@ -272,6 +272,50 @@ function buildMetaDescription(r) {
   return base.length > 157 ? base.slice(0, 154).trim() + '…' : base;
 }
 
+// Échappement pour insérer du texte dans une chaîne JSON (différent de l'échappement HTML)
+function escapeJson(str) {
+  return String(str || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, ' ').replace(/</g, '\\u003c');
+}
+
+// Bloc de données structurées (schema.org) pour obtenir les étoiles
+// de notation directement dans les résultats de recherche Google
+// ("rich snippets"). Ne s'affiche jamais à l'écran — lu uniquement
+// par les moteurs de recherche.
+function buildReviewSchema(r) {
+  const rating = r.note != null ? Number(r.note) : null;
+  if (!rating) return ''; // pas de note = pas de rich snippet possible, on n'insère rien
+
+  const summary = buildMetaDescription(r);
+  const datePublished = new Date().toISOString().split('T')[0]; // pas de champ date en base ; date de génération utilisée
+
+  return `<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Review",
+  "author": {
+    "@type": "Person",
+    "name": "Jeremy Mahieu"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "L'Entracte"
+  },
+  "datePublished": "${datePublished}",
+  "reviewBody": "${escapeJson(summary)}",
+  "reviewRating": {
+    "@type": "Rating",
+    "bestRating": "5",
+    "ratingValue": "${rating}",
+    "worstRating": "1"
+  },
+  "itemReviewed": {
+    "@type": "Movie",
+    "name": "${escapeJson(r.title)}"${r.year ? `,\n    "dateCreated": "${r.year}"` : ''}${r.genre ? `,\n    "genre": "${escapeJson(r.genre)}"` : ''}${r.realisateur ? `,\n    "director": {\n      "@type": "Person",\n      "name": "${escapeJson(r.realisateur)}"\n    }` : ''}
+  }
+}
+</script>`;
+}
+
 /* ─────────────────────────────────────────────
    GABARIT DE PAGE STATIQUE
 ───────────────────────────────────────────── */
@@ -305,6 +349,7 @@ function buildPage(r, allReviews) {
 <meta name="twitter:title" content="${escapeAttr(r.title)} – Critique">
 <meta name="twitter:description" content="${escapeAttr(description)}">
 <meta name="twitter:image" content="${escapeAttr(ogImage)}">
+${buildReviewSchema(r)}
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/review.css">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
@@ -314,7 +359,7 @@ function buildPage(r, allReviews) {
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
-<nav>
+<nav id="navbar">
 <a href="/index.html" class="logo"><img src="/images/TAGLINE.png" alt="L'Entracte"></a>
 <div class="nav-right">
 <ul class="nav-links">
@@ -405,8 +450,20 @@ let __searchDebounce=null;
 document.addEventListener('DOMContentLoaded',()=>{const input=document.getElementById('searchInput');if(input){input.addEventListener('input',()=>{clearTimeout(__searchDebounce);const q=input.value.trim();if(q.length<2){document.getElementById('searchResults').innerHTML='';return;}__searchDebounce=setTimeout(doSearch,300);});}});
 async function doSearch(){const query=document.getElementById('searchInput').value.trim();const resultsEl=document.getElementById('searchResults');if(!query)return;resultsEl.innerHTML='<p class="search-no-result">Recherche en cours…</p>';const res=await fetch(\`\${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,slug&publie=eq.true&title=ilike.*\${encodeURIComponent(query)}*&order=id.asc&limit=8\`,{headers:{apikey:SUPABASE_KEY,Authorization:\`Bearer \${SUPABASE_KEY}\`}});const data=await res.json();if(!data.length){resultsEl.innerHTML='<p class="search-no-result">Nous n\\'avons pas encore écrit sur <em style="color:#fff">« '+query+' »</em>, mais n\\'hésitez pas à nous le conseiller !</p>';return;}resultsEl.innerHTML=data.map(r=>\`<a class="search-result-card" href="/\${r.slug.endsWith('-critique')?r.slug:r.slug+'-critique'}/">\${r.img?\`<img class="search-result-img" src="\${r.img}" alt="\${r.title}">\`:'<div class="search-result-img"></div>'}<div class="search-result-info"><div class="search-result-title">\${r.title}</div><div class="search-result-meta">\${r.year||''}\${r.genre?' · '+r.genre:''}</div></div></a>\`).join('');}
 
+/* ── REPRISE DE LECTURE (marque-page) ── */
+const READ_KEY = 'entracte_review_read_${r.slug}';
+function getArticleBody(){return document.querySelector('.article-body')||document.querySelector('.article-wrapper');}
+function updateReadingProgress(){const body=getArticleBody();if(!body)return;const rect=body.getBoundingClientRect();const total=rect.height-window.innerHeight;if(total<=0)return;const scrolled=Math.min(Math.max(-rect.top,0),total);const pct=scrolled/total;if(pct>0.03&&pct<0.95){localStorage.setItem(READ_KEY,JSON.stringify({pct,scrollY:window.scrollY}));setBookmarkState(pct,window.scrollY);}else if(pct>=0.95){localStorage.removeItem(READ_KEY);setBookmarkState(null,null);}}
+function checkResumeReading(){const bookmark=createResumeBookmark();requestAnimationFrame(()=>bookmark.classList.add('visible'));const saved=localStorage.getItem(READ_KEY);if(!saved){setBookmarkState(null,null);return;}let data;try{data=JSON.parse(saved);}catch{setBookmarkState(null,null);return;}if(!data||!data.scrollY||data.scrollY<200){setBookmarkState(null,null);return;}setBookmarkState(data.pct,data.scrollY);}
+function createResumeBookmark(){let bookmark=document.querySelector('.resume-bookmark');if(bookmark)return bookmark;bookmark=document.createElement('button');bookmark.className='resume-bookmark';bookmark.setAttribute('aria-label','Marque-page de lecture');bookmark.innerHTML='<svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>';const tooltip=document.createElement('div');tooltip.className='resume-tooltip';bookmark.addEventListener('mouseenter',()=>tooltip.classList.add('visible'));bookmark.addEventListener('mouseleave',()=>tooltip.classList.remove('visible'));const nav=document.getElementById('navbar');nav.appendChild(bookmark);nav.appendChild(tooltip);return bookmark;}
+function setBookmarkState(pct,scrollY){const bookmark=document.querySelector('.resume-bookmark');const tooltip=document.querySelector('.resume-tooltip');if(!bookmark||!tooltip)return;if(pct!=null&&scrollY!=null){bookmark.classList.add('active');tooltip.textContent=\`Reprendre la lecture (\${Math.round(pct*100)}%)\`;bookmark.onclick=()=>window.scrollTo({top:scrollY,behavior:'smooth'});}else{bookmark.classList.remove('active');tooltip.textContent='Aucune lecture en cours';tooltip.classList.remove('visible');bookmark.onclick=null;}}
+let __progressTicking=false;
+function bindReadingProgress(){window.addEventListener('scroll',()=>{if(__progressTicking)return;__progressTicking=true;requestAnimationFrame(()=>{updateReadingProgress();__progressTicking=false;});},{passive:true});}
+
 document.addEventListener('DOMContentLoaded', () => {
   bindLightboxImages();
+  bindReadingProgress();
+  checkResumeReading();
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
@@ -710,8 +767,20 @@ function bindLightboxImages(){document.querySelectorAll('.article-image img, .ar
 let currentAudioClip=null;
 function toggleAudioClip(btn){const src=btn.dataset.src;const wrap=btn.closest('.audio-clip');const progressBar=wrap.querySelector('.audio-clip-progress-bar');if(currentAudioClip&&currentAudioClip.audio&&!currentAudioClip.audio.paused&&currentAudioClip.btn!==btn){currentAudioClip.audio.pause();currentAudioClip.btn.classList.remove('playing');}if(!btn._audio){btn._audio=new Audio(src);btn._audio.addEventListener('timeupdate',()=>{const pct=(btn._audio.currentTime/btn._audio.duration)*100;progressBar.style.width=pct+'%';});btn._audio.addEventListener('ended',()=>{btn.classList.remove('playing');progressBar.style.width='0%';});}if(btn._audio.paused){btn._audio.play();btn.classList.add('playing');currentAudioClip={audio:btn._audio,btn:btn};}else{btn._audio.pause();btn.classList.remove('playing');}}
 
+/* ── REPRISE DE LECTURE (marque-page) ── */
+const READ_KEY = 'entracte_ccf_read_${article.slug}';
+function getArticleBody(){return document.querySelector('.article-body')||document.querySelector('.article-wrapper');}
+function updateReadingProgress(){const body=getArticleBody();if(!body)return;const rect=body.getBoundingClientRect();const total=rect.height-window.innerHeight;if(total<=0)return;const scrolled=Math.min(Math.max(-rect.top,0),total);const pct=scrolled/total;if(pct>0.03&&pct<0.95){localStorage.setItem(READ_KEY,JSON.stringify({pct,scrollY:window.scrollY}));setBookmarkState(pct,window.scrollY);}else if(pct>=0.95){localStorage.removeItem(READ_KEY);setBookmarkState(null,null);}}
+function checkResumeReading(){const bookmark=createResumeBookmark();requestAnimationFrame(()=>bookmark.classList.add('visible'));const saved=localStorage.getItem(READ_KEY);if(!saved){setBookmarkState(null,null);return;}let data;try{data=JSON.parse(saved);}catch{setBookmarkState(null,null);return;}if(!data||!data.scrollY||data.scrollY<200){setBookmarkState(null,null);return;}setBookmarkState(data.pct,data.scrollY);}
+function createResumeBookmark(){let bookmark=document.querySelector('.resume-bookmark');if(bookmark)return bookmark;bookmark=document.createElement('button');bookmark.className='resume-bookmark';bookmark.setAttribute('aria-label','Marque-page de lecture');bookmark.innerHTML='<svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>';const tooltip=document.createElement('div');tooltip.className='resume-tooltip';bookmark.addEventListener('mouseenter',()=>tooltip.classList.add('visible'));bookmark.addEventListener('mouseleave',()=>tooltip.classList.remove('visible'));const nav=document.getElementById('navbar');nav.appendChild(bookmark);nav.appendChild(tooltip);return bookmark;}
+function setBookmarkState(pct,scrollY){const bookmark=document.querySelector('.resume-bookmark');const tooltip=document.querySelector('.resume-tooltip');if(!bookmark||!tooltip)return;if(pct!=null&&scrollY!=null){bookmark.classList.add('active');tooltip.textContent=\`Reprendre la lecture (\${Math.round(pct*100)}%)\`;bookmark.onclick=()=>window.scrollTo({top:scrollY,behavior:'smooth'});}else{bookmark.classList.remove('active');tooltip.textContent='Aucune lecture en cours';tooltip.classList.remove('visible');bookmark.onclick=null;}}
+let __progressTicking=false;
+function bindReadingProgress(){window.addEventListener('scroll',()=>{if(__progressTicking)return;__progressTicking=true;requestAnimationFrame(()=>{updateReadingProgress();__progressTicking=false;});},{passive:true});}
+
 document.addEventListener('DOMContentLoaded', () => {
   bindLightboxImages();
+  bindReadingProgress();
+  checkResumeReading();
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
