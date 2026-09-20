@@ -790,8 +790,7 @@ function updateReadingProgress(item) {
 }
 
 function checkResumeReading(item) {
-  const bookmark = createResumeBookmark();
-  requestAnimationFrame(() => bookmark.classList.add('visible'));
+  createResumeBookmark();
 
   const saved = localStorage.getItem(getReadKey(item));
   if (!saved) { setBookmarkState(null, null); return; }
@@ -830,11 +829,11 @@ function setBookmarkState(pct, scrollY) {
   if (!bookmark || !tooltip) return;
 
   if (pct != null && scrollY != null) {
-    bookmark.classList.add('active');
+    bookmark.classList.add('active', 'visible');
     tooltip.textContent = `Reprendre la lecture (${Math.round(pct * 100)}%)`;
     bookmark.onclick = () => window.scrollTo({ top: scrollY, behavior: 'smooth' });
   } else {
-    bookmark.classList.remove('active');
+    bookmark.classList.remove('active', 'visible');
     tooltip.textContent = 'Aucune lecture en cours';
     tooltip.classList.remove('visible');
     bookmark.onclick = null;
@@ -986,10 +985,6 @@ init();
 .resume-bookmark.active {
   background: var(--red, #E8253A);
   cursor: pointer;
-}
-.resume-bookmark.active:hover {
-  filter: brightness(1.12);
-  transform: translateY(-4px) scale(1.05);
 }
 .resume-bookmark svg {
   width: 20px;
