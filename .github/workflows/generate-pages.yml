@@ -30,6 +30,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add '*-critique' '*-comment-c-est-fait' sitemap.xml
+          git add '*-critique/*' '*-comment-c-est-fait/*' sitemap.xml
           git diff --staged --quiet || git commit -m "Régénération automatique des pages reviews"
           git push
