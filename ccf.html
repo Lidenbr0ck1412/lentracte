@@ -211,6 +211,48 @@ margin-top: 8px;
 const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
 
+/* ─────────────────────────────────────────────
+   REDIRECTION DES ANCIENNES URLS
+   ccf.html?id=1  ou  ccf.html?film=le-slug
+   ─────────>  /le-slug-comment-c-est-fait/
+
+   Même principe que sur review.html : on redirige
+   les vieux liens vers la page statique équivalente
+   générée par generate-static-pages.js.
+───────────────────────────────────────────── */
+async function redirectIfLegacyUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const filmSlug = params.get('film');
+  const isPreview = params.get('preview') === '1';
+
+  // Pas de ?id= ni de ?film= -> accès direct à ccf.html, rien à rediriger
+  if (!id && !filmSlug) return false;
+
+  // Mode aperçu (article pas encore publié) -> on reste sur ccf.html
+  if (isPreview) return false;
+
+  let slug = filmSlug;
+
+  if (!slug && id) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?id=eq.${id}&select=slug`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      });
+      const data = await res.json();
+      slug = data[0]?.slug || null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  if (!slug) return false;
+
+  const finalSlug = slug.endsWith('-comment-c-est-fait') ? slug : `${slug}-comment-c-est-fait`;
+  window.location.replace(`/${finalSlug}/`);
+  return true;
+}
+
 /* ── INLINE MARKDOWN ── */
 function md(text) {
   if (!text) return '';
@@ -650,6 +692,11 @@ function toggleAudioClip(btn) {
 
 /* ── INIT ── */
 async function init() {
+  // Si l'URL est un ancien format (?id= ou ?film=), on redirige
+  // immédiatement vers la nouvelle page statique et on arrête tout ici.
+  const redirected = await redirectIfLegacyUrl();
+  if (redirected) return;
+
   const params = new URLSearchParams(window.location.search);
   const filmSlug = params.get('film');
   const legacyId = params.get('id');
