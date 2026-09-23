@@ -521,6 +521,7 @@ function renderArticle(r) {
       ${trailerHtml}
 
       <!-- NOTE -->
+      ${r.sans_note ? '' : `
       <div class="rating-section reveal">
         <div class="rating-label">Notre verdict</div>
         <div class="rating-title">${verdict}</div>
@@ -528,7 +529,7 @@ function renderArticle(r) {
           ${buildStars(r.note || 0)}
         </div>
         <div class="rating-score">${r.note || '—'}<span> / 5</span></div>
-      </div>
+      </div>`}
 
       <!-- PARTAGE -->
       <div class="share-bar reveal">
