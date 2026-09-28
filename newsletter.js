@@ -9,8 +9,8 @@
                                        accountId       formId
 ───────────────────────────────────────────── */
 const NL_CONFIG = {
-  accountId: '', // ex : '123456'
-  formId: ''     // ex : '987654321'
+  accountId: '2655209',
+  formId: '199842972683994320'   // formulaire « Bas des articles »
 };
 
 (function () {
@@ -76,12 +76,12 @@ const NL_CONFIG = {
       body.append('anticsrf', 'true');
 
       try {
-        const res = await fetch(
+        // mode 'no-cors' : l'inscription part bien chez MailerLite même si
+        // leur serveur n'autorise pas la lecture de la réponse depuis ton site.
+        await fetch(
           `https://assets.mailerlite.com/jsonp/${NL_CONFIG.accountId}/forms/${NL_CONFIG.formId}/subscribe`,
-          { method: 'POST', body }
+          { method: 'POST', body, mode: 'no-cors' }
         );
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok || data.success === false) throw new Error('subscribe failed');
         tearTicket(ticket);
         track('newsletter-inscription', { source, page: location.pathname });
       } catch (err) {
@@ -92,6 +92,11 @@ const NL_CONFIG = {
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.nl-ticket').forEach(init);
+    const tickets = document.querySelectorAll('.nl-ticket');
+    tickets.forEach(init);
+    // Compte l'affichage du formulaire dans les statistiques MailerLite (onglet Analytics)
+    if (tickets.length && NL_CONFIG.accountId && NL_CONFIG.formId) {
+      try { fetch(`https://assets.mailerlite.com/jsonp/${NL_CONFIG.accountId}/forms/${NL_CONFIG.formId}/takel`, { mode: 'no-cors' }); } catch (e) {}
+    }
   });
 })();
