@@ -320,6 +320,17 @@ function buildReviewSchema(r) {
 /* ─────────────────────────────────────────────
    GABARIT DE PAGE STATIQUE
 ───────────────────────────────────────────── */
+/* ─────────────────────────────────────────────
+   NEWSLETTER — bandeau "billet de cinéma"
+   (styles : /newsletter.css — envoi : /newsletter.js)
+───────────────────────────────────────────── */
+function renderNewsletter(source) {
+  const intro = source === 'ccf'
+    ? `Tu aimes savoir ce qui se cache derrière le rideau&nbsp;? Chaque mois, reçois <strong>les nouvelles critiques</strong>, <strong>le «&nbsp;Comment c'est fait&nbsp;?&nbsp;» du moment</strong> et un <strong>aperçu exclusif</strong> de ce qui arrive sur le site.`
+    : `Chaque mois, reçois <strong>les nouvelles critiques</strong>, <strong>le «&nbsp;Comment c'est fait&nbsp;?&nbsp;» du moment</strong> et un <strong>aperçu exclusif</strong> de ce qui arrive sur le site.`;
+  return `<section class="nl-section" aria-labelledby="nl-title-${source}"><div class="nl-ticket reveal" data-source="${source}"><div class="nl-stub" aria-hidden="true"><span class="nl-stub-text">L'ENTRACTE<span class="nl-dot">•</span></span><span class="nl-stub-meta">BILLET ABONNÉ</span></div><div class="nl-main"><div class="nl-eyebrow"><span class="nl-pulse"></span>LA NEWSLETTER • 1 FOIS PAR MOIS</div><h3 class="nl-title" id="nl-title-${source}">Ne rate pas la prochaine séance<span class="nl-dot">.</span></h3><p class="nl-text">${intro}</p><form class="nl-form" novalidate><label class="nl-sr" for="nl-email-${source}">Ton adresse email</label><input class="nl-input" id="nl-email-${source}" type="email" name="email" placeholder="ton@email.be" autocomplete="email" required><input class="nl-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="nl-btn" type="submit">Je m'abonne<svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></button></form><p class="nl-msg" role="status" aria-live="polite"></p><p class="nl-fine">Pas de spam, juste du cinéma. Désinscription en un clic. <a href="/confidentialite.html">Confidentialité</a></p><div class="nl-success" role="status"><span class="nl-success-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span><strong>Presque fini&nbsp;!</strong> Vérifie ta boîte mail et clique sur le lien de confirmation pour valider ton billet 🎬</span></div></div></div></section>`;
+}
+
 function buildPage(r, allReviews) {
   const description = buildMetaDescription(r);
   const title = `${r.title} (${r.year || ''}) – Critique • L'Entracte`;
@@ -353,6 +364,8 @@ function buildPage(r, allReviews) {
 ${buildReviewSchema(r)}
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/review.css">
+<link rel="stylesheet" href="/newsletter.css">
+<script defer src="/newsletter.js"></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -388,6 +401,7 @@ ${buildReviewSchema(r)}
 
 <div id="hero-container">${heroHtml}</div>
 <div id="article-container">${articleHtml}</div>
+${renderNewsletter('critique')}
 <div id="related-container">${relatedHtml}</div>
 
 <footer><p>© ${new Date().getFullYear()} L'Entracte • Du grand écran à votre écran • Tous droits réservés</p></footer>
@@ -682,6 +696,8 @@ function buildCcfPage(article, sections) {
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/ccf.css">
 <link rel="stylesheet" href="/ccf-patch.css">
+<link rel="stylesheet" href="/newsletter.css">
+<script defer src="/newsletter.js"></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -717,6 +733,7 @@ function buildCcfPage(article, sections) {
 
 <div id="hero-container">${renderHeroCcf(article)}</div>
 <div id="article-container">${bodyHtml}</div>
+${renderNewsletter('ccf')}
 
 <footer><p>© ${new Date().getFullYear()} L'Entracte • Du grand écran à votre écran • Tous droits réservés</p></footer>
 
