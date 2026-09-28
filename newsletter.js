@@ -20,6 +20,16 @@ const NL_CONFIG = {
     try { if (window.umami && typeof window.umami.track === 'function') window.umami.track(name, data); } catch (e) {}
   }
 
+  // Le talon du billet se déchire, puis le message de confirmation apparaît
+  function tearTicket(ticket) {
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    ticket.classList.add('nl-tearing');
+    setTimeout(() => {
+      ticket.classList.remove('nl-tearing');
+      ticket.classList.add('nl-done');
+    }, reduce ? 50 : 1000);
+  }
+
   function init(ticket) {
     const form = ticket.querySelector('.nl-form');
     const input = ticket.querySelector('.nl-input');
@@ -44,6 +54,13 @@ const NL_CONFIG = {
         return;
       }
 
+      // Mode test : ajoute #test-newsletter à la fin de l'adresse de la page
+      // pour voir l'animation sans vraiment inscrire l'adresse.
+      if (location.hash === '#test-newsletter') {
+        tearTicket(ticket);
+        return;
+      }
+
       if (!NL_CONFIG.accountId || !NL_CONFIG.formId) {
         console.warn('[Newsletter] NL_CONFIG.accountId / formId à compléter dans newsletter.js');
         msg.textContent = 'Les inscriptions ouvrent très bientôt. Reviens vite !';
@@ -65,7 +82,7 @@ const NL_CONFIG = {
         );
         const data = await res.json().catch(() => ({}));
         if (!res.ok || data.success === false) throw new Error('subscribe failed');
-        ticket.classList.add('nl-done');
+        tearTicket(ticket);
         track('newsletter-inscription', { source, page: location.pathname });
       } catch (err) {
         msg.textContent = "Une erreur est survenue. Réessaie dans un instant.";
