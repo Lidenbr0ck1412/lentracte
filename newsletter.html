@@ -9,10 +9,10 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="La Newsletter de L'Entracte">
 <meta property="og:description" content="Les coulisses du cinéma, directement dans ta boîte mail. Une fois par mois, gratuit, sans spam.">
-<meta property="og:image" content="https://l-entracte.be/favicon-512.png">
+<meta property="og:image" content="https://l-entracte.be/images/bg_newsletter.jpg">
 <meta property="og:url" content="https://l-entracte.be/newsletter.html">
 <meta property="og:locale" content="fr_BE">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
@@ -29,45 +29,72 @@
   .nlp-reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
   .nlp-reveal.visible { opacity: 1; transform: none; }
 
-  /* ── HERO ── */
-  .nlp-hero {
-    position: relative; overflow: hidden; text-align: center;
-    padding: 110px 24px 70px;
+  /* ═══ OUVERTURE « DÉCHIRURE » (même principe que la page À propos) ═══ */
+  .tear-wrapper { position: relative; height: 260vh; }
+  .tear-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .viewfinder-corner { position: absolute; width: 20px; height: 20px; z-index: 3; border-color: rgba(255,255,255,.28); pointer-events: none; }
+  .viewfinder-corner.tl { top: 34px; left: 34px; border-top: 1px solid; border-left: 1px solid; }
+  .viewfinder-corner.tr { top: 34px; right: 34px; border-top: 1px solid; border-right: 1px solid; }
+  .viewfinder-corner.bl { bottom: 34px; left: 34px; border-bottom: 1px solid; border-left: 1px solid; }
+  .viewfinder-corner.br { bottom: 34px; right: 34px; border-bottom: 1px solid; border-right: 1px solid; }
+
+  .poster-layer {
+    position: absolute; inset: 0; z-index: 2;
     background:
-      radial-gradient(ellipse 700px 360px at 50% 0%, rgba(232,37,58,.22), transparent 70%),
-      repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0 2px, transparent 2px 5px),
-      var(--black);
+      linear-gradient(180deg, rgba(10,10,10,.30) 0%, rgba(10,10,10,.20) 40%, rgba(10,10,10,.88) 100%),
+      linear-gradient(90deg, rgba(10,10,10,.55) 0%, rgba(10,10,10,0) 55%),
+      url('images/bg_newsletter.jpg') center 30%/cover no-repeat;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    will-change: clip-path; overflow: hidden;
   }
-  .nlp-hero::before, .nlp-hero::after {
-    content: ''; position: absolute; left: 0; right: 0; height: 18px;
-    background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(255,255,255,.07) 14px 28px);
-    opacity: .9;
-  }
-  .nlp-hero::before { top: 22px; }
-  .nlp-hero::after { bottom: 0; }
-  .nlp-eyebrow {
+  .poster-billing { position: relative; z-index: 2; text-align: center; padding: 0 24px; max-width: 1100px; }
+  .poster-eyebrow {
     display: inline-flex; align-items: center; gap: 10px;
-    font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 6px; color: var(--red);
-    margin-bottom: 20px;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 6px; font-size: 14px; color: var(--white);
+    margin-bottom: 18px; text-shadow: 0 2px 12px rgba(0,0,0,.6);
   }
-  .nlp-eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 12px rgba(232,37,58,.8); }
-  .nlp-hero h1 {
-    font-family: 'Playfair Display', serif; font-style: italic; font-weight: 900;
-    font-size: clamp(38px, 6vw, 72px); line-height: 1.05; color: var(--white);
-    max-width: 900px; margin: 0 auto;
+  .poster-eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 12px rgba(232,37,58,.9); }
+  .poster-title {
+    font-family: 'Playfair Display', serif; font-weight: 900; font-style: italic;
+    color: var(--white); font-size: clamp(34px, 5.6vw, 80px); line-height: 1.06;
+    text-shadow: 0 6px 40px rgba(0,0,0,.55);
   }
-  .nlp-hero h1 .red { color: var(--red); font-style: normal; }
-  .nlp-hero p {
-    font-family: 'Montserrat', sans-serif; font-size: clamp(15px, 1.6vw, 17px); line-height: 1.75;
-    color: rgba(255,255,255,.7); max-width: 620px; margin: 24px auto 0;
+  .poster-title .red { color: var(--red); font-style: normal; }
+  .poster-subtitle {
+    margin-top: 18px;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 6px; font-size: clamp(14px, 1.6vw, 18px);
+    color: rgba(255,255,255,.75);
   }
-  .nlp-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
-  .nlp-badges span {
-    font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 3px; color: var(--white);
-    border: 1px solid rgba(255,255,255,.15); border-radius: 50px; padding: 8px 18px;
-    background: rgba(255,255,255,.03);
+  .poster-scroll-hint {
+    position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+    font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 3px; white-space: nowrap;
+    color: rgba(255,255,255,.5); display: flex; flex-direction: column; align-items: center; gap: 8px;
+    z-index: 2; transition: opacity .3s;
   }
-  .nlp-badges span b { color: var(--red); font-weight: 400; }
+  .poster-scroll-hint svg { width: 16px; height: 16px; animation: bounce 1.6s ease-in-out infinite; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  .backstage-layer {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      radial-gradient(ellipse 700px 380px at 50% 10%, rgba(232,37,58,.10), transparent 70%),
+      repeating-linear-gradient(45deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 2px, transparent 2px, transparent 14px),
+      var(--dark2);
+    display: flex; align-items: center; justify-content: center; padding: 0 40px;
+  }
+  .backstage-edition {
+    position: absolute; top: 34px; left: 40px; z-index: 2;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 3px; font-size: 11px; color: rgba(255,255,255,.35);
+  }
+  .backstage-edition strong { color: var(--red); font-weight: 400; }
+  .backstage-vertical {
+    position: absolute; left: 44px; top: 130px; bottom: 130px; z-index: 2;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 4px; font-size: 11px; color: rgba(255,255,255,.22);
+  }
+  .backstage-inner { position: relative; z-index: 2; width: 100%; max-width: 1040px; }
 
   /* ── EN-TÊTES DE SECTION ── */
   .nlp-head { text-align: center; margin-bottom: 44px; }
@@ -76,8 +103,7 @@
   .nlp-head h2 em { color: var(--red); }
 
   /* ── AU PROGRAMME ── */
-  .nlp-program { padding: 60px 24px 90px; }
-  .nlp-cards { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .nlp-cards { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .nlp-card {
     position: relative; background: linear-gradient(180deg, #161616, #0f0f0f);
     border: 1px solid rgba(255,255,255,.07); border-top: 2px solid var(--red);
@@ -89,7 +115,9 @@
   .nlp-card p { font-family: 'Montserrat', sans-serif; font-size: 14px; line-height: 1.75; color: rgba(255,255,255,.65); }
 
   /* ── FAQ ── */
-  .nlp-faq { padding: 30px 24px 30px; }
+  .nlp-faq { padding: 40px 24px 30px; }
+  .nlp-signup { padding: 100px 24px 60px; }
+  .nlp-signup .nlp-head { margin-bottom: 34px; }
   .nlp-faq-list { max-width: 760px; margin: 0 auto; }
   .nlp-faq details { border-bottom: 1px solid rgba(255,255,255,.08); }
   .nlp-faq summary {
@@ -111,15 +139,30 @@
   .nlp-back a { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.6); transition: color .2s; }
   .nlp-back a:hover { color: var(--red); }
 
+  @media (max-width: 900px) { .backstage-vertical { display: none; } }
   @media (max-width: 860px) {
-    .nlp-cards { grid-template-columns: 1fr; }
+    .backstage-layer { padding: 70px 18px 24px; }
+    .backstage-edition { display: none; }
+    .backstage-inner .nlp-head { margin-bottom: 18px; }
+    .backstage-inner .nlp-head h2 { font-size: 24px; }
+    .nlp-cards { grid-template-columns: 1fr; gap: 10px; }
+    .nlp-card { display: grid; grid-template-columns: 44px 1fr; column-gap: 12px; padding: 14px 16px; border-radius: 12px; }
+    .nlp-card .num { font-size: 32px; grid-row: 1 / 3; }
+    .nlp-card h3 { font-size: 18px; margin: 0 0 4px; }
+    .nlp-card p { font-size: 12.5px; line-height: 1.55; }
+    .nlp-card:hover { transform: none; }
   }
   @media (max-width: 600px) {
-    .nlp-hero { padding: 80px 18px 50px; }
-    .nlp-program { padding-left: 16px; padding-right: 16px; }
+    .viewfinder-corner.tl, .viewfinder-corner.tr { top: 22px; }
+    .viewfinder-corner.tl, .viewfinder-corner.bl { left: 18px; }
+    .viewfinder-corner.tr, .viewfinder-corner.br { right: 18px; }
+    .viewfinder-corner.bl, .viewfinder-corner.br { bottom: 22px; }
+    .poster-layer { background-position: 58% 30%; }
+    .nlp-signup { padding: 70px 16px 40px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .nlp-reveal { opacity: 1; transform: none; transition: none; }
+    .poster-scroll-hint svg { animation: none; }
   }
 </style>
 </head>
@@ -165,24 +208,43 @@
 </div>
 
 
-<!-- ─── HERO ─── -->
-<section class="nlp-hero">
-  <div class="nlp-eyebrow"><span class="dot"></span>LA NEWSLETTER</div>
-  <h1>Les coulisses du cinéma, directement dans ta boîte mail<span class="red">.</span></h1>
-  <p>Une fois par mois, je te raconte ce qui s'est passé sur L'Entracte&nbsp;: les nouvelles critiques, le «&nbsp;Comment c'est fait&nbsp;?&nbsp;» du moment, et un aperçu de ce qui se prépare… avant tout le monde.</p>
-  <div class="nlp-badges"><span><b>1×</b> par mois</span><span><b>0</b> spam</span><span><b>100 %</b> gratuit</span></div>
-</section>
+<!-- ─── OUVERTURE : l'affiche se déchire et révèle le programme ─── -->
+<div class="tear-wrapper" id="tearWrapper">
+  <div class="tear-sticky">
+    <div class="backstage-layer">
+      <div class="backstage-edition"><strong>LA NEWSLETTER</strong> — 1 FOIS PAR MOIS • 0 SPAM • 100 % GRATUIT</div>
+      <div class="backstage-vertical">L'ENTRACTE - DU GRAND ÉCRAN À VOTRE ÉCRAN</div>
+      <div class="backstage-inner">
+        <div class="nlp-head"><span class="kicker">AU PROGRAMME DE CHAQUE NUMÉRO</span><h2>Trois raisons d'<em>ouvrir</em> ta boîte mail</h2></div>
+        <div class="nlp-cards">
+    <div class="nlp-card"><div class="num">01</div><h3>Les critiques du mois</h3><p>Tous les films passés au crible sur le site, avec leur note, pour ne rater aucune sortie qui vaut le détour… ni celles à éviter.</p></div>
+    <div class="nlp-card"><div class="num">02</div><h3>Comment c'est fait&nbsp;?</h3><p>Le dossier coulisses du moment&nbsp;: effets spéciaux, tournage, anecdotes. Parce que parfois, le meilleur d'un film se cache derrière le rideau.</p></div>
+    <div class="nlp-card"><div class="num">03</div><h3>L'exclu abonnés</h3><p>Un aperçu des articles qui arrivent le mois suivant, réservé aux abonnés. Tu sauras avant tout le monde ce qui se prépare.</p></div>
+  </div>
+      </div>
+    </div>
+    <div class="poster-layer" id="posterLayer">
+      <div class="viewfinder-corner tl"></div>
+      <div class="viewfinder-corner tr"></div>
+      <div class="viewfinder-corner bl"></div>
+      <div class="viewfinder-corner br"></div>
+      <div class="poster-billing">
+        <div class="poster-eyebrow"><span class="dot"></span>LA NEWSLETTER</div>
+        <h1 class="poster-title">Les coulisses du cinéma, directement dans ta boîte mail<span class="red">.</span></h1>
+        <div class="poster-subtitle">de L'Entracte</div>
+      </div>
+      <div class="poster-scroll-hint" id="scrollHint">
+        SCROLLEZ POUR ENTRER EN COULISSES
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ─── TICKET D'INSCRIPTION ─── -->
-<section class="nl-section" id="inscription" aria-labelledby="nl-title-page" style="padding-top:10px;"><div class="nl-ticket" data-source="page"><div class="nl-stub" aria-hidden="true"><span class="nl-stub-text">L'ENTRACTE<span class="nl-dot">•</span></span><span class="nl-stub-meta">BILLET ABONNÉ</span></div><div class="nl-main"><div class="nl-eyebrow"><span class="nl-pulse"></span>TON BILLET • GRATUIT</div><h3 class="nl-title" id="nl-title-page">Réserve ta place en coulisses<span class="nl-dot">.</span></h3><p class="nl-text">Entre ton adresse email et reçois dès maintenant un <strong>email de bienvenue</strong>, puis chaque mois <strong>la newsletter de L'Entracte</strong>.</p><form class="nl-form" novalidate><label class="nl-sr" for="nl-email-page">Ton adresse email</label><input class="nl-input" id="nl-email-page" type="email" name="email" placeholder="ton@email.be" autocomplete="email" required><input class="nl-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="nl-btn" type="submit">Je m'abonne<svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></button></form><p class="nl-msg" role="status" aria-live="polite"></p><p class="nl-fine">Pas de spam, juste du cinéma. Désinscription en un clic. <a href="confidentialite.html">Confidentialité</a></p><div class="nl-success" role="status"><span class="nl-success-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span><strong>C'est tout bon&nbsp;!</strong> Ton billet est validé&nbsp;: l'email de bienvenue arrive dans ta boîte mail d'ici quelques minutes 🎬</span></div></div></div></section>
-
-<!-- ─── AU PROGRAMME ─── -->
-<section class="nlp-program">
-  <div class="nlp-head nlp-reveal"><span class="kicker">AU PROGRAMME DE CHAQUE NUMÉRO</span><h2>Trois raisons d'<em>ouvrir</em> ta boîte mail</h2></div>
-  <div class="nlp-cards">
-    <div class="nlp-card nlp-reveal"><div class="num">01</div><h3>Les critiques du mois</h3><p>Tous les films passés au crible sur le site, avec leur note, pour ne rater aucune sortie qui vaut le détour… ni celles à éviter.</p></div>
-    <div class="nlp-card nlp-reveal"><div class="num">02</div><h3>Comment c'est fait&nbsp;?</h3><p>Le dossier coulisses du moment&nbsp;: effets spéciaux, tournage, anecdotes. Parce que parfois, le meilleur d'un film se cache derrière le rideau.</p></div>
-    <div class="nlp-card nlp-reveal"><div class="num">03</div><h3>L'exclu abonnés</h3><p>Un aperçu des articles qui arrivent le mois suivant, réservé aux abonnés. Tu sauras avant tout le monde ce qui se prépare.</p></div>
+<section class="nlp-signup" id="inscription">
+  <div class="nlp-reveal">
+<section class="nl-section" aria-labelledby="nl-title-page" style="padding:0;"><div class="nl-ticket" data-source="page"><div class="nl-stub" aria-hidden="true"><span class="nl-stub-text">L'ENTRACTE<span class="nl-dot">•</span></span><span class="nl-stub-meta">BILLET ABONNÉ</span></div><div class="nl-main"><div class="nl-eyebrow"><span class="nl-pulse"></span>TON BILLET • GRATUIT</div><h3 class="nl-title" id="nl-title-page">Réserve ta place en coulisses<span class="nl-dot">.</span></h3><p class="nl-text">Entre ton adresse email et reçois dès maintenant un <strong>email de bienvenue</strong>, puis chaque mois <strong>la newsletter de L'Entracte</strong>.</p><form class="nl-form" novalidate><label class="nl-sr" for="nl-email-page">Ton adresse email</label><input class="nl-input" id="nl-email-page" type="email" name="email" placeholder="ton@email.be" autocomplete="email" required><input class="nl-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="nl-btn" type="submit">Je m'abonne<svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></button></form><p class="nl-msg" role="status" aria-live="polite"></p><p class="nl-fine">Pas de spam, juste du cinéma. Désinscription en un clic. <a href="confidentialite.html">Confidentialité</a></p><div class="nl-success" role="status"><span class="nl-success-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span><strong>C'est tout bon&nbsp;!</strong> Ton billet est validé&nbsp;: l'email de bienvenue arrive dans ta boîte mail d'ici quelques minutes 🎬</span></div></div></div></section>
   </div>
 </section>
 
@@ -230,6 +292,37 @@ function toggleMobileNav() {
   if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('visible'));return;}
   const io=new IntersectionObserver(en=>en.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}}),{threshold:.15});
   els.forEach(e=>io.observe(e));
+})();
+</script>
+<script>
+(function(){
+  const tearWrapper = document.getElementById('tearWrapper');
+  const posterLayer = document.getElementById('posterLayer');
+  const scrollHint = document.getElementById('scrollHint');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function jaggedPolygon(progress) {
+    const bottom = 100 - progress * 100;
+    const teeth = 14;
+    const points = ['0% 0%', '100% 0%', '100% ' + bottom + '%'];
+    for (let i = teeth; i >= 0; i--) {
+      const x = (i / teeth) * 100;
+      const jag = (i % 2 === 0) ? 3 : -3;
+      points.push(x + '% ' + Math.max(0, Math.min(100, bottom + jag)) + '%');
+    }
+    points.push('0% ' + bottom + '%');
+    return 'polygon(' + points.join(',') + ')';
+  }
+  function onScroll() {
+    const rect = tearWrapper.getBoundingClientRect();
+    const h = tearWrapper.offsetHeight - window.innerHeight;
+    let progress = Math.max(0, Math.min(1, -rect.top / h));
+    if (reduceMotion) posterLayer.style.opacity = progress > 0.5 ? '0' : '1';
+    else posterLayer.style.clipPath = jaggedPolygon(progress);
+    scrollHint.style.opacity = progress > 0.08 ? '0' : '1';
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
 })();
 </script>
 </body>
