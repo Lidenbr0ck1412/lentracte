@@ -1,0 +1,264 @@
+/* ─────────────────────────────────────────────
+   NEWSLETTER — bandeau d'inscription "billet de cinéma"
+   Affiché en bas des critiques et des "Comment c'est fait ?"
+───────────────────────────────────────────── */
+
+.nl-section {
+  padding: 16px 24px 88px;
+  background: #0a0a0a;
+}
+
+.nl-ticket {
+  --nl-red: #E8253A;
+  --nl-red-dark: #c01e2e;
+  --nl-bg: #0a0a0a;
+  --nl-stub: 150px;
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: var(--nl-stub) minmax(0, 1fr);
+  background:
+    radial-gradient(ellipse 520px 260px at 100% 0%, rgba(232,37,58,.14), transparent 70%),
+    linear-gradient(135deg, #181818, #0f0f0f);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.55);
+  overflow: hidden;
+}
+
+/* Encoches du billet, de part et d'autre de la ligne de perforation */
+.nl-ticket::before,
+.nl-ticket::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--nl-stub) - 14px);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--nl-bg);
+  border: 1px solid rgba(255,255,255,.08);
+  z-index: 2;
+}
+.nl-ticket::before { top: -15px; }
+.nl-ticket::after  { bottom: -15px; }
+
+/* ── Talon du billet ── */
+.nl-stub {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border-right: 2px dashed rgba(255,255,255,.12);
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 2px, transparent 2px 6px),
+    #121212;
+}
+.nl-stub-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 34px;
+  letter-spacing: 6px;
+  color: rgba(255,255,255,.9);
+  line-height: 1;
+  white-space: nowrap;
+}
+.nl-stub-text .nl-dot { color: var(--nl-red); }
+.nl-stub-meta {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--nl-red);
+  white-space: nowrap;
+}
+
+/* ── Partie principale ── */
+.nl-main {
+  padding: 44px 48px 40px;
+}
+.nl-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--nl-red);
+  margin-bottom: 12px;
+}
+.nl-eyebrow .nl-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--nl-red);
+  box-shadow: 0 0 0 0 rgba(232,37,58,.6);
+  animation: nlPulse 2.2s ease-out infinite;
+}
+@keyframes nlPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(232,37,58,.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(232,37,58,0); }
+  100% { box-shadow: 0 0 0 0 rgba(232,37,58,0); }
+}
+.nl-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(26px, 3.2vw, 36px);
+  line-height: 1.15;
+  color: #fff;
+  margin-bottom: 14px;
+}
+.nl-title .nl-dot { color: var(--nl-red); font-style: normal; }
+.nl-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: #bdbdbd;
+  max-width: 560px;
+  margin-bottom: 26px;
+}
+.nl-text strong { color: #fff; font-weight: 600; }
+
+/* Formulaire : même langage visuel que la barre de recherche du site */
+.nl-form {
+  display: flex;
+  gap: 10px;
+  max-width: 560px;
+}
+.nl-input {
+  flex: 1;
+  min-width: 0;
+  background: #0d0d0d;
+  border: 2px solid #2a2a2a;
+  border-radius: 50px;
+  padding: 15px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  outline: none;
+  letter-spacing: .3px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.nl-input::placeholder { color: #555; font-weight: 500; }
+.nl-input:focus {
+  border-color: var(--nl-red);
+  box-shadow: 0 0 0 4px rgba(232,37,58,.15);
+}
+.nl-input.nl-invalid { border-color: var(--nl-red); animation: nlShake .35s; }
+@keyframes nlShake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+.nl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--nl-red);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0 26px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, transform .2s;
+}
+.nl-btn:hover { background: var(--nl-red-dark); transform: scale(1.04); }
+.nl-btn:disabled { opacity: .6; cursor: wait; transform: none; }
+.nl-btn svg { width: 14px; height: 14px; fill: currentColor; transition: transform .2s; }
+.nl-btn:hover svg { transform: translateX(3px); }
+
+/* Champ anti-robots (invisible) */
+.nl-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; }
+.nl-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.nl-fine {
+  margin-top: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  letter-spacing: .4px;
+  color: #666;
+}
+.nl-fine a { color: #888; text-decoration: underline; }
+.nl-fine a:hover { color: #fff; }
+
+.nl-msg {
+  margin-top: 12px;
+  min-height: 18px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  color: var(--nl-red);
+}
+
+/* État "inscrit" */
+.nl-success {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  max-width: 560px;
+  padding: 16px 20px;
+  border: 1px solid rgba(232,37,58,.35);
+  background: rgba(232,37,58,.08);
+  border-radius: 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #ddd;
+}
+.nl-success strong { color: #fff; }
+.nl-success-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--nl-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nl-success-icon svg { width: 18px; height: 18px; fill: #fff; }
+.nl-ticket.nl-done .nl-form,
+.nl-ticket.nl-done .nl-fine,
+.nl-ticket.nl-done .nl-msg { display: none; }
+.nl-ticket.nl-done .nl-success { display: flex; }
+
+/* ── Mobile : le talon passe au-dessus ── */
+@media (max-width: 680px) {
+  .nl-section { padding: 8px 16px 64px; }
+  .nl-ticket { --nl-stub: 64px; grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--nl-stub) auto; }
+  .nl-ticket::before,
+  .nl-ticket::after { left: auto; top: calc(var(--nl-stub) - 14px); bottom: auto; }
+  .nl-ticket::before { left: -15px; }
+  .nl-ticket::after  { right: -15px; }
+  .nl-stub {
+    border-right: none;
+    border-bottom: 2px dashed rgba(255,255,255,.12);
+    justify-content: space-between;
+    padding: 0 26px;
+  }
+  .nl-stub-text,
+  .nl-stub-meta { writing-mode: horizontal-tb; transform: none; }
+  .nl-stub { min-width: 0; padding: 0 24px; gap: 10px; }
+  .nl-stub-text { font-size: 24px; letter-spacing: 3px; }
+  .nl-stub-meta { font-size: 11px; letter-spacing: 3px; }
+  .nl-eyebrow { font-size: 12px; letter-spacing: 2.5px; }
+  .nl-title { font-size: 25px; }
+  .nl-text { font-size: 14px; }
+  .nl-main { padding: 30px 22px 28px; }
+  .nl-form { flex-direction: column; }
+  .nl-btn { justify-content: center; padding: 15px 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nl-eyebrow .nl-pulse { animation: none; }
+}
