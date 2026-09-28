@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Newsletter • L'Entracte</title>
+<meta name="description" content="Chaque mois, les nouvelles critiques, le « Comment c'est fait ? » du moment et un aperçu exclusif de ce qui arrive sur L'Entracte. Gratuit, sans spam.">
+<link rel="canonical" href="https://l-entracte.be/newsletter.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="La Newsletter de L'Entracte">
+<meta property="og:description" content="Les coulisses du cinéma, directement dans ta boîte mail. Une fois par mois, gratuit, sans spam.">
+<meta property="og:image" content="https://l-entracte.be/favicon-512.png">
+<meta property="og:url" content="https://l-entracte.be/newsletter.html">
+<meta property="og:locale" content="fr_BE">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="newsletter.css">
+<script defer src="newsletter.js"></script>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  body { background: var(--black); }
+  .nlp-reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
+  .nlp-reveal.visible { opacity: 1; transform: none; }
+
+  /* ── HERO ── */
+  .nlp-hero {
+    position: relative; overflow: hidden; text-align: center;
+    padding: 110px 24px 70px;
+    background:
+      radial-gradient(ellipse 700px 360px at 50% 0%, rgba(232,37,58,.22), transparent 70%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0 2px, transparent 2px 5px),
+      var(--black);
+  }
+  .nlp-hero::before, .nlp-hero::after {
+    content: ''; position: absolute; left: 0; right: 0; height: 18px;
+    background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(255,255,255,.07) 14px 28px);
+    opacity: .9;
+  }
+  .nlp-hero::before { top: 22px; }
+  .nlp-hero::after { bottom: 0; }
+  .nlp-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 6px; color: var(--red);
+    margin-bottom: 20px;
+  }
+  .nlp-eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 12px rgba(232,37,58,.8); }
+  .nlp-hero h1 {
+    font-family: 'Playfair Display', serif; font-style: italic; font-weight: 900;
+    font-size: clamp(38px, 6vw, 72px); line-height: 1.05; color: var(--white);
+    max-width: 900px; margin: 0 auto;
+  }
+  .nlp-hero h1 .red { color: var(--red); font-style: normal; }
+  .nlp-hero p {
+    font-family: 'Montserrat', sans-serif; font-size: clamp(15px, 1.6vw, 17px); line-height: 1.75;
+    color: rgba(255,255,255,.7); max-width: 620px; margin: 24px auto 0;
+  }
+  .nlp-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .nlp-badges span {
+    font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 3px; color: var(--white);
+    border: 1px solid rgba(255,255,255,.15); border-radius: 50px; padding: 8px 18px;
+    background: rgba(255,255,255,.03);
+  }
+  .nlp-badges span b { color: var(--red); font-weight: 400; }
+
+  /* ── EN-TÊTES DE SECTION ── */
+  .nlp-head { text-align: center; margin-bottom: 44px; }
+  .nlp-head .kicker { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 5px; color: var(--red); display: block; margin-bottom: 10px; }
+  .nlp-head h2 { font-family: 'Playfair Display', serif; font-weight: 800; font-size: clamp(28px, 3.4vw, 40px); color: var(--white); }
+  .nlp-head h2 em { color: var(--red); }
+
+  /* ── AU PROGRAMME ── */
+  .nlp-program { padding: 60px 24px 90px; }
+  .nlp-cards { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .nlp-card {
+    position: relative; background: linear-gradient(180deg, #161616, #0f0f0f);
+    border: 1px solid rgba(255,255,255,.07); border-top: 2px solid var(--red);
+    border-radius: 16px; padding: 30px 26px 28px; transition: transform .3s, border-color .3s;
+  }
+  .nlp-card:hover { transform: translateY(-4px); border-color: rgba(232,37,58,.4); }
+  .nlp-card .num { font-family: 'Bebas Neue', sans-serif; font-size: 46px; line-height: 1; color: var(--red); }
+  .nlp-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1.5px; color: var(--white); margin: 12px 0 10px; }
+  .nlp-card p { font-family: 'Montserrat', sans-serif; font-size: 14px; line-height: 1.75; color: rgba(255,255,255,.65); }
+
+  /* ── FAQ ── */
+  .nlp-faq { padding: 30px 24px 30px; }
+  .nlp-faq-list { max-width: 760px; margin: 0 auto; }
+  .nlp-faq details { border-bottom: 1px solid rgba(255,255,255,.08); }
+  .nlp-faq summary {
+    list-style: none; cursor: pointer; padding: 22px 40px 22px 0; position: relative;
+    font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1.2px; color: var(--white);
+    transition: color .2s;
+  }
+  .nlp-faq summary::-webkit-details-marker { display: none; }
+  .nlp-faq summary::after {
+    content: '+'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    font-family: 'Montserrat', sans-serif; font-size: 24px; color: var(--red); transition: transform .3s;
+  }
+  .nlp-faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  .nlp-faq summary:hover { color: var(--red); }
+  .nlp-faq details p { font-family: 'Montserrat', sans-serif; font-size: 14.5px; line-height: 1.8; color: rgba(255,255,255,.68); padding: 0 0 22px; }
+  .nlp-faq details a { color: var(--white); text-decoration: underline; }
+
+  .nlp-back { text-align: center; padding: 40px 24px 90px; }
+  .nlp-back a { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.6); transition: color .2s; }
+  .nlp-back a:hover { color: var(--red); }
+
+  @media (max-width: 860px) {
+    .nlp-cards { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .nlp-hero { padding: 80px 18px 50px; }
+    .nlp-program { padding-left: 16px; padding-right: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nlp-reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="index.html" class="logo">
+    <img src="images/TAGLINE.png" alt="L'Entracte" style="height:100px;width:auto;display:block;">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+          Cinéma
+          <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+          <div class="dropdown">
+            <a href="full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+            <a href="ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+            <a href="tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
+          </div>
+      </li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="newsletter.html">Newsletter</a></li>
+      <li><a href="index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    </svg>
+  </div>
+  <div class="burger" onclick="toggleMobileNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="full-reviews.html" onclick="toggleMobileNav()">Reviews</a>
+  <a href="ccf-archives.html" onclick="toggleMobileNav()">Comment c'est fait ?</a>
+  <a href="tops-archives.html" onclick="toggleMobileNav()">Les tops</a>
+  <a href="a-propos.html" onclick="toggleMobileNav()">À propos</a>
+  <a href="newsletter.html" onclick="toggleMobileNav()">Newsletter</a>
+  <a href="index.html#contact" onclick="toggleMobileNav()">Contact</a>
+</div>
+
+
+<!-- ─── HERO ─── -->
+<section class="nlp-hero">
+  <div class="nlp-eyebrow"><span class="dot"></span>LA NEWSLETTER</div>
+  <h1>Les coulisses du cinéma, directement dans ta boîte mail<span class="red">.</span></h1>
+  <p>Une fois par mois, je te raconte ce qui s'est passé sur L'Entracte&nbsp;: les nouvelles critiques, le «&nbsp;Comment c'est fait&nbsp;?&nbsp;» du moment, et un aperçu de ce qui se prépare… avant tout le monde.</p>
+  <div class="nlp-badges"><span><b>1×</b> par mois</span><span><b>0</b> spam</span><span><b>100 %</b> gratuit</span></div>
+</section>
+
+<!-- ─── TICKET D'INSCRIPTION ─── -->
+<section class="nl-section" id="inscription" aria-labelledby="nl-title-page" style="padding-top:10px;"><div class="nl-ticket" data-source="page"><div class="nl-stub" aria-hidden="true"><span class="nl-stub-text">L'ENTRACTE<span class="nl-dot">•</span></span><span class="nl-stub-meta">BILLET ABONNÉ</span></div><div class="nl-main"><div class="nl-eyebrow"><span class="nl-pulse"></span>TON BILLET • GRATUIT</div><h3 class="nl-title" id="nl-title-page">Réserve ta place en coulisses<span class="nl-dot">.</span></h3><p class="nl-text">Entre ton adresse email et reçois dès maintenant un <strong>email de bienvenue</strong>, puis chaque mois <strong>la newsletter de L'Entracte</strong>.</p><form class="nl-form" novalidate><label class="nl-sr" for="nl-email-page">Ton adresse email</label><input class="nl-input" id="nl-email-page" type="email" name="email" placeholder="ton@email.be" autocomplete="email" required><input class="nl-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button class="nl-btn" type="submit">Je m'abonne<svg viewBox="0 0 24 24"><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></button></form><p class="nl-msg" role="status" aria-live="polite"></p><p class="nl-fine">Pas de spam, juste du cinéma. Désinscription en un clic. <a href="confidentialite.html">Confidentialité</a></p><div class="nl-success" role="status"><span class="nl-success-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span><span><strong>C'est tout bon&nbsp;!</strong> Ton billet est validé&nbsp;: l'email de bienvenue arrive dans ta boîte mail d'ici quelques minutes 🎬</span></div></div></div></section>
+
+<!-- ─── AU PROGRAMME ─── -->
+<section class="nlp-program">
+  <div class="nlp-head nlp-reveal"><span class="kicker">AU PROGRAMME DE CHAQUE NUMÉRO</span><h2>Trois raisons d'<em>ouvrir</em> ta boîte mail</h2></div>
+  <div class="nlp-cards">
+    <div class="nlp-card nlp-reveal"><div class="num">01</div><h3>Les critiques du mois</h3><p>Tous les films passés au crible sur le site, avec leur note, pour ne rater aucune sortie qui vaut le détour… ni celles à éviter.</p></div>
+    <div class="nlp-card nlp-reveal"><div class="num">02</div><h3>Comment c'est fait&nbsp;?</h3><p>Le dossier coulisses du moment&nbsp;: effets spéciaux, tournage, anecdotes. Parce que parfois, le meilleur d'un film se cache derrière le rideau.</p></div>
+    <div class="nlp-card nlp-reveal"><div class="num">03</div><h3>L'exclu abonnés</h3><p>Un aperçu des articles qui arrivent le mois suivant, réservé aux abonnés. Tu sauras avant tout le monde ce qui se prépare.</p></div>
+  </div>
+</section>
+
+<!-- ─── FAQ ─── -->
+<section class="nlp-faq">
+  <div class="nlp-head nlp-reveal"><span class="kicker">QUESTIONS FRÉQUENTES</span><h2>Avant d'<em>entrer</em> dans la salle</h2></div>
+  <div class="nlp-faq-list nlp-reveal">
+    <details><summary>C'est vraiment gratuit&nbsp;?</summary><p>Oui, totalement. La newsletter est gratuite et le restera.</p></details>
+    <details><summary>Combien d'emails vais-je recevoir&nbsp;?</summary><p>Un email de bienvenue juste après ton inscription, puis <strong>une newsletter par mois</strong>, en début de mois. Pas plus.</p></details>
+    <details><summary>Je n'ai pas reçu l'email de bienvenue</summary><p>Il peut mettre quelques minutes à arriver. Pense à vérifier tes spams et, sur Gmail, l'onglet «&nbsp;Promotions&nbsp;». Si tu le trouves là, déplace-le dans ta boîte principale&nbsp;: les prochains arriveront au bon endroit.</p></details>
+    <details><summary>Comment me désinscrire&nbsp;?</summary><p>En un clic, grâce au lien «&nbsp;Se désinscrire&nbsp;» présent en bas de chaque email. Sans justification, sans rancune.</p></details>
+    <details><summary>Que faites-vous de mon adresse email&nbsp;?</summary><p>Elle sert uniquement à t'envoyer la newsletter. Elle n'est jamais vendue ni partagée. Tous les détails sont dans la <a href="confidentialite.html">politique de confidentialité</a>.</p></details>
+  </div>
+</section>
+
+<div class="nlp-back"><a href="full-reviews.html">← Retour aux critiques</a></div>
+
+<footer>
+  <p>© 2025 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+  <p style="margin-top:8px;font-size:10.5px;">
+    <a href="confidentialite.html" style="color:rgba(255,255,255,.4);text-decoration:underline;">Politique de confidentialité</a>
+    <span style="color:rgba(255,255,255,.25);margin:0 8px;">·</span>
+    <a href="cgu.html" style="color:rgba(255,255,255,.4);text-decoration:underline;">Conditions générales d'utilisation</a>
+  </p>
+</footer>
+
+<script>
+function toggleMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const burger = document.getElementById('burger');
+  const spans = burger.querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+</script>
+<script>
+(function(){
+  const els=document.querySelectorAll('.nlp-reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('visible'));return;}
+  const io=new IntersectionObserver(en=>en.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}}),{threshold:.15});
+  els.forEach(e=>io.observe(e));
+})();
+</script>
+</body>
+</html>

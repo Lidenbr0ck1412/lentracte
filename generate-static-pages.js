@@ -385,6 +385,7 @@ ${buildReviewSchema(r)}
 </div>
 </li>
 <li><a href="/a-propos.html">À propos</a></li>
+<li><a href="/newsletter.html">Newsletter</a></li>
 <li><a href="/index.html#contact" class="contact-link">Contact</a></li>
 </ul>
 </div>
@@ -396,6 +397,7 @@ ${buildReviewSchema(r)}
 <a href="/ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
 <a href="/tops-archives.html" onclick="toggleNav()">Les tops</a>
 <a href="/a-propos.html" onclick="toggleNav()">À propos</a>
+<a href="/newsletter.html" onclick="toggleNav()">Newsletter</a>
 <a href="/index.html#contact" onclick="toggleNav()">Contact</a>
 </div>
 
@@ -717,6 +719,7 @@ function buildCcfPage(article, sections) {
 </div>
 </li>
 <li><a href="/a-propos.html">À propos</a></li>
+<li><a href="/newsletter.html">Newsletter</a></li>
 <li><a href="/index.html#contact" class="contact-link">Contact</a></li>
 </ul>
 </div>
@@ -728,6 +731,7 @@ function buildCcfPage(article, sections) {
 <a href="/ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
 <a href="/tops-archives.html" onclick="toggleNav()">Les tops</a>
 <a href="/a-propos.html" onclick="toggleNav()">À propos</a>
+<a href="/newsletter.html" onclick="toggleNav()">Newsletter</a>
 <a href="/index.html#contact" onclick="toggleNav()">Contact</a>
 </div>
 
