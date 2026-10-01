@@ -2,16 +2,20 @@
    L'ENTRACTE — MODE HALLOWEEN 🎃
    Clins d'œil horreur, actifs automatiquement en octobre.
 
-   1. Le coup de fil : « Quel est ton film d'horreur préféré ? »
-   2. REDRUM : tape « Shining » dans la recherche…
+   1. Toiles d'araignée dans les coins du menu
+   2. Une petite araignée qui traverse l'écran de temps en temps
+   3. Le coup de fil : « Quel est ton film d'horreur préféré ? »
+   4. REDRUM : tape « Shining » dans la recherche…
 
    Pour tester hors octobre : ajoute #halloween à la fin de l'adresse.
 ───────────────────────────────────────────── */
 (function () {
   const CONFIG = {
-    moisActif: 9,              // 9 = octobre (janvier = 0)
-    redrumToutLAnnee: true,    // l'easter egg « Shining » reste actif après octobre
-    delaiAppelSecondes: 25,    // temps avant le coup de fil (une fois par visite)
+    moisActif: 9,                   // 9 = octobre (janvier = 0)
+    redrumToutLAnnee: true,         // l'easter egg « Shining » reste actif après octobre
+    delaiAppelSecondes: 20,         // temps avant le premier coup de fil
+    rappelAppelSecondes: 80,        // délai minimum avant que le téléphone resonne à nouveau
+    delaiAraigneeSecondes: [35, 70],// intervalle (min, max) entre deux passages d'araignée
   };
 
   const now = new Date();
@@ -21,7 +25,19 @@
   const RED = '#E8253A';
 
   const css = `
-  /* ── 1. Le coup de fil ── */
+  /* ── 1. Toiles d'araignée ── */
+  .hw-web { position: fixed; top: -4px; z-index: 101; width: 68px; height: 68px; pointer-events: none; opacity: .85; }
+  .hw-web.left { left: -4px; }
+  .hw-web.right { right: -4px; transform: scaleX(-1); }
+  .hw-web svg { width: 100%; height: 100%; display: block; }
+
+  /* ── 2. L'araignée qui traverse l'écran ── */
+  .hw-spider { position: fixed; left: 0; top: 0; z-index: 97; width: 38px; height: 26px; pointer-events: none; will-change: transform; }
+  .hw-spider svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); }
+  .hw-spider .legs { transform-origin: 32px 22px; animation: hwLegs .16s ease-in-out infinite; }
+  @keyframes hwLegs { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(4deg); } }
+
+  /* ── 3. Le coup de fil ── */
   .hw-call { position: fixed; right: 24px; bottom: 24px; z-index: 9000; width: 340px; max-width: calc(100vw - 32px);
     background: linear-gradient(160deg, #1b1b1b, #0d0d0d); border: 1px solid rgba(255,255,255,.08);
     border-left: 3px solid ${RED}; border-radius: 16px; padding: 18px 18px 16px;
@@ -47,7 +63,7 @@
   .hw-hangup { background: rgba(255,255,255,.08); color: rgba(255,255,255,.75); }
   @media (max-width: 600px) { .hw-call { right: 16px; left: 16px; bottom: 16px; width: auto; } }
 
-  /* ── 2. REDRUM ── */
+  /* ── 4. REDRUM ── */
   .hw-redrum { position: fixed; inset: 0; z-index: 99999; background: #050505; display: flex; align-items: center;
     justify-content: center; flex-direction: column; opacity: 0; transition: opacity .35s; perspective: 1200px; cursor: pointer; }
   .hw-redrum.show { opacity: 1; }
@@ -78,14 +94,103 @@
     document.head.appendChild(s);
   }
 
-  /* ── 1. Le coup de fil ── */
-  function phoneCall() {
-    let already = false;
-    try { already = sessionStorage.getItem('hw-call') === '1'; } catch (e) {}
-    if (already && !forced) return;
+  /* ── 1. Toiles d'araignée dans les coins ── */
+  function cobwebs() {
+    const svg = `<svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="rgba(225,225,232,.32)" stroke-width="1">
+        <path d="M0 0 L68 0"/><path d="M0 0 L0 68"/>
+        <path d="M0 0 L68 34"/><path d="M0 0 L34 68"/>
+        <path d="M0 0 L68 14"/><path d="M0 0 L14 68"/>
+        <path d="M0 0 L68 54"/><path d="M0 0 L54 68"/>
+        <path d="M6 1 Q9 9 1 6"/>
+        <path d="M15 2 Q22 22 2 15"/>
+        <path d="M27 4 Q40 40 4 27"/>
+        <path d="M42 6 Q60 60 6 42"/>
+      </g>
+    </svg>`;
+    ['left', 'right'].forEach(side => {
+      const el = document.createElement('div');
+      el.className = 'hw-web ' + side;
+      el.setAttribute('aria-hidden', 'true');
+      el.innerHTML = svg;
+      document.body.appendChild(el);
+    });
+  }
 
-    setTimeout(() => {
-      try { sessionStorage.setItem('hw-call', '1'); } catch (e) {}
+  /* ── 2. L'araignée qui traverse l'écran ── */
+  function spiderCrossing() {
+    const SPIDER_SVG = `<svg viewBox="0 0 64 44" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#161616" stroke-width="2.2" fill="#161616" stroke-linecap="round">
+        <ellipse cx="38" cy="22" rx="10" ry="8"/>
+        <circle cx="24" cy="20" r="6"/>
+        <g class="legs" fill="none" stroke-width="2">
+          <path d="M30 16 Q18 10 6 12"/><path d="M31 20 Q17 18 4 22"/>
+          <path d="M31 24 Q18 26 6 32"/><path d="M33 27 Q22 34 12 40"/>
+          <path d="M44 16 Q54 8 62 10"/><path d="M46 19 Q58 15 64 18"/>
+          <path d="M46 25 Q58 28 63 34"/><path d="M43 28 Q52 36 58 42"/>
+        </g>
+      </g>
+    </svg>`;
+
+    function spawn() {
+      const nav = document.getElementById('navbar') || document.querySelector('nav');
+      const navH = nav ? nav.getBoundingClientRect().height : 100;
+      const vh = window.innerHeight, vw = window.innerWidth;
+      const y = navH + 24 + Math.random() * Math.max(60, vh - navH - 140);
+      const leftToRight = Math.random() < 0.5;
+      const startX = leftToRight ? -50 : vw + 50;
+      const endX = leftToRight ? vw + 50 : -50;
+
+      const el = document.createElement('div');
+      el.className = 'hw-spider';
+      el.setAttribute('aria-hidden', 'true');
+      el.innerHTML = SPIDER_SVG;
+      el.style.top = y + 'px';
+      const facing = leftToRight ? 1 : -1;
+      el.style.transform = `translate(${startX}px, 0) scaleX(${facing})`;
+      document.body.appendChild(el);
+
+      if (reduce) { setTimeout(() => el.remove(), 1200); return; }
+
+      const duration = 5000 + Math.random() * 3000;
+      const t0 = performance.now();
+      function frame(t) {
+        const p = Math.min(1, (t - t0) / duration);
+        const x = startX + (endX - startX) * p;
+        const bob = Math.sin(p * Math.PI * 8) * 6;
+        el.style.transform = `translate(${x}px, ${bob}px) scaleX(${facing})`;
+        if (p < 1) requestAnimationFrame(frame);
+        else el.remove();
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function scheduleNext() {
+      const [min, max] = CONFIG.delaiAraigneeSecondes;
+      const delay = (forced ? 6 : min + Math.random() * (max - min)) * 1000;
+      setTimeout(() => { spawn(); scheduleNext(); }, delay);
+    }
+    scheduleNext();
+  }
+
+  /* ── 3. Le coup de fil ── */
+  function phoneCall() {
+    function lastShown() {
+      try { return parseInt(sessionStorage.getItem('hw-call-last') || '0', 10); } catch (e) { return 0; }
+    }
+    function markShown() {
+      try { sessionStorage.setItem('hw-call-last', String(Date.now())); } catch (e) {}
+    }
+    function scheduleNext() {
+      const last = lastShown();
+      const rappelMs = (forced ? 15 : CONFIG.rappelAppelSecondes) * 1000;
+      const premierMs = (forced ? 4 : CONFIG.delaiAppelSecondes) * 1000;
+      const wait = last ? Math.max(1000, rappelMs - (Date.now() - last)) : premierMs;
+      setTimeout(showCall, wait);
+    }
+
+    function showCall() {
+      markShown();
       const isHome = /\/(index\.html)?$/.test(location.pathname);
       const box = document.createElement('div');
       box.className = 'hw-call';
@@ -104,17 +209,22 @@
       document.body.appendChild(box);
       requestAnimationFrame(() => requestAnimationFrame(() => box.classList.add('show')));
 
-      const close = () => { box.classList.remove('show'); setTimeout(() => box.remove(), 600); };
+      const close = () => { box.classList.remove('show'); setTimeout(() => box.remove(), 600); scheduleNext(); };
       const autoClose = setTimeout(close, 25000);
       box.querySelector('.hw-hangup').onclick = () => { clearTimeout(autoClose); close(); };
       box.querySelector('.hw-answer').onclick = () => {
         clearTimeout(autoClose);
         try { sessionStorage.setItem('hw-answered', '1'); } catch (e) {}
         try { window.umami && umami.track('halloween-appel-decroche'); } catch (e) {}
-        if (isHome && document.getElementById('contact')) { close(); answerOnContact(); }
+        box.classList.remove('show');
+        setTimeout(() => box.remove(), 600);
+        scheduleNext();
+        if (isHome && document.getElementById('contact')) { answerOnContact(); }
         else location.href = '/index.html#contact';
       };
-    }, (forced ? 4 : CONFIG.delaiAppelSecondes) * 1000);
+    }
+
+    scheduleNext();
   }
 
   // Arrivée sur le formulaire de contact après avoir « décroché »
@@ -129,7 +239,7 @@
     setTimeout(() => film.focus({ preventScroll: true }), 700);
   }
 
-  /* ── 2. REDRUM ── */
+  /* ── 4. REDRUM ── */
   let redrumBusy = false;
   function letters(word, front) {
     return [...word].map((c, i) => {
@@ -193,6 +303,8 @@
     injectCSS();
     hookSearch();
     if (!halloween) return;
+    cobwebs();
+    spiderCrossing();
     phoneCall();
     answerOnContact();
   }
