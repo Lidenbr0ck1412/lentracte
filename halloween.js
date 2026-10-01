@@ -2,10 +2,8 @@
    L'ENTRACTE — MODE HALLOWEEN 🎃
    Clins d'œil horreur, actifs automatiquement en octobre.
 
-   1. Le point rouge du logo qui saigne
-   2. L'écran qui saigne (gouttes sous le menu)
-   3. Le coup de fil : « Quel est ton film d'horreur préféré ? »
-   4. REDRUM : tape « Shining » dans la recherche…
+   1. Le coup de fil : « Quel est ton film d'horreur préféré ? »
+   2. REDRUM : tape « Shining » dans la recherche…
 
    Pour tester hors octobre : ajoute #halloween à la fin de l'adresse.
 ───────────────────────────────────────────── */
@@ -23,32 +21,7 @@
   const RED = '#E8253A';
 
   const css = `
-  /* ── 1. Point rouge du logo ── */
-  .hw-logo-wrap { position: relative; }
-  .hw-logo-drip { position: absolute; pointer-events: none; z-index: 5; transform: translateX(-50%); }
-  .hw-logo-drip .stem { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: var(--w); height: 0;
-    background: ${RED}; border-radius: 0 0 999px 999px; }
-  .hw-logo-drip .drop { position: absolute; left: 50%; top: 0; width: calc(var(--w) * 1.25); height: calc(var(--w) * 1.25);
-    margin-left: calc(var(--w) * -0.625); background: ${RED}; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; opacity: 0; }
-  .hw-logo-drip.go .stem { animation: hwStem 2.8s cubic-bezier(.5,0,.4,1) forwards; }
-  .hw-logo-drip.go .drop { animation: hwDrop 2.8s cubic-bezier(.55,0,.8,.3) forwards; }
-  @keyframes hwStem { 0% { height: 0; } 45% { height: var(--h); } 62% { height: calc(var(--h) * .55); } 100% { height: 0; } }
-  @keyframes hwDrop {
-    0%, 44% { opacity: 0; transform: translateY(var(--h)) scale(.6); }
-    50% { opacity: 1; transform: translateY(var(--h)) scale(1); }
-    100% { opacity: 0; transform: translateY(calc(var(--h) + 70px)) scaleY(1.35); }
-  }
-
-  /* ── 2. L'écran qui saigne ── */
-  /* Même technique que la goutte de sang de la page "Films d'horreur à découvrir"
-     (retro.css : .blood-container / .blood-drip) : couleur plate, pas de dégradé,
-     pas de goutte arrondie au bout — juste une barre qui s'allonge une fois. */
-  .hw-blood { position: fixed; left: 0; right: 0; top: 0; height: 0; pointer-events: none; z-index: 98; }
-  .hw-drip { position: absolute; top: 0; height: 0; background: #cc0000; border-radius: 0 0 999px 999px;
-    animation: hwBleed ease-in forwards; }
-  @keyframes hwBleed { from { height: 0; } to { height: var(--len); } }
-
-  /* ── 3. Le coup de fil ── */
+  /* ── 1. Le coup de fil ── */
   .hw-call { position: fixed; right: 24px; bottom: 24px; z-index: 9000; width: 340px; max-width: calc(100vw - 32px);
     background: linear-gradient(160deg, #1b1b1b, #0d0d0d); border: 1px solid rgba(255,255,255,.08);
     border-left: 3px solid ${RED}; border-radius: 16px; padding: 18px 18px 16px;
@@ -74,7 +47,7 @@
   .hw-hangup { background: rgba(255,255,255,.08); color: rgba(255,255,255,.75); }
   @media (max-width: 600px) { .hw-call { right: 16px; left: 16px; bottom: 16px; width: auto; } }
 
-  /* ── 4. REDRUM ── */
+  /* ── 2. REDRUM ── */
   .hw-redrum { position: fixed; inset: 0; z-index: 99999; background: #050505; display: flex; align-items: center;
     justify-content: center; flex-direction: column; opacity: 0; transition: opacity .35s; perspective: 1200px; cursor: pointer; }
   .hw-redrum.show { opacity: 1; }
@@ -105,82 +78,7 @@
     document.head.appendChild(s);
   }
 
-  /* ── 1. Le point rouge du logo qui saigne ── */
-  function logoDrip() {
-    const img = document.querySelector('nav .logo img');
-    if (!img) return;
-    const logo = img.closest('.logo');
-    logo.classList.add('hw-logo-wrap');
-    const drip = document.createElement('span');
-    drip.className = 'hw-logo-drip';
-    drip.setAttribute('aria-hidden', 'true');
-    drip.innerHTML = '<span class="stem"></span><span class="drop"></span>';
-    logo.appendChild(drip);
-
-    // Position du point rouge dans TAGLINE.png (1500×500) : centre x 84,2 %, bas 51,4 %, diamètre 4,5 %
-    function place() {
-      const w = img.offsetWidth, h = img.offsetHeight;
-      if (!w) return;
-      const d = w * 0.0447;
-      drip.style.left = (img.offsetLeft + w * 0.8423) + 'px';
-      drip.style.top = (img.offsetTop + h * 0.495) + 'px';
-      drip.style.setProperty('--w', Math.max(2, d * 0.42) + 'px');
-      drip.style.setProperty('--h', Math.max(6, d * 1.3) + 'px');
-    }
-    place();
-    if (!img.complete) img.addEventListener('load', place);
-    window.addEventListener('resize', place);
-    if (reduce) return;
-
-    function cycle() {
-      drip.classList.remove('go'); void drip.offsetWidth; drip.classList.add('go');
-      setTimeout(cycle, 6000 + Math.random() * 6000);
-    }
-    setTimeout(cycle, 1800);
-  }
-
-  /* ── 2. L'écran qui saigne ── */
-  function screenBleed() {
-    if (document.getElementById('bloodContainer')) return; // la page horreur a déjà les siennes
-    const nav = document.getElementById('navbar') || document.querySelector('nav');
-    const box = document.createElement('div');
-    box.className = 'hw-blood';
-    box.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(box);
-    function placeBox() { box.style.top = (nav ? nav.getBoundingClientRect().height : 100) + 'px'; }
-    placeBox();
-    window.addEventListener('resize', placeBox);
-
-    // Mêmes gouttes (largeur / longueur / délai / durée) que dripsData sur la page
-    // "Films d'horreur à découvrir" (retro_horreur.html), réparties en pourcentage
-    // pour s'étaler sur toute la largeur de chaque page.
-    const dripsData = [
-      { left: 3,  width: 7, length: 120, delay: 0,   duration: 12 },
-      { left: 9,  width: 5, length: 80,  delay: 2.5, duration: 10 },
-      { left: 16, width: 9, length: 160, delay: 5.0, duration: 14 },
-      { left: 24, width: 4, length: 60,  delay: 1.2, duration: 9  },
-      { left: 32, width: 6, length: 110, delay: 7.0, duration: 13 },
-      { left: 41, width: 8, length: 140, delay: 3.5, duration: 14 },
-      { left: 50, width: 5, length: 70,  delay: 8.5, duration: 10 },
-      { left: 59, width: 7, length: 100, delay: 1.8, duration: 11 },
-      { left: 68, width: 4, length: 55,  delay: 6.0, duration: 9  },
-      { left: 77, width: 6, length: 130, delay: 2.8, duration: 12 },
-      { left: 86, width: 9, length: 90,  delay: 9.5, duration: 11 },
-      { left: 94, width: 5, length: 75,  delay: 4.5, duration: 11 },
-    ];
-    const mobile = window.innerWidth < 700;
-    dripsData.forEach(d => {
-      const el = document.createElement('div');
-      el.className = 'hw-drip';
-      const len = mobile ? Math.round(d.length * 0.55) : d.length;
-      const width = mobile ? Math.max(3, d.width - 1) : d.width;
-      el.style.cssText = `left:${d.left}%;width:${width}px;--len:${len}px;` +
-        (reduce ? `height:${len}px;animation:none;` : `animation-duration:${d.duration}s;animation-delay:${d.delay}s;`);
-      box.appendChild(el);
-    });
-  }
-
-  /* ── 3. Le coup de fil ── */
+  /* ── 1. Le coup de fil ── */
   function phoneCall() {
     let already = false;
     try { already = sessionStorage.getItem('hw-call') === '1'; } catch (e) {}
@@ -231,7 +129,7 @@
     setTimeout(() => film.focus({ preventScroll: true }), 700);
   }
 
-  /* ── 4. REDRUM ── */
+  /* ── 2. REDRUM ── */
   let redrumBusy = false;
   function letters(word, front) {
     return [...word].map((c, i) => {
@@ -295,8 +193,6 @@
     injectCSS();
     hookSearch();
     if (!halloween) return;
-    logoDrip();
-    screenBleed();
     phoneCall();
     answerOnContact();
   }
