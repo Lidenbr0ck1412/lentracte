@@ -40,12 +40,12 @@
   }
 
   /* ── 2. L'écran qui saigne ── */
+  /* Même technique que la goutte de sang de la page "Films d'horreur à découvrir"
+     (retro.css : .blood-container / .blood-drip) : couleur plate, pas de dégradé,
+     pas de goutte arrondie au bout — juste une barre qui s'allonge une fois. */
   .hw-blood { position: fixed; left: 0; right: 0; top: 0; height: 0; pointer-events: none; z-index: 98; }
-  .hw-drip { position: absolute; top: 0; height: 0; border-radius: 0 0 999px 999px;
-    background: linear-gradient(90deg, #7d0a12 0%, ${RED} 45%, #b3131f 100%);
+  .hw-drip { position: absolute; top: 0; height: 0; background: #cc0000; border-radius: 0 0 999px 999px;
     animation: hwBleed ease-in forwards; }
-  .hw-drip::after { content: ''; position: absolute; left: 50%; bottom: -3px; width: 150%; aspect-ratio: 1;
-    transform: translateX(-50%); border-radius: 50%; background: inherit; }
   @keyframes hwBleed { from { height: 0; } to { height: var(--len); } }
 
   /* ── 3. Le coup de fil ── */
@@ -64,7 +64,7 @@
   @keyframes hwRing { 0%, 50%, 100% { transform: rotate(0); } 5%, 15%, 25% { transform: rotate(-16deg); } 10%, 20%, 30% { transform: rotate(16deg); } }
   .hw-call-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 3px; color: ${RED}; line-height: 1.2; }
   .hw-call-who { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 2px; }
-  .hw-call-quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: 19px; line-height: 1.3; margin: 0 0 14px; }
+  .hw-call-quote { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 16px; line-height: 1.45; margin: 0 0 14px; }
   .hw-call-actions { display: flex; gap: 8px; }
   .hw-call-actions button { flex: 1; border: none; border-radius: 50px; padding: 11px 10px; cursor: pointer;
     font-family: 'Montserrat', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
@@ -151,20 +151,33 @@
     placeBox();
     window.addEventListener('resize', placeBox);
 
+    // Mêmes gouttes (largeur / longueur / délai / durée) que dripsData sur la page
+    // "Films d'horreur à découvrir" (retro_horreur.html), réparties en pourcentage
+    // pour s'étaler sur toute la largeur de chaque page.
+    const dripsData = [
+      { left: 3,  width: 7, length: 120, delay: 0,   duration: 12 },
+      { left: 9,  width: 5, length: 80,  delay: 2.5, duration: 10 },
+      { left: 16, width: 9, length: 160, delay: 5.0, duration: 14 },
+      { left: 24, width: 4, length: 60,  delay: 1.2, duration: 9  },
+      { left: 32, width: 6, length: 110, delay: 7.0, duration: 13 },
+      { left: 41, width: 8, length: 140, delay: 3.5, duration: 14 },
+      { left: 50, width: 5, length: 70,  delay: 8.5, duration: 10 },
+      { left: 59, width: 7, length: 100, delay: 1.8, duration: 11 },
+      { left: 68, width: 4, length: 55,  delay: 6.0, duration: 9  },
+      { left: 77, width: 6, length: 130, delay: 2.8, duration: 12 },
+      { left: 86, width: 9, length: 90,  delay: 9.5, duration: 11 },
+      { left: 94, width: 5, length: 75,  delay: 4.5, duration: 11 },
+    ];
     const mobile = window.innerWidth < 700;
-    const count = mobile ? 6 : 14;
-    let seed = 7;
-    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-    for (let i = 0; i < count; i++) {
+    dripsData.forEach(d => {
       const el = document.createElement('div');
       el.className = 'hw-drip';
-      const slot = (i + 0.15 + rnd() * 0.7) / count * 100;
-      const width = (mobile ? 3 : 4) + Math.round(rnd() * (mobile ? 4 : 6));
-      const len = Math.round((mobile ? 18 : 28) + rnd() * (mobile ? 70 : 130));
-      el.style.cssText = `left:${slot}%;width:${width}px;--len:${len}px;` +
-        (reduce ? `height:${len}px;animation:none;` : `animation-duration:${7 + rnd() * 8}s;animation-delay:${rnd() * 6}s;`);
+      const len = mobile ? Math.round(d.length * 0.55) : d.length;
+      const width = mobile ? Math.max(3, d.width - 1) : d.width;
+      el.style.cssText = `left:${d.left}%;width:${width}px;--len:${len}px;` +
+        (reduce ? `height:${len}px;animation:none;` : `animation-duration:${d.duration}s;animation-delay:${d.delay}s;`);
       box.appendChild(el);
-    }
+    });
   }
 
   /* ── 3. Le coup de fil ── */
