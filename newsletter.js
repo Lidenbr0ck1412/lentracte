@@ -75,19 +75,17 @@ const NL_CONFIG = {
       body.append('ml-submit', '1');
       body.append('anticsrf', 'true');
 
+      // Le billet se déchire tout de suite : l'envoi vers MailerLite continue
+      // en arrière-plan (keepalive : il aboutit même si le lecteur quitte la page).
+      // En mode 'no-cors', MailerLite ne renvoie de toute façon pas de réponse lisible.
+      tearTicket(ticket);
+      track('newsletter-inscription', { source, page: location.pathname });
       try {
-        // mode 'no-cors' : l'inscription part bien chez MailerLite même si
-        // leur serveur n'autorise pas la lecture de la réponse depuis ton site.
-        await fetch(
+        fetch(
           `https://assets.mailerlite.com/jsonp/${NL_CONFIG.accountId}/forms/${NL_CONFIG.formId}/subscribe`,
-          { method: 'POST', body, mode: 'no-cors' }
-        );
-        tearTicket(ticket);
-        track('newsletter-inscription', { source, page: location.pathname });
-      } catch (err) {
-        msg.textContent = "Une erreur est survenue. Réessaie dans un instant.";
-        btn.disabled = false;
-      }
+          { method: 'POST', body, mode: 'no-cors', keepalive: true }
+        ).catch(() => {});
+      } catch (err) {}
     });
   }
 
@@ -96,7 +94,7 @@ const NL_CONFIG = {
     tickets.forEach(init);
     // Compte l'affichage du formulaire dans les statistiques MailerLite (onglet Analytics)
     if (tickets.length && NL_CONFIG.accountId && NL_CONFIG.formId) {
-      try { fetch(`https://assets.mailerlite.com/jsonp/${NL_CONFIG.accountId}/forms/${NL_CONFIG.formId}/takel`, { mode: 'no-cors' }); } catch (e) {}
+      try { fetch(`https://assets.mailerlite.com/jsonp/${NL_CONFIG.accountId}/forms/${NL_CONFIG.formId}/takel`, { mode: 'no-cors' }).catch(() => {}); } catch (e) {}
     }
   });
 })();

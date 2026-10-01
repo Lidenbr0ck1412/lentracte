@@ -365,6 +365,7 @@ ${buildReviewSchema(r)}
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/review.css">
 <link rel="stylesheet" href="/newsletter.css">
+<script defer src="/halloween.js"></script>
 <script defer src="/newsletter.js"></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -699,6 +700,7 @@ function buildCcfPage(article, sections) {
 <link rel="stylesheet" href="/ccf.css">
 <link rel="stylesheet" href="/ccf-patch.css">
 <link rel="stylesheet" href="/newsletter.css">
+<script defer src="/halloween.js"></script>
 <script defer src="/newsletter.js"></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d4fdfb43-bc4b-4c30-a897-d5103f786ec7"></script>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
