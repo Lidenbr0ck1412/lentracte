@@ -182,6 +182,8 @@ nav {
 .article-body p { font-size: 15px; line-height: 1.9; color: rgba(255,255,255,.72); margin-bottom: 26px; }
 .article-body p strong { color: var(--white); font-weight: 700; }
 .article-body p em { color: rgba(255,255,255,.85); font-style: italic; }
+.article-body p a { color: var(--red); text-decoration: underline; text-decoration-color: rgba(232,37,58,.4); text-underline-offset: 2px; transition: color .2s, text-decoration-color .2s; }
+.article-body p a:hover { color: var(--white); text-decoration-color: var(--red); }
 
 .section-title {
   font-family: 'Bebas Neue', sans-serif;
