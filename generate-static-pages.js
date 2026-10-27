@@ -859,7 +859,7 @@ async function fetchReviews() {
 }
 
 async function fetchCcfArticles() {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?select=*&order=id.asc`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?select=*&publie=eq.true&order=id.asc`, {
     headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
   });
   if (!res.ok) throw new Error(`Erreur Supabase (ccf): ${res.status} ${await res.text()}`);
