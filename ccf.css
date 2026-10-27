@@ -201,6 +201,19 @@ nav {
   margin-top: 12px; font-style: normal; font-weight: 700; text-transform: uppercase;
 }
 
+/* Avertissement (contenu sensible) */
+.warning-card {
+  background: rgba(180, 20, 20, .08);
+  border: 2px solid var(--red);
+  border-radius: 12px;
+  padding: 24px 28px; margin: 0 0 40px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.warning-icon { font-size: 22px; }
+.warning-label { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 3px; color: var(--red); }
+.warning-text { font-size: 14px; line-height: 1.85; color: rgba(255,255,255,.8); margin: 0; }
+.warning-text strong { color: var(--white); }
+
 /* Anecdote */
 .anecdote-card {
   background: var(--dark2); border: 1px solid #2a2a2a;
