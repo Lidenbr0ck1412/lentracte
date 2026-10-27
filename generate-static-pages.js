@@ -607,6 +607,8 @@ function renderSectionCcf(s) {
       return mdTextCcf(s.contenu) + '<div class="clearfix"></div>';
     case 'pull_quote':
       return `<div class="pull-quote reveal"><p>${mdCcf(s.contenu)}</p>${s.cite ? `<cite>${s.cite}</cite>` : ''}</div>`;
+    case 'avertissement':
+      return `<div class="warning-card reveal"><div class="warning-icon">⚠️</div><div class="warning-label">${s.titre || 'AVERTISSEMENT'}</div><p class="warning-text">${mdCcf(s.contenu)}</p></div>`;
     case 'anecdote':
       return `<div class="anecdote-card reveal"><div class="anecdote-icon">💡</div><div class="anecdote-label">${s.titre || 'LE SAVIEZ-VOUS ?'}</div><p class="anecdote-text">${mdCcf(s.contenu)}</p></div>`;
     case 'img_full':
@@ -667,12 +669,14 @@ function buildCcfPage(article, sections) {
     : `${SITE_URL}/favicon-512.png`;
 
   let bodyHtml = '<div class="article-wrapper">';
+  // Les blocs "avertissement" s'affichent tout en haut, avant l'intro
+  sections.filter(s => s.type === 'avertissement').forEach(s => { bodyHtml += renderSectionCcf(s); });
   if (article.intro_1) bodyHtml += `<p class="article-intro reveal">${mdCcf(article.intro_1)}</p>`;
   if (article.intro_2) bodyHtml += `<p class="article-intro reveal">${mdCcf(article.intro_2)}</p>`;
   if (article.intro_3) bodyHtml += `<p class="article-intro reveal">${mdCcf(article.intro_3)}</p>`;
   if (article.transition) bodyHtml += `<p class="article-transition reveal">${mdCcf(article.transition)}</p>`;
   bodyHtml += '<div class="article-body">';
-  sections.forEach(s => { bodyHtml += renderSectionCcf(s); });
+  sections.filter(s => s.type !== 'avertissement').forEach(s => { bodyHtml += renderSectionCcf(s); });
   bodyHtml += '</div>';
   bodyHtml += `<div class="share-bar reveal"><span class="share-label">Partager</span><button class="share-btn" onclick="shareTwitter()"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X / Twitter</button><button class="share-btn" onclick="shareFacebook()"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook</button><button class="share-btn" id="copyBtn"><svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>Copier le lien</button></div>`;
   bodyHtml += '</div>';
