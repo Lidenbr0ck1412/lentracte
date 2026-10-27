@@ -702,17 +702,19 @@ async function init() {
   const params = new URLSearchParams(window.location.search);
   const filmSlug = params.get('film');
   const legacyId = params.get('id');
+  // ?preview=1 permet de voir un CCF même non publié (pour toi seulement, lien à ne pas partager)
+  const publieFilter = params.get('preview') === '1' ? '' : '&publie=eq.true';
 
   let article = null;
   if (filmSlug) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?slug=eq.${encodeURIComponent(filmSlug)}&select=*`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?slug=eq.${encodeURIComponent(filmSlug)}&select=*${publieFilter}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
     article = data[0] || null;
   } else {
     const idToUse = legacyId || 1;
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?id=eq.${idToUse}&select=*`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/ccf?id=eq.${idToUse}&select=*${publieFilter}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
     });
     const data = await res.json();
