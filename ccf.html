@@ -498,6 +498,13 @@ function renderSection(s) {
           <p>${md(s.contenu)}</p>
           ${s.cite ? `<cite>${s.cite}</cite>` : ''}
         </div>`;
+    case 'avertissement':
+      return `
+        <div class="warning-card reveal">
+          <div class="warning-icon">⚠️</div>
+          <div class="warning-label">${s.titre || 'AVERTISSEMENT'}</div>
+          <p class="warning-text">${md(s.contenu)}</p>
+        </div>`;
     case 'anecdote':
       return `
         <div class="anecdote-card reveal">
@@ -747,13 +754,15 @@ async function init() {
 
   // Intro
   let html = '<div class="article-wrapper">';
+  // Les blocs "avertissement" s'affichent tout en haut, avant l'intro
+  sections.filter(s => s.type === 'avertissement').forEach(s => { html += renderSection(s); });
   if (article.intro_1) html += `<p class="article-intro reveal">${mdIntro(article.intro_1)}</p>`;
   if (article.intro_2) html += `<p class="article-intro reveal">${mdIntro(article.intro_2)}</p>`;
   if (article.intro_3) html += `<p class="article-intro reveal">${mdIntro(article.intro_3)}</p>`;
   if (article.transition) html += `<p class="article-transition reveal">${mdIntro(article.transition)}</p>`;
 
   html += '<div class="article-body">';
-  sections.forEach(s => { html += renderSection(s); });
+  sections.filter(s => s.type !== 'avertissement').forEach(s => { html += renderSection(s); });
   html += '</div>';
 
   // Share
