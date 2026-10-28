@@ -582,6 +582,21 @@ function mdTextCcf(text) {
       blocks.push(renderImgBlockCcf(imgs));
       continue;
     }
+    // Encadré anecdote : une ligne qui commence par un emoji (ex. "💡 LE SAVIEZ-VOUS ?"),
+    // suivie du texte de l'anecdote, jusqu'à la prochaine ligne vide
+    if (/^[\u{1F300}-\u{1FAFF}✨💡🎬🎥📽🎞🔍⚡🏆💬🎭🎦]/u.test(line.trim())) {
+      flushParagraph();
+      const emoji = [...line.trim()][0];
+      const label = line.trim().slice(emoji.length).trim();
+      const contentLines = [];
+      while (i + 1 < lines.length && lines[i + 1].trim() !== '' && !lines[i + 1].trim().startsWith('>') && !/^!\[/.test(lines[i + 1].trim())) {
+        i++;
+        contentLines.push(lines[i]);
+      }
+      blocks.push(`<div class="anecdote-card reveal"><div class="anecdote-icon">${emoji}</div><div class="anecdote-label">${label || 'LE SAVIEZ-VOUS ?'}</div><p class="anecdote-text">${mdCcf(contentLines.join(' '))}</p></div>`);
+      continue;
+    }
+
     const quoteMatch = line.trim().match(/^>\s?(.+)$/);
     if (quoteMatch) {
       flushParagraph();
