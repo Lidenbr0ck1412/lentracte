@@ -207,9 +207,12 @@ nav {
   border: 2px solid var(--red);
   border-radius: 12px;
   padding: 24px 28px; margin: 0 0 40px;
-  display: flex; flex-direction: column; gap: 8px;
+  display: grid; grid-template-columns: auto 1fr;
+  column-gap: 20px; row-gap: 6px; align-items: center;
 }
-.warning-icon { font-size: 22px; }
+/* L'icône occupe toute la hauteur à gauche, le titre et le texte à droite */
+.warning-icon { font-size: 34px; line-height: 1; grid-row: 1 / span 2; align-self: center; }
+.warning-label, .warning-text { grid-column: 2; }
 .warning-label { font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 3px; color: var(--red); }
 .warning-text { font-size: 14px; line-height: 1.85; color: rgba(255,255,255,.8); margin: 0; }
 .warning-text strong { color: var(--white); }
