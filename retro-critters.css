@@ -1,0 +1,198 @@
+/* ═══════════════════════════════════════════════════════════
+   retro-critters.css — mise en page de la rétrospective Critters
+   (retros.mise_en_page = 'critters')
+
+   Ne gère QUE l'intérieur de l'article : la barre de navigation,
+   la bannière, le partage et le pied de page viennent de retro.css,
+   comme sur toutes les rétrospectives du site.
+═══════════════════════════════════════════════════════════ */
+:root {
+  --text: #d6d6d6;
+  --line: rgba(255,255,255,.55);
+  --col: 680px;
+  --shift: 110px;
+}
+body { background: var(--black, #0a0a0a); }
+
+/* ── ARTICLE ── */
+.article { position: relative; max-width: 1180px; margin: 0 auto; padding: 56px 24px 120px; }
+#route { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+#route .trail { fill: none; stroke: rgba(255,255,255,.85); stroke-width: 2; stroke-dasharray: 2 10; stroke-linecap: round; }
+#route .trail-ghost { fill: none; stroke: rgba(255,255,255,.13); stroke-width: 2; stroke-dasharray: 2 10; stroke-linecap: round; }
+#route .comet { fill: var(--white); filter: drop-shadow(0 0 5px var(--white)) drop-shadow(0 0 12px var(--red)); }
+
+
+
+/* Ciel étoilé discret, fixe derrière la page */
+#starfield { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+.article, 
+.intro, .stop { position: relative; z-index: 1; max-width: var(--col); margin-left: auto; margin-right: auto; }
+.stop { margin-top: 150px; scroll-margin-top: 130px; }
+.stop.left  { transform: translateX(calc(var(--shift) * -1)); }
+.stop.right { transform: translateX(var(--shift)); }
+
+
+/* Intro découpée : lettrine, phrase-clé, frise, chute */
+.intro .lead {
+  font-family: 'Montserrat', sans-serif; font-style: normal; font-size: 17px; line-height: 1.9; color: var(--text);
+}
+.intro .lead::first-letter {
+  float: left; font-family: 'Bebas Neue', sans-serif; font-size: 92px; line-height: .82; color: var(--red);
+  padding: 6px 12px 0 0;
+}
+.statement {
+  font-family: 'Playfair Display', serif !important; font-style: italic; font-weight: 700;
+  font-size: clamp(24px, 3.2vw, 34px) !important; line-height: 1.25 !important; color: var(--white) !important;
+  margin: 40px 0 28px !important; padding-left: 22px; border-left: 3px solid var(--red);
+}
+.voyage {
+  list-style: none; position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+  margin: 46px 0 44px; padding-top: 30px;
+}
+.voyage::before { /* la trajectoire de la frise */
+  content: ''; position: absolute; left: 8px; right: 8px; top: 7px;
+  border-top: 2px dotted rgba(255,255,255,.6);
+}
+.voyage li { position: relative; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.voyage li::before {
+  content: ''; position: absolute; top: -30px; left: 0; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--black); border: 2px solid var(--white);
+}
+.voyage li:last-child::before { background: var(--red); border-color: var(--red); }
+.voyage b { font-family: 'Bebas Neue', sans-serif; font-weight: 400; font-size: 26px; letter-spacing: 1px; color: var(--red); line-height: 1; }
+.voyage span { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white); }
+.voyage i { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--grey); line-height: 1.35; }
+/* Formats photo supplémentaires */
+.shot.wide { margin: 46px 0; }
+.shot.wide .frame { aspect-ratio: 21 / 9; }
+.stop.left .shot.wide  { margin-right: -180px; }
+.stop.right .shot.wide { margin-left: -180px; }
+.shot.side { width: 44%; margin: 6px 0 18px 0; }
+.shot.side .frame { aspect-ratio: 4 / 5; }
+.shot.side.r { float: right; margin-left: 28px; transform: rotate(1.2deg); }
+.shot.side.l { float: left; margin-right: 28px; transform: rotate(-1.2deg); }
+.photo-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 40px 0; }
+.photo-trio .shot { margin: 0; }
+.photo-trio .frame { aspect-ratio: 1 / 1; }
+.photo-trio .shot:nth-child(2) { transform: translateY(18px); }
+.ccf, .pull, .photo-duo, .photo-trio, .shot.wide, .stop p.transition { clear: both; }
+.stop::after { content: ''; display: block; clear: both; }
+@media (max-width: 1100px) {
+  .stop.left .shot.wide  { margin-right: -60px; }
+  .stop.right .shot.wide { margin-left: -60px; }
+}
+@media (max-width: 900px) {
+  .stop.left .shot.wide, .stop.right .shot.wide { margin-left: 0; margin-right: 0; }
+  .shot.wide .frame { aspect-ratio: 16 / 9; }
+}
+@media (max-width: 640px) {
+  .shot.side, .shot.side.r, .shot.side.l { float: none; width: auto; margin: 34px 0; transform: none; }
+  .shot.side .frame { aspect-ratio: 16 / 9; }
+  .photo-trio { grid-template-columns: 1fr 1fr; }
+  .photo-trio .shot:nth-child(2) { transform: none; }
+  .photo-trio .shot:nth-child(3) { grid-column: 1 / -1; }
+  .photo-trio .shot:nth-child(3) .frame { aspect-ratio: 16 / 9; }
+}
+
+/* Paragraphe de transition entre deux escales */
+.stop p.transition {
+  font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; line-height: 1.7;
+  color: var(--light-grey); margin: 44px 0 0; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.1);
+}
+/* Le premier paragraphe de chaque escale, un peu plus présent */
+.stop .meta + p { font-size: 17px; color: #e4e4e4; }
+@media (max-width: 640px) {
+  .voyage { grid-template-columns: 1fr; gap: 18px; padding-top: 0; padding-left: 34px; }
+  .voyage::before { left: 7px; right: auto; top: 6px; bottom: 6px; border-top: 0; border-left: 2px dotted rgba(255,255,255,.6); }
+  .voyage li::before { top: 4px; left: -34px; }
+  .intro .lead::first-letter { font-size: 76px; }
+}
+.toc { margin-top: 40px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.toc a { font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--grey); transition: color .2s; }
+.toc a:hover { color: var(--white); }
+.toc a b { color: var(--red); font-weight: 700; margin-right: 6px; }
+
+/* En-tête d'escale : une petite planète, point d'ancrage du tracé */
+.stop-head { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.stop.right .stop-head { flex-direction: row-reverse; }
+.marker {
+  --c1: #3a3a3a; --c2: #111;
+  position: relative; flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, var(--c1), var(--c2) 72%);
+  box-shadow: inset -6px -8px 14px rgba(0,0,0,.6), 0 0 22px rgba(232,37,58,.12);
+}
+.marker::after {
+  content: ''; position: absolute; left: -11px; right: -11px; top: 50%; height: 13px;
+  border: 1.5px solid rgba(255,255,255,.35); border-radius: 50%; transform: translateY(-50%) rotate(-18deg);
+}
+.marker.no-ring::after { display: none; }
+.stop-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--red); }
+.stop h2 {
+  font-family: 'Bebas Neue', sans-serif; font-size: clamp(34px, 4.5vw, 48px); letter-spacing: 2px; line-height: 1;
+  margin-bottom: 8px; text-wrap: balance;
+}
+.stop .meta { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--grey); margin-bottom: 26px; }
+
+.intro p, .stop p { font-size: 16px; line-height: 1.9; color: var(--text); margin-bottom: 20px; }
+.stop p strong { color: var(--white); font-weight: 700; }
+em { color: var(--white); }
+
+/* Encart « Comment c'est fait » : le seul élément en panneau, pour qu'il se repère */
+.ccf {
+  margin: 34px 0; padding: 24px 26px; border-radius: 12px;
+  background: rgba(20,20,20,.94); border: 1px solid rgba(255,255,255,.12); border-left: 3px solid var(--white);
+}
+.ccf-label {
+  display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  background: var(--white); color: var(--black); padding: 4px 10px; border-radius: 3px; margin-bottom: 14px;
+}
+.ccf p { font-size: 15px; }
+.ccf p:last-child { margin-bottom: 0; }
+
+.pull {
+  font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(20px, 2.4vw, 25px);
+  line-height: 1.45; color: var(--white); margin: 34px 0; padding-left: 22px; border-left: 3px solid var(--red);
+}
+
+/* Photos */
+.shot { margin: 38px 0; }
+.shot.tilt-l { transform: rotate(-1.4deg); }
+.shot.tilt-r { transform: rotate(1.2deg); }
+.photo-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 38px 0; }
+.photo-duo .shot { margin: 0; }
+.photo-duo .frame { aspect-ratio: 4 / 5; }
+.shot .frame { border-radius: 8px; overflow: hidden; background: #141414; border: 1px solid rgba(255,255,255,.08); aspect-ratio: 16 / 9; max-width: 100%; }
+.shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.shot figcaption { margin-top: 10px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; color: var(--grey); }
+.shot.missing img { display: none; }
+.shot.missing .frame {
+  display: flex; align-items: center; justify-content: center; text-align: center; padding: 14px;
+  border: 1.5px dashed rgba(255,255,255,.22);
+  background: repeating-linear-gradient(-45deg, #121212 0 12px, #161616 12px 24px);
+}
+.shot.missing .frame::after { content: attr(data-file); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #555; }
+
+.verdict-box { margin-top: 8px; padding: 26px 0 0; border-top: 1px solid rgba(255,255,255,.12); }
+.verdict-box p { font-family: 'Playfair Display', serif; font-size: 18px; line-height: 1.75; color: var(--white); }
+
+
+@media (max-width: 1100px) { :root { --shift: 60px; } }
+@media (max-width: 900px)  {
+  :root { --shift: 0px; }
+  .stop { padding-left: 54px; }
+  .stop .stop-head, .stop.right .stop-head { flex-direction: row; margin-left: -54px; gap: 16px; }
+  .marker { width: 38px; height: 38px; }
+  .shot.tilt-l, .shot.tilt-r { transform: none; }
+}
+@media (max-width: 768px) {
+  .article { padding: 40px 16px 90px; }
+  .stop { margin-top: 110px; }
+  .intro p, .stop p { font-size: 15.5px; line-height: 1.85; }
+  .photo-duo { grid-template-columns: 1fr; }
+  .photo-duo .frame { aspect-ratio: 16 / 9; }
+  .ccf { padding: 20px; }
+}
+
+/* Aperçu d'une rétro non publiée */
+.preview-banner { position: fixed; top: 110px; right: 16px; z-index: 300; background: var(--red); color: var(--white);
+  font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 7px 12px; border-radius: 4px; }

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rétrospective • L'Entracte</title>
+<!-- Page générique des rétrospectives (même habillage que retro_horreur.html).
+     retrospective.html?slug=critters            → rétro publiée
+     retrospective.html?slug=critters&preview=1  → aperçu, même non publiée
+     L'intérieur de l'article dépend de retros.mise_en_page :
+     /retro-<mise_en_page>.css et /retro-<mise_en_page>.js -->
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/retro.css">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="/index.html" class="logo">
+    <img src="/images/TAGLINE.png" alt="L'Entracte" style="height:100px;width:auto;display:block;">
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li class="nav-cinema">
+          Cinéma
+          <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>
+          <div class="dropdown">
+            <a href="/full-reviews.html"><span>▸</span>Nos dernières reviews</a>
+            <a href="/ccf-archives.html"><span>▸</span>Comment c'est fait ?</a>
+            <a href="/tops-archives.html"><span>▸</span>Les tops & rétrospectives</a>
+          </div>
+      </li>
+      <li><a href="/a-propos.html">À propos</a></li>
+      <li><a href="/newsletter.html">Newsletter</a></li>
+      <li><a href="/index.html#contact" class="contact-link">Contact</a></li>
+    </ul>
+  </div>
+  <div class="search-btn" onclick="toggleSearch()" title="Rechercher">
+    <svg viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    </svg>
+  </div>
+  <div class="burger" onclick="toggleNav()" id="burger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="/full-reviews.html" onclick="toggleNav()">Nos critiques</a>
+  <a href="/ccf-archives.html" onclick="toggleNav()">Comment c'est fait ?</a>
+  <a href="/tops-archives.html" onclick="toggleNav()">Les tops</a>
+  <a href="/a-propos.html" onclick="toggleNav()">À propos</a>
+  <a href="/newsletter.html" onclick="toggleNav()">Newsletter</a>
+  <a href="/index.html#contact" onclick="toggleNav()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img id="heroImg" alt="">
+    <div class="hero-bg-gradient"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-category"><span class="dot"></span>RÉTROSPECTIVE</div>
+    <h1 class="hero-title" id="heroTitle"></h1>
+    <p class="hero-subtitle" id="heroSubtitle"></p>
+  </div>
+</section>
+
+<!-- ARTICLE (rendu par la mise en page) -->
+<div id="retro-root"></div>
+
+<!-- SHARE -->
+<div class="share-bar">
+  <span class="share-label">Partager</span>
+  <button class="share-btn" onclick="shareTwitter()">
+    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    X / Twitter
+  </button>
+  <button class="share-btn" onclick="shareFacebook()">
+    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    Facebook
+  </button>
+  <button class="share-btn" id="copyBtn">
+    <svg viewBox="0 0 24 24"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg>
+    Copier le lien
+  </button>
+</div>
+
+<footer>
+  <p>© 2026 L'Entracte • Du grand écran à votre écran • Tous droits réservés</p>
+</footer>
+
+<script>
+function toggleNav() {
+  const nav = document.getElementById('mobileNav');
+  nav.classList.toggle('open');
+  const spans = document.getElementById('burger').querySelectorAll('span');
+  if (nav.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+function shareTwitter() {
+  window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(document.title)}`, '_blank');
+}
+function shareFacebook() {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, '_blank');
+}
+document.getElementById('copyBtn').addEventListener('click', function() {
+  navigator.clipboard?.writeText(location.href);
+  this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M20 6L9 17l-5-5"/></svg> Copié !';
+  setTimeout(() => {
+    this.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor"><path d="M13.5 3H12H8C6.4 3 5 4.4 5 6v15l7-3 7 3V6c0-1.6-1.4-3-3-3h-2.5z"/></svg> Copier le lien';
+  }, 2000);
+});
+</script>
+<script>
+const SUPABASE_URL = 'https://jnlfejbcpudkmcphsfej.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpubGZlamJjcHVka21jcGhzZmVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTg4NTYsImV4cCI6MjA4OTA3NDg1Nn0.m7xChZb5vc8Ho-LSgu1LY-edxiDC40A_b4DiX9kQWS4';
+</script>
+
+<!-- ─── SEARCH OVERLAY (barre de nav, partagé avec l'accueil) ─── -->
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+  <button class="search-close" onclick="toggleSearch()">✕</button>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Rechercher un film…" autocomplete="off">
+    <button class="search-submit" onclick="doSearch()">
+      <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+  <p class="search-hint">APPUYEZ SUR ENTRÉE POUR RECHERCHER • ÉCHAP POUR FERMER</p>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<style>
+.search-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.82);
+  z-index: 200;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+  backdrop-filter: blur(4px);
+}
+.search-overlay.active { opacity: 1; pointer-events: all; }
+.search-box { width: min(600px, 90vw); position: relative; transform: translateY(20px); transition: transform .35s ease; }
+.search-overlay.active .search-box { transform: translateY(0); }
+.search-box input {
+  width: 100%; background: #1a1a1a; border: 2px solid var(--red); border-radius: 50px;
+  padding: 18px 60px 18px 28px;
+  font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 600;
+  color: var(--white); outline: none; letter-spacing: .5px;
+}
+.search-box input::placeholder { color: #555; }
+.search-box .search-submit {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; padding: 4px;
+}
+.search-box .search-submit svg { width: 22px; height: 22px; fill: var(--red); }
+.search-close {
+  position: absolute; top: 24px; right: 24px;
+  background: none; border: none;
+  color: #666; font-size: 28px; cursor: pointer;
+  transition: color .2s; line-height: 1;
+}
+.search-close:hover { color: var(--white); }
+.search-hint {
+  text-align: center; margin-top: 16px;
+  font-size: 12px; color: #444; letter-spacing: 2px; text-transform: uppercase;
+}
+.search-results { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 640px; }
+.search-result-card { display: flex; align-items: center; gap: 16px; background: #181818; border: 1px solid #2a2a2a; border-radius: 10px; padding: 12px 16px; text-decoration: none; color: #fff; transition: border-color .2s, background .2s; cursor: pointer; }
+.search-result-card:hover { border-color: #E8253A; background: rgba(232,37,58,.07); }
+.search-result-img { width: 44px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; background: #2a2a2a; }
+.search-result-info { display: flex; flex-direction: column; gap: 4px; }
+.search-result-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: #fff; }
+.search-result-meta { font-size: 11px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+.search-no-result { font-size: 13px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+</style>
+
+<script>
+function toggleSearch() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.toggle('active');
+  if (overlay.classList.contains('active')) {
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  } else {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+}
+let __overlayMouseDownOnSelf = false;
+document.addEventListener('DOMContentLoaded', () => {
+  const ov = document.getElementById('searchOverlay');
+  if (ov) ov.addEventListener('mousedown', e => { __overlayMouseDownOnSelf = (e.target === ov); });
+});
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('searchOverlay') && __overlayMouseDownOnSelf) toggleSearch();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('searchOverlay').classList.remove('active');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '';
+  }
+  if (e.key === 'Enter' && document.getElementById('searchOverlay').classList.contains('active')) {
+    doSearch();
+  }
+});
+let __searchDebounce = null;
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('searchInput');
+  if (input) {
+    input.addEventListener('input', () => {
+      clearTimeout(__searchDebounce);
+      const q = input.value.trim();
+      if (q.length < 2) {
+        document.getElementById('searchResults').innerHTML = '';
+        return;
+      }
+      __searchDebounce = setTimeout(doSearch, 300);
+    });
+  }
+});
+async function doSearch(){const query=document.getElementById('searchInput').value.trim();const resultsEl=document.getElementById('searchResults');if(!query)return;resultsEl.innerHTML='<p class="search-no-result">Recherche en cours…</p>';const res=await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=id,title,year,genre,img,slug&publie=eq.true&title=ilike.*${encodeURIComponent(query)}*&order=id.asc&limit=8`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}});const data=await res.json();if(!data.length){resultsEl.innerHTML='<p class="search-no-result">Nous n\'avons pas encore écrit sur <em style="color:#fff">« '+query+' »</em>, mais n\'hésitez pas à nous le conseiller !</p>';return;}resultsEl.innerHTML=data.map(r=>{const finalSlug=r.slug&&r.slug.endsWith('-critique')?r.slug:`${r.slug}-critique`;return `<a class="search-result-card" href="/${finalSlug}/">${r.img?`<img class="search-result-img" src="${r.img}" alt="${r.title}">`:'<div class="search-result-img"></div>'}<div class="search-result-info"><div class="search-result-title">${r.title}</div><div class="search-result-meta">${r.year||''}${r.genre?' · '+r.genre:''}</div></div></a>`;}).join('');}
+</script>
+
+<!-- RETRO-LOADER : chargement depuis Supabase (retiré dans les pages générées) -->
+<script>
+function sb(path) {
+  return fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+}
+function loadAsset(tag, attrs) {
+  return new Promise((resolve, reject) => {
+    const el = document.createElement(tag);
+    Object.assign(el, attrs);
+    el.onload = resolve; el.onerror = reject;
+    document.head.appendChild(el);
+  });
+}
+function showError(msg) {
+  document.getElementById('retro-root').innerHTML =
+    `<p style="max-width:680px;margin:120px auto;padding:0 24px;text-align:center;color:#ccc;line-height:1.8">${msg}</p>`;
+}
+(async function () {
+  const params = new URLSearchParams(location.search);
+  const slug = params.get('slug');
+  const preview = params.get('preview') === '1';
+  if (!slug) return showError('Aucune rétrospective demandée.');
+  try {
+    const filtre = preview ? '' : '&publie=eq.true';
+    const [retro] = await sb(`retros?slug=eq.${encodeURIComponent(slug)}${filtre}&select=*`);
+    if (!retro) return showError("Cette rétrospective n'existe pas (encore).");
+    const sections = await sb(`retro_sections?retro_id=eq.${retro.id}&select=*&order=ordre.asc`);
+    const layout = (retro.mise_en_page || retro.slug).replace(/[^a-z0-9-]/gi, '');
+    await Promise.all([
+      loadAsset('link', { rel: 'stylesheet', href: `/retro-${layout}.css` }),
+      loadAsset('script', { src: `/retro-${layout}.js` })
+    ]);
+    const L = window.RetroLayouts[layout];
+    const hero = L.hero(retro);
+    document.title = `${retro.title} — Rétrospective • L'Entracte`;
+    const img = document.getElementById('heroImg');
+    if (img && hero.img) { img.onerror = () => img.remove(); img.src = hero.img; img.alt = hero.alt; } else if (img) img.remove();
+    document.getElementById('heroTitle').innerHTML = hero.title;
+    document.getElementById('heroSubtitle').innerHTML = hero.subtitle;
+    document.getElementById('retro-root').innerHTML = L.render(retro, sections) +
+      (!retro.publie ? '<div class="preview-banner">Aperçu · non publié</div>' : '');
+    L.animate();
+  } catch (e) {
+    console.error(e);
+    showError('Impossible de charger la rétrospective pour le moment.');
+  }
+})();
+</script>
+<!-- /RETRO-LOADER -->
+</body>
+</html>
