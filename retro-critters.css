@@ -1,11 +1,3 @@
-/* ═══════════════════════════════════════════════════════════
-   retro-critters.css — mise en page de la rétrospective Critters
-   (retros.mise_en_page = 'critters')
-
-   Ne gère QUE l'intérieur de l'article : la barre de navigation,
-   la bannière, le partage et le pied de page viennent de retro.css,
-   comme sur toutes les rétrospectives du site.
-═══════════════════════════════════════════════════════════ */
 :root {
   --text: #d6d6d6;
   --light-grey: #cccccc;
@@ -17,10 +9,9 @@ body { background: var(--black, #0a0a0a); }
 
 /* ── ARTICLE ── */
 .article { position: relative; max-width: 1180px; margin: 0 auto; padding: 56px 24px 120px; }
-#route { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-#route .trail { fill: none; stroke: rgba(255,255,255,.85); stroke-width: 2; stroke-dasharray: 2 10; stroke-linecap: round; }
-#route .trail-ghost { fill: none; stroke: rgba(255,255,255,.13); stroke-width: 2; stroke-dasharray: 2 10; stroke-linecap: round; }
-#route .comet { transition: opacity .3s; }
+/* Traînée + comète : calque fixe de la taille de l'écran, sous les planètes et le texte */
+#routeCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+#routeGeom { position: absolute; width: 0; height: 0; overflow: hidden; visibility: hidden; }
 
 /* Ciel étoilé discret, fixe derrière la page */
 #starfield { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
