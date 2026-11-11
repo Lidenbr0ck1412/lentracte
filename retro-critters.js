@@ -136,7 +136,7 @@
 
     return '<canvas id="starfield"></canvas>' +
       '<main class="article" id="article">' +
-      '<svg id="route" aria-hidden="true"><defs><mask id="routeMask" maskUnits="userSpaceOnUse">' +
+      '<svg id="route" aria-hidden="true"><defs><mask id="routeMask" maskUnits="userSpaceOnUse" x="-5000" y="-5000" width="20000" height="200000">' +
       '<path id="routeReveal" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/></mask>' +
       '<radialGradient id="cometGlow"><stop offset="0" stop-color="#fff" stop-opacity=".9"/>' +
       '<stop offset=".35" stop-color="#E8253A" stop-opacity=".35"/><stop offset="1" stop-color="#E8253A" stop-opacity="0"/></radialGradient></defs>' +
