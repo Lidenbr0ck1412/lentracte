@@ -111,7 +111,8 @@
         '<h2>Le verdict</h2><div class="verdict-box">' + renderBlocks(retro.verdict) + '</div></section>'
       : '';
 
-    return '<main class="article" id="article">' +
+    return '<div id="starfield" aria-hidden="true"><div class="sf sf-far"></div><div class="sf sf-mid"></div><div class="sf sf-near"></div></div>' +
+      '<main class="article" id="article">' +
       // Tracé en pointillés entre les planètes : dessiné une seule fois, aucun calcul au scroll
       '<svg id="route" aria-hidden="true"><path id="routePath"/></svg>' +
       intro + stops + verdict + '</main>';
@@ -131,6 +132,28 @@
       img.addEventListener('load', function () { img.closest('.shot').classList.remove('missing'); drawRoute(); });
     });
 
+
+    // Ciel étoilé : chaque couche glisse à sa vitesse (simple déplacement, aucun redessin)
+    (function stars() {
+      var layers = [
+        { el: document.querySelector('#starfield .sf-far'),  speed: .03, tile: 400 },
+        { el: document.querySelector('#starfield .sf-mid'),  speed: .08, tile: 560 },
+        { el: document.querySelector('#starfield .sf-near'), speed: .15, tile: 700 }
+      ].filter(function (l) { return l.el; });
+      if (!layers.length || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var ticking = false;
+      function move() {
+        ticking = false;
+        layers.forEach(function (l) {
+          var y = (scrollY * l.speed) % l.tile;
+          l.el.style.transform = 'translate3d(0,' + (-y).toFixed(1) + 'px,0)';
+        });
+      }
+      addEventListener('scroll', function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(move); }
+      }, { passive: true });
+      move();
+    })();
 
     // Tracé en pointillés entre les planètes.
     // Volontairement statique : il est calculé au chargement (et si la page change de taille),
