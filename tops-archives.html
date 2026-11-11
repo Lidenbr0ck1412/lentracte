@@ -108,6 +108,25 @@ async function loadTops() {
   );
   const tops = await topsRes.json();
 
+  // Rétrospectives publiées (table `retros`), ajoutées en tête de liste
+  try {
+    const retroRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/retros?select=*&publie=eq.true&order=ordre.asc.nullslast,created_at.desc`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const retros = retroRes.ok ? await retroRes.json() : [];
+    tops.unshift(...retros.filter(r => r.slug).map(r => ({
+      id: `retro-${r.id}`,
+      isRetro: true,
+      title: r.title,
+      subtitle: r.accroche || '',
+      intro: (r.intro || '').split(/\n\s*\n/)[0],
+      cover: r.cover,
+      banner: r.banner,
+      page_url: `${r.slug}-retrospective/`
+    })));
+  } catch (e) { console.warn('Rétrospectives indisponibles', e); }
+
   if (!tops || !tops.length) {
     document.getElementById('topsEmpty').style.display = 'block';
     return;
@@ -178,6 +197,7 @@ function smartTruncate(str, maxChars = 240) {
 // Détermine le badge "type" en fonction de la page_url ou autre indice
 // (puisque tu n'as pas de champ `type`, on devine via la page_url)
 function inferType(top) {
+  if (top.isRetro) return 'RÉTROSPECTIVE';
   const url = (top.page_url || '').toLowerCase();
   if (url.startsWith('top')) return 'CLASSEMENT';
   if (url.startsWith('retro')) return 'SÉLECTION';
@@ -219,7 +239,7 @@ function makeRow(top, idx, count) {
 
   // Métadonnées en haut (TOP + année si dispo)
   const yearPart = top.annee ? ` · ${top.annee}` : '';
-  const meta = `TOP${yearPart}`;
+  const meta = top.isRetro ? 'RÉTROSPECTIVE' : `TOP${yearPart}`;
 
   // Accroche : intro tronquée
   const intro = top.intro ? smartTruncate(top.intro, 280) : '';
