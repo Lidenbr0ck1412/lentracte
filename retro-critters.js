@@ -113,11 +113,8 @@
 
     return '<canvas id="starfield"></canvas>' +
       '<main class="article" id="article">' +
-      // Traînée et comète : dessinées dans un calque fixe de la taille de l'écran
-      // (seule la partie visible est redessinée au scroll, très léger pour Safari).
-      // Le petit SVG invisible sert uniquement à mesurer le tracé.
-      '<canvas id="routeCanvas" aria-hidden="true"></canvas>' +
-      '<svg id="routeGeom" width="0" height="0" aria-hidden="true"><path id="routePath"/></svg>' +
+      // Tracé en pointillés entre les planètes : dessiné une seule fois, aucun calcul au scroll
+      '<svg id="route" aria-hidden="true"><path id="routePath"/></svg>' +
       intro + stops + verdict + '</main>';
   }
 
@@ -172,21 +169,17 @@
       resize();
     })();
 
-    // Trajectoire en pointillés entre les planètes, dessinée au fil du scroll
-    var canvas = document.getElementById('routeCanvas'), cx = canvas.getContext('2d'),
-        geom = document.getElementById('routePath');
-    var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var route = null, routeLen = 0, samples = [], dpr = 1, cw = 0, ch = 0;
-
-    function sizeCanvas() {
-      dpr = Math.min(devicePixelRatio || 1, 2);
-      cw = innerWidth; ch = innerHeight;
-      canvas.width = cw * dpr; canvas.height = ch * dpr;
-      canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
-    }
+    // Tracé en pointillés entre les planètes.
+    // Volontairement statique : il est calculé au chargement (et si la page change de taille),
+    // puis ne bouge plus. Rien n'est recalculé pendant le scroll.
+    var svg = document.getElementById('route'), path = document.getElementById('routePath');
+    var lastW = 0, lastH = 0;
 
     function drawRoute() {
       var ar = article.getBoundingClientRect();
+      if (Math.round(ar.width) === lastW && Math.round(ar.height) === lastH && path.getAttribute('d')) return;
+      lastW = Math.round(ar.width); lastH = Math.round(ar.height);
+      svg.setAttribute('viewBox', '0 0 ' + ar.width + ' ' + ar.height);
       var narrow = innerWidth <= 900;
       var stops = Array.prototype.map.call(article.querySelectorAll('.stop'), function (s) {
         var m = s.querySelector('.marker').getBoundingClientRect(), r = s.getBoundingClientRect();
@@ -212,67 +205,18 @@
         d += ' L ' + out + ' ' + (a.bottom - 20);
         d += ' C ' + out + ' ' + (a.bottom + gap * .55) + ', ' + b.x + ' ' + (b.y - gap * .55) + ', ' + b.x + ' ' + (b.y - b.r - 6) + ' L ' + b.x + ' ' + b.y;
       });
-      geom.setAttribute('d', d);
-      route = new Path2D(d);
-      routeLen = geom.getTotalLength();
-      samples = []; var maxY = 0;
-      for (var l = 0; l <= routeLen; l += 6) { maxY = Math.max(maxY, geom.getPointAtLength(l).y); samples.push({ l: l, y: maxY }); }
-      paint();
+      path.setAttribute('d', d);
     }
 
-    function paint() {
-      if (!route) return;
-      var ar = article.getBoundingClientRect();
-      cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cx.clearRect(0, 0, cw, ch);
-      if (ar.bottom < -50 || ar.top > ch + 50) return; // article hors écran : rien à dessiner
-      cx.translate(ar.left, ar.top);
-      cx.lineWidth = 2; cx.lineCap = 'round'; cx.setLineDash([2, 10]);
-
-      // tracé complet, très discret
-      cx.strokeStyle = 'rgba(255,255,255,.13)';
-      cx.stroke(route);
-
-      // partie déjà parcourue
-      var atBottom = innerHeight + scrollY >= document.documentElement.scrollHeight - 8;
-      var targetY = ch * .65 - ar.top;
-      var drawn = 0, revealY = targetY;
-      if (reduceMotion || atBottom) { drawn = routeLen; revealY = 1e7; }
-      else for (var i = 0; i < samples.length; i++) { if (samples[i].y > targetY) break; drawn = samples[i].l; }
-      if (revealY > 0) {
-        cx.save();
-        cx.beginPath(); cx.rect(-1e4, -1e4, 3e4, revealY + 1e4); cx.clip();
-        cx.strokeStyle = 'rgba(255,255,255,.85)';
-        cx.stroke(route);
-        cx.restore();
-      }
-
-      // comète en tête du tracé (cachée au départ et une fois la dernière planète atteinte)
-      var last = samples.length ? samples[samples.length - 1].l : routeLen;
-      if (drawn > 1 && drawn < last - 1) {
-        var pt = geom.getPointAtLength(drawn);
-        var g = cx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 16);
-        g.addColorStop(0, 'rgba(255,255,255,.9)');
-        g.addColorStop(.35, 'rgba(232,37,58,.35)');
-        g.addColorStop(1, 'rgba(232,37,58,0)');
-        cx.setLineDash([]);
-        cx.fillStyle = g; cx.beginPath(); cx.arc(pt.x, pt.y, 16, 0, Math.PI * 2); cx.fill();
-        cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2); cx.fill();
-      }
+    var pending = false;
+    function scheduleDraw() {
+      if (pending) return;
+      pending = true;
+      setTimeout(function () { pending = false; drawRoute(); }, 150);
     }
-
-    var ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () { ticking = false; paint(); });
-    }
-    addEventListener('scroll', onScroll, { passive: true });
-    addEventListener('resize', function () { sizeCanvas(); requestAnimationFrame(drawRoute); });
-    new ResizeObserver(function () { requestAnimationFrame(drawRoute); }).observe(article);
+    new ResizeObserver(scheduleDraw).observe(article);
     addEventListener('load', drawRoute);
     if (document.fonts) document.fonts.ready.then(drawRoute);
-    sizeCanvas();
     drawRoute();
   }
 
