@@ -111,8 +111,7 @@
         '<h2>Le verdict</h2><div class="verdict-box">' + renderBlocks(retro.verdict) + '</div></section>'
       : '';
 
-    return '<canvas id="starfield"></canvas>' +
-      '<main class="article" id="article">' +
+    return '<main class="article" id="article">' +
       // Tracé en pointillés entre les planètes : dessiné une seule fois, aucun calcul au scroll
       '<svg id="route" aria-hidden="true"><path id="routePath"/></svg>' +
       intro + stops + verdict + '</main>';
@@ -132,42 +131,6 @@
       img.addEventListener('load', function () { img.closest('.shot').classList.remove('missing'); drawRoute(); });
     });
 
-    // Ciel étoilé discret
-    (function stars() {
-      var c = document.getElementById('starfield');
-      if (!c) return;
-      var ctx = c.getContext('2d'), pts = [], W = 0, H = 0;
-      function paint() {
-        ctx.clearRect(0, 0, W, H);
-        ctx.fillStyle = '#fff';
-        pts.forEach(function (p) {
-          ctx.globalAlpha = p.a; ctx.beginPath(); ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2); ctx.fill();
-        });
-      }
-      function resize() {
-        var newW = innerWidth;
-        // Hauteur de la toile : on prend la plus grande hauteur possible de l'écran pour que
-        // l'apparition/disparition de la barre d'adresse sur mobile ne crée ni trou ni saut.
-        var newH = Math.max(innerHeight, (screen && screen.height) || 0);
-        if (newW === W && Math.abs(newH - H) < 2) return;
-        var regenerate = newW !== W;
-        W = newW; H = newH;
-        var dpr = Math.min(devicePixelRatio || 1, 2);
-        c.width = W * dpr; c.height = H * dpr;
-        c.style.width = W + 'px'; c.style.height = H + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        if (regenerate) {
-          pts = Array.from({ length: Math.round(W * H / 9000) }, function () {
-            return { x: Math.random(), y: Math.random(),
-              r: Math.random() < .93 ? Math.random() * .8 + .2 : Math.random() * 1.2 + .7,
-              a: Math.random() * .45 + .15, d: Math.random() * .15 + .03 };
-          });
-        }
-        paint();
-      }
-      addEventListener('resize', resize);
-      resize();
-    })();
 
     // Tracé en pointillés entre les planètes.
     // Volontairement statique : il est calculé au chargement (et si la page change de taille),
