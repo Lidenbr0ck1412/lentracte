@@ -14,6 +14,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import vm from 'vm';
 
 /* ─────────────────────────────────────────────
    CONFIG — à adapter si besoin
@@ -23,6 +24,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const SITE_URL = 'https://l-entracte.be'; // <-- vérifie que c'est bien ton domaine final
 const URL_SUFFIX = '-critique'; // ajouté après le slug : "together" -> "together-critique"
 const CCF_URL_SUFFIX = '-comment-c-est-fait'; // ajouté après le slug d'un article CCF
+const RETRO_URL_SUFFIX = '-retrospective'; // ajouté après le slug d'une rétrospective
 
 // Construit le nom de dossier final pour un film donné
 function pageDirName(slug) {
@@ -32,6 +34,11 @@ function pageDirName(slug) {
 // Idem pour un article "Comment c'est fait ?"
 function pageDirNameCcf(slug) {
   return slug.endsWith(CCF_URL_SUFFIX) ? slug : `${slug}${CCF_URL_SUFFIX}`;
+}
+
+// Idem pour une rétrospective
+function pageDirNameRetro(slug) {
+  return slug.endsWith(RETRO_URL_SUFFIX) ? slug : `${slug}${RETRO_URL_SUFFIX}`;
 }
 
 /* ─────────────────────────────────────────────
@@ -854,16 +861,88 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ─────────────────────────────────────────────
    SITEMAP
 ───────────────────────────────────────────── */
-function generateSitemap(reviews, ccfArticles) {
+function generateSitemap(reviews, ccfArticles, retros = []) {
   const staticPages = ['', 'full-reviews.html', 'ccf-archives.html', 'tops-archives.html', 'a-propos.html'];
   const today = new Date().toISOString().split('T')[0];
   const urls = [
     ...staticPages.map(p => `<url><loc>${SITE_URL}/${p}</loc><lastmod>${today}</lastmod></url>`),
     ...reviews.map(r => `<url><loc>${SITE_URL}/${pageDirName(r.slug)}/</loc><lastmod>${today}</lastmod></url>`),
-    ...ccfArticles.map(a => `<url><loc>${SITE_URL}/${pageDirNameCcf(a.slug)}/</loc><lastmod>${today}</lastmod></url>`)
+    ...ccfArticles.map(a => `<url><loc>${SITE_URL}/${pageDirNameCcf(a.slug)}/</loc><lastmod>${today}</lastmod></url>`),
+    ...retros.filter(r => r.slug).map(r => `<url><loc>${SITE_URL}/${pageDirNameRetro(r.slug)}/</loc><lastmod>${today}</lastmod></url>`)
   ];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>`;
   fs.writeFileSync('sitemap.xml', xml);
+}
+
+
+/* ─────────────────────────────────────────────
+   RÉTROSPECTIVES
+   Chaque rétro a sa propre mise en page (champ mise_en_page),
+   définie par /retro-<mise_en_page>.css et /retro-<mise_en_page>.js.
+   La coquille de page (nav, footer) vient de retrospective.html.
+───────────────────────────────────────────── */
+function loadRetroLayout(name) {
+  const file = `retro-${name}.js`;
+  if (!fs.existsSync(file)) throw new Error(`Mise en page introuvable : ${file}`);
+  const sandbox = { globalThis: {} };
+  sandbox.globalThis = sandbox;
+  vm.runInNewContext(fs.readFileSync(file, 'utf8'), sandbox);
+  return sandbox.RetroLayouts[name];
+}
+
+function buildRetroPage(retro, sections) {
+  const layout = (retro.mise_en_page || retro.slug).replace(/[^a-z0-9-]/gi, '');
+  const L = loadRetroLayout(layout);
+  const shell = fs.readFileSync('retrospective.html', 'utf8');
+
+  const firstPara = (retro.intro || '').split(/\n\s*\n/)[0] || retro.subtitle || '';
+  const description = stripMarkdownToText(firstPara).slice(0, 155);
+  const title = `${retro.title} — Rétrospective • L'Entracte`;
+  const canonical = `${SITE_URL}/${pageDirNameRetro(retro.slug)}/`;
+  const resolvedOg = resolveImgPath(retro.cover || retro.banner);
+  const ogImage = resolvedOg
+    ? (resolvedOg.startsWith('http') ? resolvedOg : `${SITE_URL}${resolvedOg}`)
+    : `${SITE_URL}/favicon-512.png`;
+
+  const head = `<title>${escapeAttr(title)}</title>
+<meta name="description" content="${escapeAttr(description)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${escapeAttr(title)}">
+<meta property="og:description" content="${escapeAttr(description)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:image" content="${ogImage}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/retro-${layout}.css">`;
+
+  const h = L.hero(retro);
+  let page = shell
+    .replace(/<title>[\s\S]*?<\/title>/, head)
+    .replace(/<!-- Page générique[\s\S]*?-->\n/, '')
+    .replace('<meta name="robots" content="noindex, nofollow">\n', '')
+    .replace('<img id="heroImg" alt="">', h.img ? `<img id="heroImg" src="${escapeAttr(h.img)}" alt="${escapeAttr(h.alt)}" onerror="this.remove()">` : '')
+    .replace('<h1 class="hero-title" id="heroTitle"></h1>', `<h1 class="hero-title" id="heroTitle">${h.title}</h1>`)
+    .replace('<p class="hero-subtitle" id="heroSubtitle"></p>', h.subtitle ? `<p class="hero-subtitle" id="heroSubtitle">${h.subtitle}</p>` : '')
+    .replace('<div id="retro-root"></div>', `<div id="retro-root">${L.render(retro, sections)}</div>`)
+    .replace(/<!-- RETRO-LOADER[\s\S]*?<!-- \/RETRO-LOADER -->/,
+      `<script src="/retro-${layout}.js"></script>\n<script>RetroLayouts['${layout}'].animate();</script>`);
+  return page;
+}
+
+async function fetchRetros() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/retros?select=*&publie=eq.true&order=ordre.asc.nullslast,id.asc`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  if (!res.ok) throw new Error(`Erreur Supabase (retros): ${res.status} ${await res.text()}`);
+  return res.json();
+}
+
+async function fetchRetroSections(retroId) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/retro_sections?retro_id=eq.${retroId}&select=*&order=ordre.asc`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+  });
+  if (!res.ok) throw new Error(`Erreur Supabase (retro_sections, id ${retroId}): ${res.status} ${await res.text()}`);
+  return res.json();
 }
 
 /* ─────────────────────────────────────────────
@@ -925,7 +1004,23 @@ async function main() {
     console.log(`✔ ${dirName}/index.html`);
   }
 
-  generateSitemap(allReviews, allCcf);
+  console.log('\nRécupération des rétrospectives publiées depuis Supabase…');
+  const allRetros = await fetchRetros();
+  console.log(`${allRetros.length} rétrospective(s) trouvée(s).`);
+
+  for (const r of allRetros) {
+    if (!r.slug) {
+      console.warn(`⚠️  Rétrospective "${r.title}" (id ${r.id}) n'a pas de slug, ignorée.`);
+      continue;
+    }
+    const sections = await fetchRetroSections(r.id);
+    const dirName = pageDirNameRetro(r.slug);
+    fs.mkdirSync(dirName, { recursive: true });
+    fs.writeFileSync(path.join(dirName, 'index.html'), buildRetroPage(r, sections));
+    console.log(`✔ ${dirName}/index.html`);
+  }
+
+  generateSitemap(allReviews, allCcf, allRetros);
   console.log('✔ sitemap.xml mis à jour');
   console.log('\nTerminé.');
 }
