@@ -1,26 +1,3 @@
-/* ═══════════════════════════════════════════════════════════
-   retro-critters.js — mise en page de la rétrospective Critters
-
-   Utilisé par :
-   - retrospective.html (aperçu dynamique, côté navigateur)
-   - generate-static-pages.js (page statique, côté Node)
-
-   Expose : RetroLayouts.critters = { hero(retro), render(retro, sections), animate() }
-   La bannière, la navigation, le partage et le pied de page sont ceux
-   de retrospective.html (identiques aux autres rétrospectives).
-
-   Repères acceptés dans les champs markdown (intro et contenu) :
-     paragraphe normal, avec *italique* et **gras**
-     !! phrase                        → phrase-clé en grand (intro)
-     [frise]                          → frise chronologique (champ retros.frise)
-     > phrase                         → citation en exergue
-     ~ paragraphe                     → transition vers l'escale suivante
-     [large] chemin | légende         → photo panoramique
-     [photo] chemin | légende         → photo classique
-     [vignette droite] chemin | légende   (ou gauche) → photo contournée par le texte
-     [duo] chemin | légende ; chemin | légende
-     [trio] chemin | légende ; chemin | légende ; chemin | légende
-═══════════════════════════════════════════════════════════ */
 (function (root) {
   'use strict';
 
@@ -136,12 +113,11 @@
 
     return '<canvas id="starfield"></canvas>' +
       '<main class="article" id="article">' +
-      '<svg id="route" aria-hidden="true"><defs><mask id="routeMask" maskUnits="userSpaceOnUse" x="-5000" y="-5000" width="20000" height="200000">' +
-      '<path id="routeReveal" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/></mask>' +
-      '<radialGradient id="cometGlow"><stop offset="0" stop-color="#fff" stop-opacity=".9"/>' +
-      '<stop offset=".35" stop-color="#E8253A" stop-opacity=".35"/><stop offset="1" stop-color="#E8253A" stop-opacity="0"/></radialGradient></defs>' +
-      '<path class="trail-ghost" id="routeGhost"/><path class="trail" id="routePath" mask="url(#routeMask)"/>' +
-      '<g id="comet" class="comet" style="opacity:0"><circle r="16" fill="url(#cometGlow)"/><circle r="3.5" fill="#fff"/></g></svg>' +
+      // Traînée et comète : dessinées dans un calque fixe de la taille de l'écran
+      // (seule la partie visible est redessinée au scroll, très léger pour Safari).
+      // Le petit SVG invisible sert uniquement à mesurer le tracé.
+      '<canvas id="routeCanvas" aria-hidden="true"></canvas>' +
+      '<svg id="routeGeom" width="0" height="0" aria-hidden="true"><path id="routePath"/></svg>' +
       intro + stops + verdict + '</main>';
   }
 
@@ -168,8 +144,7 @@
         ctx.clearRect(0, 0, W, H);
         ctx.fillStyle = '#fff';
         pts.forEach(function (p) {
-          var y = (p.y * H - scrollY * p.d) % H; if (y < 0) y += H;
-          ctx.globalAlpha = p.a; ctx.beginPath(); ctx.arc(p.x * W, y, p.r, 0, Math.PI * 2); ctx.fill();
+          ctx.globalAlpha = p.a; ctx.beginPath(); ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2); ctx.fill();
         });
       }
       function resize() {
@@ -194,20 +169,24 @@
         paint();
       }
       addEventListener('resize', resize);
-      root.__retroPaintStars = paint;
       resize();
     })();
 
     // Trajectoire en pointillés entre les planètes, dessinée au fil du scroll
-    var svg = document.getElementById('route'), path = document.getElementById('routePath'),
-        ghost = document.getElementById('routeGhost'), reveal = document.getElementById('routeReveal'),
-        comet = document.getElementById('comet');
+    var canvas = document.getElementById('routeCanvas'), cx = canvas.getContext('2d'),
+        geom = document.getElementById('routePath');
     var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var routeLen = 0, samples = [];
+    var route = null, routeLen = 0, samples = [], dpr = 1, cw = 0, ch = 0;
+
+    function sizeCanvas() {
+      dpr = Math.min(devicePixelRatio || 1, 2);
+      cw = innerWidth; ch = innerHeight;
+      canvas.width = cw * dpr; canvas.height = ch * dpr;
+      canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
+    }
 
     function drawRoute() {
       var ar = article.getBoundingClientRect();
-      svg.setAttribute('viewBox', '0 0 ' + ar.width + ' ' + ar.height);
       var narrow = innerWidth <= 900;
       var stops = Array.prototype.map.call(article.querySelectorAll('.stop'), function (s) {
         var m = s.querySelector('.marker').getBoundingClientRect(), r = s.getBoundingClientRect();
@@ -233,42 +212,67 @@
         d += ' L ' + out + ' ' + (a.bottom - 20);
         d += ' C ' + out + ' ' + (a.bottom + gap * .55) + ', ' + b.x + ' ' + (b.y - gap * .55) + ', ' + b.x + ' ' + (b.y - b.r - 6) + ' L ' + b.x + ' ' + b.y;
       });
-      path.setAttribute('d', d); ghost.setAttribute('d', d); reveal.setAttribute('d', d);
-      routeLen = path.getTotalLength();
-      reveal.style.strokeDasharray = routeLen;
+      geom.setAttribute('d', d);
+      route = new Path2D(d);
+      routeLen = geom.getTotalLength();
       samples = []; var maxY = 0;
-      for (var l = 0; l <= routeLen; l += 6) { maxY = Math.max(maxY, path.getPointAtLength(l).y); samples.push({ l: l, y: maxY }); }
-      updateRoute();
+      for (var l = 0; l <= routeLen; l += 6) { maxY = Math.max(maxY, geom.getPointAtLength(l).y); samples.push({ l: l, y: maxY }); }
+      paint();
     }
 
-    function updateRoute() {
-      if (!routeLen) return;
+    function paint() {
+      if (!route) return;
       var ar = article.getBoundingClientRect();
+      cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx.clearRect(0, 0, cw, ch);
+      if (ar.bottom < -50 || ar.top > ch + 50) return; // article hors écran : rien à dessiner
+      cx.translate(ar.left, ar.top);
+      cx.lineWidth = 2; cx.lineCap = 'round'; cx.setLineDash([2, 10]);
+
+      // tracé complet, très discret
+      cx.strokeStyle = 'rgba(255,255,255,.13)';
+      cx.stroke(route);
+
+      // partie déjà parcourue
       var atBottom = innerHeight + scrollY >= document.documentElement.scrollHeight - 8;
-      var targetY = innerHeight * .65 - ar.top;
-      var drawn = 0;
-      if (reduceMotion || atBottom) drawn = routeLen;
+      var targetY = ch * .65 - ar.top;
+      var drawn = 0, revealY = targetY;
+      if (reduceMotion || atBottom) { drawn = routeLen; revealY = 1e7; }
       else for (var i = 0; i < samples.length; i++) { if (samples[i].y > targetY) break; drawn = samples[i].l; }
-      reveal.style.strokeDashoffset = routeLen - drawn;
-      var pt = path.getPointAtLength(Math.max(drawn, .1));
-      comet.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ')');
+      if (revealY > 0) {
+        cx.save();
+        cx.beginPath(); cx.rect(-1e4, -1e4, 3e4, revealY + 1e4); cx.clip();
+        cx.strokeStyle = 'rgba(255,255,255,.85)';
+        cx.stroke(route);
+        cx.restore();
+      }
+
+      // comète en tête du tracé (cachée au départ et une fois la dernière planète atteinte)
       var last = samples.length ? samples[samples.length - 1].l : routeLen;
-      comet.style.opacity = drawn > 1 && drawn < last - 1 ? 1 : 0;
+      if (drawn > 1 && drawn < last - 1) {
+        var pt = geom.getPointAtLength(drawn);
+        var g = cx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 16);
+        g.addColorStop(0, 'rgba(255,255,255,.9)');
+        g.addColorStop(.35, 'rgba(232,37,58,.35)');
+        g.addColorStop(1, 'rgba(232,37,58,0)');
+        cx.setLineDash([]);
+        cx.fillStyle = g; cx.beginPath(); cx.arc(pt.x, pt.y, 16, 0, Math.PI * 2); cx.fill();
+        cx.fillStyle = '#fff'; cx.beginPath(); cx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2); cx.fill();
+      }
     }
 
     var ticking = false;
-    addEventListener('scroll', function () {
+    function onScroll() {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(function () {
-        ticking = false;
-        if (root.__retroPaintStars) root.__retroPaintStars();
-        updateRoute();
-      });
-    }, { passive: true });
+      requestAnimationFrame(function () { ticking = false; paint(); });
+    }
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', function () { sizeCanvas(); requestAnimationFrame(drawRoute); });
     new ResizeObserver(function () { requestAnimationFrame(drawRoute); }).observe(article);
     addEventListener('load', drawRoute);
     if (document.fonts) document.fonts.ready.then(drawRoute);
+    sizeCanvas();
     drawRoute();
   }
 
