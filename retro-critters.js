@@ -137,9 +137,11 @@
     return '<canvas id="starfield"></canvas>' +
       '<main class="article" id="article">' +
       '<svg id="route" aria-hidden="true"><defs><mask id="routeMask" maskUnits="userSpaceOnUse">' +
-      '<path id="routeReveal" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/></mask></defs>' +
+      '<path id="routeReveal" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/></mask>' +
+      '<radialGradient id="cometGlow"><stop offset="0" stop-color="#fff" stop-opacity=".9"/>' +
+      '<stop offset=".35" stop-color="#E8253A" stop-opacity=".35"/><stop offset="1" stop-color="#E8253A" stop-opacity="0"/></radialGradient></defs>' +
       '<path class="trail-ghost" id="routeGhost"/><path class="trail" id="routePath" mask="url(#routeMask)"/>' +
-      '<circle class="comet" id="comet" r="4"/></svg>' +
+      '<g id="comet" class="comet" style="opacity:0"><circle r="16" fill="url(#cometGlow)"/><circle r="3.5" fill="#fff"/></g></svg>' +
       intro + stops + verdict + '</main>';
   }
 
@@ -161,29 +163,38 @@
     (function stars() {
       var c = document.getElementById('starfield');
       if (!c) return;
-      var ctx = c.getContext('2d'), pts = [];
+      var ctx = c.getContext('2d'), pts = [], W = 0, H = 0;
       function paint() {
-        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        ctx.clearRect(0, 0, W, H);
         ctx.fillStyle = '#fff';
         pts.forEach(function (p) {
-          var y = (p.y - scrollY * p.d) % innerHeight; if (y < 0) y += innerHeight;
-          ctx.globalAlpha = p.a; ctx.beginPath(); ctx.arc(p.x, y, p.r, 0, Math.PI * 2); ctx.fill();
+          var y = (p.y * H - scrollY * p.d) % H; if (y < 0) y += H;
+          ctx.globalAlpha = p.a; ctx.beginPath(); ctx.arc(p.x * W, y, p.r, 0, Math.PI * 2); ctx.fill();
         });
       }
       function resize() {
+        var newW = innerWidth;
+        // Hauteur de la toile : on prend la plus grande hauteur possible de l'écran pour que
+        // l'apparition/disparition de la barre d'adresse sur mobile ne crée ni trou ni saut.
+        var newH = Math.max(innerHeight, (screen && screen.height) || 0);
+        if (newW === W && Math.abs(newH - H) < 2) return;
+        var regenerate = newW !== W;
+        W = newW; H = newH;
         var dpr = Math.min(devicePixelRatio || 1, 2);
-        c.width = innerWidth * dpr; c.height = innerHeight * dpr;
-        c.style.width = innerWidth + 'px'; c.style.height = innerHeight + 'px';
+        c.width = W * dpr; c.height = H * dpr;
+        c.style.width = W + 'px'; c.style.height = H + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        pts = Array.from({ length: Math.round(innerWidth * innerHeight / 9000) }, function () {
-          return { x: Math.random() * innerWidth, y: Math.random() * innerHeight,
-            r: Math.random() < .93 ? Math.random() * .8 + .2 : Math.random() * 1.2 + .7,
-            a: Math.random() * .45 + .15, d: Math.random() * .15 + .03 };
-        });
+        if (regenerate) {
+          pts = Array.from({ length: Math.round(W * H / 9000) }, function () {
+            return { x: Math.random(), y: Math.random(),
+              r: Math.random() < .93 ? Math.random() * .8 + .2 : Math.random() * 1.2 + .7,
+              a: Math.random() * .45 + .15, d: Math.random() * .15 + .03 };
+          });
+        }
         paint();
       }
       addEventListener('resize', resize);
-      addEventListener('scroll', function () { requestAnimationFrame(paint); }, { passive: true });
+      root.__retroPaintStars = paint;
       resize();
     })();
 
@@ -240,11 +251,21 @@
       else for (var i = 0; i < samples.length; i++) { if (samples[i].y > targetY) break; drawn = samples[i].l; }
       reveal.style.strokeDashoffset = routeLen - drawn;
       var pt = path.getPointAtLength(Math.max(drawn, .1));
-      comet.setAttribute('cx', pt.x); comet.setAttribute('cy', pt.y);
-      comet.style.opacity = drawn > 1 && drawn < routeLen - 1 ? 1 : 0;
+      comet.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ')');
+      var last = samples.length ? samples[samples.length - 1].l : routeLen;
+      comet.style.opacity = drawn > 1 && drawn < last - 1 ? 1 : 0;
     }
 
-    addEventListener('scroll', function () { requestAnimationFrame(updateRoute); }, { passive: true });
+    var ticking = false;
+    addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        if (root.__retroPaintStars) root.__retroPaintStars();
+        updateRoute();
+      });
+    }, { passive: true });
     new ResizeObserver(function () { requestAnimationFrame(drawRoute); }).observe(article);
     addEventListener('load', drawRoute);
     if (document.fonts) document.fonts.ready.then(drawRoute);
